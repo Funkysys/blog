@@ -14,18 +14,19 @@ import {
 } from "@/components/ui/navigation-menu"
 import { CATEGORIES } from "@/utils/categories"
 import { Category } from "@/types"
+import { useCategories } from "@/hook/useCategories"
 
 
 export function HeaderNavigation() {
+  const {data: categories} = useCategories()
   return (
-    <NavigationMenu>
+    <NavigationMenu className="hidden md:block">
       <NavigationMenuList>
-        
         <NavigationMenuItem>
           <NavigationMenuTrigger>categories</NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-            {CATEGORIES.map((category: Category) => (
+            {categories?.map((category: Category) => (
                 <ListItem
                   key={category.id}
                   title={category.title}
@@ -38,7 +39,7 @@ export function HeaderNavigation() {
           </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <Link href="/new-post" legacyBehavior passHref>
+          <Link href="/write" legacyBehavior passHref>
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
               Write a post
             </NavigationMenuLink>

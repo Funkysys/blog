@@ -4,6 +4,8 @@ import { Button } from "./ui/button"
 import Link from "next/link"
 import { CATEGORIES } from "@/utils/categories"
 import { Category } from "@/types"
+import ToggleTheme from "./ToggleTheme"
+import ProfileButton from "./ProfileButton"
 
 const ResponsiveMenu = () => {
     return (
@@ -13,11 +15,15 @@ const ResponsiveMenu = () => {
             </SheetTrigger>
             <SheetContent
                 side="left"
-                >
+            >
+                <div className="flex flex-col gap-4 pl-5 ">
+                    <ProfileButton />
+                    <ToggleTheme />
+                </div>
                 <div
-                className="flex flex-col gap-4"
+                    className="flex flex-col gap-4"
                 >
-                    <Link href={'/new-post'}>
+                    <Link href={'/write'}>
                         <Button variant={'ghost'}>Write A Post</Button>
                     </Link>
                     <p>Categories</p>

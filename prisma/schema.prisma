@@ -65,8 +65,8 @@ model Post {
   nbComments Int @default(0)
   comments Comment[]
   // user
-  userId String
-  user User @relation(fields: [userId], references: [id])
+  userEmail String
+  user User @relation(fields: [userEmail], references: [id])
   // category
   catSlug String
   cat Category @relation(fields: [catSlug], references: [slug])

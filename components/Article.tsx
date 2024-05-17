@@ -18,11 +18,11 @@ type Props = {
 }
 
 const Article = ({ post }: Props) => {
-console.log(post);
+    console.log(post);
 
     return (
-        <Card className="flex flex-col justify-center items-between rounded-lg border-2 m-2 h-[100%]">
-            <Link href={`/posts/${post.catSlug}`}>
+        <Card className="flex flex-col justify-center items-between rounded-lg border-2 m-2 h-[100%] ">
+            <Link href={`/posts/${post.slug}`}>
                 <CardHeader>
                     <div className="aspect-square relative mb-2">
                         <Image
@@ -45,7 +45,10 @@ console.log(post);
             </CardContent>
             <CardFooter className="flex justify-between">
                 <Link href={`/posts/${post.slug}`}>
-                    <Button variant='outline'>View this article</Button>
+                    <Button
+                        variant='outline'
+                    >
+                        Discover</Button>
                 </Link>
                 <div className="flex gap-2">
                     <div className="flex gap-1 items-center"></div>

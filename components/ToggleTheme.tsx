@@ -13,7 +13,7 @@ const ToggleTheme = () => {
 
   return (
     <Button
-        variant={"ghost"}
+        variant={"outline"}
         size={"icon"}
         className='flex justify-center px-1'
         onClick={() => toggleFunc()}
