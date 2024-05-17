@@ -1,13 +1,16 @@
-import { Button } from "@/components/ui/button";
-import { Eye } from "lucide-react";
-
+import HomeComponent from "@/components/LandingPage/HomeComponent";
+import CategoriesComponent from "@/components/LandingPage/CategoriesComponent";
+import ArticlesListComponent from "@/components/LandingPage/ArticlesListComponent";
+import { POSTS } from "@/utils/posts";
 
 export default function Home() {
+  
+  
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <Button variant={"outline"}>
-        <Eye size={24} /> 
-        click me</Button>
+    <main className=" flex-grow py-10 px-4">
+      <HomeComponent />
+      <CategoriesComponent />
+      <ArticlesListComponent slug={""}/>
     </main>
   );
 }
