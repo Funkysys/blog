@@ -26,7 +26,7 @@ const Article = ({ post }: Props) => {
                 <CardHeader>
                     <div className="aspect-square relative mb-2">
                         <Image
-                            src={'/img/img.jpg'}
+                            src={`/images${post.image}`}
                             alt={post?.content}
                             fill
                             className="aspect-square object-cover transition-all duration-300 hover:scale-110"

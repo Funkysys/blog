@@ -24,7 +24,7 @@ const ResponsiveMenu = () => {
                     className="flex flex-col gap-4"
                 >
                     <Link href={'/write'}>
-                        <Button variant={'ghost'}>Write A Post</Button>
+                        <Button variant={'ghost'}>Add an album</Button>
                     </Link>
                     <p>Categories</p>
                     {CATEGORIES.map((category: Category) => (

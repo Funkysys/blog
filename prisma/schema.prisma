@@ -44,6 +44,7 @@ model User {
   sessions      Session[]
   posts         Post[]
   comments      Comment[]
+  @@unique([email, name, image])
 }
 
 model VerificationToken {
@@ -65,11 +66,15 @@ model Post {
   nbComments Int @default(0)
   comments Comment[]
   // user
+  user User @relation(fields: [userEmail, userName, userImage], references: [email, name, image])
   userEmail String
-  user User @relation(fields: [userEmail], references: [id])
+  userName String
+  userImage String
   // category
   catSlug String
   cat Category @relation(fields: [catSlug], references: [slug])
+
+  // @@unique([userEmail, userName, userImage])
 }
 
 model Category {
@@ -84,8 +89,8 @@ model Comment {
   id String @id @default(cuid())
   createdAt DateTime @default(now())
   content String
-  userId String
-  user User @relation(fields: [userId], references: [id])
+  userEmail String
+  user User @relation(fields: [userEmail], references: [email])
   postSlug String
   post Post @relation(fields: [postSlug], references: [slug])
 }

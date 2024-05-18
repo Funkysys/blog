@@ -7,16 +7,18 @@ export const POST = async (req: Request) => {
   const file: File | null = data.get("file") as unknown as File;
 
   if (!file) {
-    return NextResponse.json({ message: "No file found" }, { status: 500 }); 
+    return NextResponse.json({ message: "No file found !" }, { status: 500 }); 
   }
 
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
 
   // const imageUrl = `/images/${Math.floor(Math.random() * 10001)}_${(new Date().toJSON().slice(0,10))}_${file.name}`;
-  const imageUrl = `/images/${new Date().getTime()}_${file.name}`;
-  const imagePath = path.join(process.cwd(), `/public${imageUrl}`);
+  const imageUrl = `/${new Date().getTime()}_${file.name}`;
+  const imagePath = path.join(process.cwd(), `/public/images${imageUrl}`);
 
+  console.log(imageUrl, imagePath);
+  
   try {
     await writeFile(imagePath, buffer);
     return NextResponse.json(imageUrl, { status: 200 });

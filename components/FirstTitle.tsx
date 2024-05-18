@@ -7,7 +7,7 @@ const FirstTitle = () => {
             <Disc className='mr-2 rounded-full bg-gradient-to-br from-yellow-900 to-green-300
             '/>
             <h1
-                className='text-2xl font-bold
+                className='text-2xl font-bold 
             text-transparent bg-clip-text bg-gradient-to-br from-yellow-200 to-green-300
             '
             >DiscoPhiles</h1>

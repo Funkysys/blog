@@ -41,7 +41,7 @@ export function HeaderNavigation() {
         <NavigationMenuItem>
           <Link href="/write" legacyBehavior passHref>
             <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Write a post
+              Add an album
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>

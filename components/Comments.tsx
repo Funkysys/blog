@@ -13,27 +13,29 @@ import { useComments } from "@/hook/useComments";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { CommentWithUser } from "@/types";
 
-function Comments({postSlug}: {postSlug: string}) {
+function Comments({ postSlug }: { postSlug: string }) {
 
-  const {status} = useSession();
+  const { status } = useSession();
   const [content, setContent] = useState("");
 
   const createComment = (newComment: Partial<Comment>) => {
     return axios.post("/api/comments", newComment).then(res => res.data)
   };
 
-  const {mutate, isLoading} = useMutation(createComment, {
+  const { mutate, isLoading } = useMutation(createComment, {
     onSuccess: (data: Comment) => {
       console.log("Comment created successfully", data);
+      setContent("")
+      return refetch()
     }
   });
-  
+
   const onSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    mutate({content, postSlug});
+    mutate({ content, postSlug });
   };
 
-  const {data: comments, isFetching} = useComments(postSlug);
+  const { data: comments, isFetching, refetch } = useComments(postSlug);
 
   return (
     <div className="mt-10">
@@ -42,40 +44,42 @@ function Comments({postSlug}: {postSlug: string}) {
       {/* Formulaire */}
       <div className="mt-2 mb-6">
         {status === "authenticated" ? <div className="">
-          <Textarea 
-            placeholder="Write a comment..." 
-            onChange={e => setContent(e.target.value)} 
+          <Textarea
+            placeholder="Write a comment..."
+            onChange={e => setContent(e.target.value)}
           />
-          <Button 
-            disabled={content === "" || isLoading} 
+          <Button
+            disabled={content === "" || isLoading}
             className="mt-4"
             onClick={onSubmit}
-            >
+          >
             {isLoading ? "Adding your comment" : "Add your comment"}
           </Button>
         </div> : <Link href="/login" className="underline">Login to write a comment</Link>}
       </div>
 
       {/* List of comments */}
-      {isFetching ? <p>Loading comments...</p> : (
-        comments.map((comment: CommentWithUser) => (
-          <div className="flex items-center mt-4" key={comment.id}>
-            <Avatar>
-              <AvatarImage src={comment.user.image || "/img/shadcn_avatar.jpg"} alt="" />
-              <AvatarFallback>{comment.user.name}</AvatarFallback>
-            </Avatar>
-            
-            <div className="ml-3 p-4 border border-slate-400 rounded-lg">
-              <div className="flex items-center gap-2">
-                <span className="font-semibold">{comment.user.name}</span>
-                <span className="text-sm text-slate-500">{new Date(comment.createdAt).toLocaleDateString()}</span>
-              </div>
+        <>
+          {isFetching ? <p>Loading comments...</p> : (
+            comments.map((comment: CommentWithUser) => (
+              <div className="flex items-center mt-4" key={comment.id}>
+                <Avatar>
+                  <AvatarImage src={comment.user.image || "/img/shadcn_avatar.jpg"} alt="" />
+                  <AvatarFallback>{comment.user.name}</AvatarFallback>
+                </Avatar>
 
-              <p className="mt-2">{comment.content}</p>
-            </div>
-          </div>
-        ))
-      )}
+                <div className="ml-3 p-4 border border-slate-400 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold">{comment.user.name}</span>
+                    <span className="text-sm text-slate-500">{new Date(comment.createdAt).toLocaleDateString()}</span>
+                  </div>
+
+                  <p className="mt-2">{comment.content}</p>
+                </div>
+              </div>
+            ))
+          )}
+        </>
     </div>
   )
 }

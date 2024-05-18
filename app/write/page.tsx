@@ -11,11 +11,13 @@ import { SyntheticEvent, useLayoutEffect, useState } from "react";
 
 import "react-quill/dist/quill.snow.css";
 import "react-quill/dist/quill.snow.css";
+
 import dynamic from "next/dynamic";
 const ReactQuill = dynamic(() => import("react-quill"), {
   loading: () => <p>Loading...</p>,
   ssr: false,
 });
+
 import { Button } from "@/components/ui/button";
 import { useMutation } from "react-query";
 import axios from "axios";
@@ -102,9 +104,9 @@ export default function WritePage() {
         {/* Image */}
         <div className="mb-6">
           {imageObjectUrl && (
-            <div className="relative w-40 h-40 mx-auto mb-3 flex">
+            <div className="relative w-60 h-60 mx-auto mb-3 flex">
               <Image
-                className="object-cover rounded-lg"
+                className="object-cover rounded-full"
                 src={imageObjectUrl}
                 fill
                 alt={title}

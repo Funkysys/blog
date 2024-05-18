@@ -25,17 +25,6 @@ const Login = () => {
                         </div>
                         Sign In With Discord
                     </Button>
-                    <Button onClick={onLogin("github")}>
-                        <div className="w-7 h-7 mr-3 aspect-square relative ">
-                            <Image
-                                alt="github icon"
-                                className="w-10 h-10"
-                                src={"/icons/github-mark.png"}
-                                fill
-                            />
-                        </div>
-                        Sign In With Github
-                    </Button>
                     <Button onClick={onLogin("google")}>
                         <Mail className="mr-3" />
                         Sign In With Google
