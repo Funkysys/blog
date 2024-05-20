@@ -27,13 +27,15 @@ const Article = ({ post }: Props) => {
                     <div className="aspect-square relative mb-2">
                         <Image
                             src={`${post.image}`}
-                            alt={post?.content}
+                            alt={post?.title}
                             fill
                             className="aspect-square object-cover transition-all duration-300 hover:scale-110"
                         />
                     </div>
                     <CardTitle className="font-semibold text-md">{post.title}</CardTitle>
-                    <CardDescription>{`${post.content ? post.content.substring(0, 50) : ""}...`}</CardDescription>
+                    <CardDescription dangerouslySetInnerHTML={{
+                            __html: post.content as string ? post.content.substring(0, 50) : ""
+                        }} />
                 </CardHeader>
             </Link>
             <CardContent>
