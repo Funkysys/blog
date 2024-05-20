@@ -12,7 +12,6 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
-import { CATEGORIES } from "@/utils/categories"
 import { Category } from "@/types"
 import { useCategories } from "@/hook/useCategories"
 

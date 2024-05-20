@@ -2,12 +2,13 @@ import { Menu } from "lucide-react"
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet"
 import { Button } from "./ui/button"
 import Link from "next/link"
-import { CATEGORIES } from "@/utils/categories"
 import { Category } from "@/types"
 import ToggleTheme from "./ToggleTheme"
 import ProfileButton from "./ProfileButton"
+import { useCategories } from "@/hook/useCategories"
 
 const ResponsiveMenu = () => {
+    const {data: categories} = useCategories()
     return (
         <Sheet>
             <SheetTrigger>
@@ -27,7 +28,7 @@ const ResponsiveMenu = () => {
                         <Button variant={'ghost'}>Add an album</Button>
                     </Link>
                     <p>Categories</p>
-                    {CATEGORIES.map((category: Category) => (
+                    {categories.map((category: Category) => (
                         <Link
                             key={category.id}
                             href={`/categories/${category.slug}`}
