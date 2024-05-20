@@ -8,7 +8,7 @@ import ProfileButton from "./ProfileButton"
 import { useCategories } from "@/hook/useCategories"
 
 const ResponsiveMenu = () => {
-    const {data: categories} = useCategories()
+    // const {data: categories} = useCategories()
     return (
         <Sheet>
             <SheetTrigger>
@@ -28,7 +28,7 @@ const ResponsiveMenu = () => {
                         <Button variant={'ghost'}>Add an album</Button>
                     </Link>
                     <p>Categories</p>
-                    {categories.map((category: Category) => (
+                    {/* {categories.map((category: Category) => (
                         <Link
                             key={category.id}
                             href={`/categories/${category.slug}`}
@@ -39,7 +39,7 @@ const ResponsiveMenu = () => {
                             </Button>
                         </Link>
                     )
-                    )}
+                    )} */}
                 </div>
             </SheetContent>
         </Sheet>
