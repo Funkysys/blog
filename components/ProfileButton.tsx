@@ -11,7 +11,6 @@ import { signOut } from 'next-auth/react'
 
 const ProfileButton = () => {
     const { data: session, status } = useSession()
-console.log(status, session);
 
     if (status === "unauthenticated") {
         return (

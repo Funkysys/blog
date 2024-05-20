@@ -18,7 +18,6 @@ type Props = {
 }
 
 const Article = ({ post }: Props) => {
-    console.log(post.image);
 
     return (
         <Card className="flex flex-col justify-center items-between rounded-lg border-2 m-2 h-[100%] ">

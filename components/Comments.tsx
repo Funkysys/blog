@@ -24,7 +24,6 @@ function Comments({ postSlug }: { postSlug: string }) {
 
   const { mutate, isLoading } = useMutation(createComment, {
     onSuccess: (data: Comment) => {
-      console.log("Comment created successfully", data);
       setContent("")
       return refetch()
     }
