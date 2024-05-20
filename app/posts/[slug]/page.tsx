@@ -31,7 +31,7 @@ const PostsPage = ({ params }: Props) => {
                     <PageTitle title={post.title} />
                     <div
                         className="rounded-full border-2 border-gray-500 aspect-square md:aspect-[1/1] overflow-hidden bg-cover w-[30%] m-auto p-6"
-                        style={{ backgroundImage: `url(/images${post.image})` }}
+                        style={{ backgroundImage: `url(${post.image})` }}
                     />
 
                 </section>

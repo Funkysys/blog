@@ -7,7 +7,7 @@ import { useCategories } from "@/hook/useCategories";
 import { Category, Post } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { SyntheticEvent, useLayoutEffect, useState } from "react";
+import { FormEventHandler, SyntheticEvent, useLayoutEffect, useState } from "react";
 
 import "react-quill/dist/quill.snow.css";
 import "react-quill/dist/quill.snow.css";
@@ -23,11 +23,13 @@ import { useMutation } from "react-query";
 import axios from "axios";
 import { slugify } from "@/utils/slugify";
 import Image from "next/image";
+import { uploadFile } from "../api/upload/upload.action";
 
 export default function WritePage() {
   const [title, setTitle] = useState("");
   const [catSlug, setCatSlug] = useState("");
   const [content, setContent] = useState("");
+  const [imageUrl, setImageUrl] = useState<string>("")
 
   const [file, setFile] = useState<File>();
   const [imageObjectUrl, setImageObjectUrl] = useState<string | null>(null);
@@ -45,6 +47,7 @@ export default function WritePage() {
       },
     }
   )
+  console.log(imageUrl);
 
   const { data: session, status } = useSession();
 
@@ -58,32 +61,50 @@ export default function WritePage() {
     setImageObjectUrl(URL.createObjectURL(files[0]));
   }
 
-  const handleSubmit = async (e: SyntheticEvent) => {
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
-    const image = await uploadImage();
-    console.log("image is : ", image);
+    const image = await uploadImage(e);
+    console.log("image is : ", image, imageUrl);
 
-    if (title !== "" && content !== "" && catSlug !== "" && image) {
+
+
+
+    console.log(
+      title,
+      content,
+      catSlug,
+      slugify(title),
+      imageUrl,
+    )
+    if (title !== "" && content !== "" && catSlug !== "" && imageUrl) {
       await mutate({
         title,
         content,
         catSlug,
         slug: slugify(title),
-        image: image,
+        image: imageUrl,
       });
     }
   };
 
-  const uploadImage = async () => {
+  const uploadImage: FormEventHandler<HTMLFormElement> = async (e ) => {
     try {
-      if (!file) return;
 
-      const data = new FormData();
-      data.set("file", file);
+      const formData = new FormData(e.currentTarget);
+      const image = formData.get('image') as File;
+      console.log(formData);
+      const url = await uploadFile(formData);
+      setImageUrl(url);
+      return url
+      // if (!file) return;
 
-      const response = await axios.post("/api/upload", data);
-      return response.data;
+      // const data = new FormData();
+      // data.set("file", file);
+
+
+      // const response = await axios.post("/api/upload", file);
+      // return response.data;
 
     } catch (error) {
       console.error("Error in uploadImage : ", error);
@@ -100,56 +121,59 @@ export default function WritePage() {
   return (
     <main>
       <div className="p-10">
-        <PageTitle title="Write a new post" />
-        {/* Image */}
-        <div className="mb-6">
-          {imageObjectUrl && (
-            <div className="relative w-60 h-60 mx-auto mb-3 flex">
-              <Image
-                className="object-cover rounded-full"
-                src={imageObjectUrl}
-                fill
-                alt={title}
-              />
-            </div>
-          )}
-          <Input type="file" name="image" onChange={onChangeFile} />
-        </div>
-        {/* Title post */}
-        <Input
-          type="text"
-          placeholder="Title"
-          className="mb-6"
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        {/* Category / select */}
-        {isFetching ? <p>Loading categories</p> :
-          <Select onValueChange={(value) => setCatSlug(value)}>
-            <SelectTrigger>
-              <SelectValue placeholder="select a category" />
-            </SelectTrigger>
-            <SelectContent>
-              {categories.map((category: Category) => (
-                <SelectItem key={category.id} value={category.slug}>
-                  {category.title}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>}
-        {/* Content */}
-        <ReactQuill
-          className="mt-6"
-          placeholder="Write post content here..."
-          value={content}
-          onChange={setContent}
-        />
-        {/* Submit button */}
-        <Button disabled={isLoading} className="mt-6" onClick={handleSubmit}>
-          {isLoading ? "Creating..." : "Publish"}
-        </Button>
+        <form onSubmit={handleSubmit}>
+
+          <PageTitle title="Write a new post" />
+          {/* Image */}
+          <div className="mb-6">
+            {imageObjectUrl && (
+              <div className="relative w-60 h-60 mx-auto mb-3 flex">
+                <Image
+                  className="object-cover rounded-full"
+                  src={imageUrl ? imageUrl : imageObjectUrl}
+                  fill
+                  alt={title}
+                />
+              </div>
+            )}
+            <Input type="file" name="image" onChange={onChangeFile} />
+          </div>
+          {/* Title post */}
+          <Input
+            type="text"
+            placeholder="Title"
+            className="mb-6"
+            onChange={(e) => setTitle(e.target.value)}
+          />
+          {/* Category / select */}
+          {isFetching ? <p>Loading categories</p> :
+            <Select onValueChange={(value) => setCatSlug(value)}>
+              <SelectTrigger>
+                <SelectValue placeholder="select a category" />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map((category: Category) => (
+                  <SelectItem key={category.id} value={category.slug}>
+                    {category.title}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>}
+          {/* Content */}
+          <ReactQuill
+            className="mt-6"
+            placeholder="Write post content here..."
+            value={content}
+            onChange={setContent}
+          />
+          {/* Submit button */}
+          <Button disabled={isLoading} className="mt-6" type="submit" >
+            {isLoading ? "Creating..." : "Publish"}
+          </Button>
+        </form>
       </div>
     </main>
-    )
+  )
 }
 
 // "use client";

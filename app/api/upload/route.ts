@@ -13,7 +13,6 @@ export const POST = async (req: Request) => {
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
 
-  // const imageUrl = `/images/${Math.floor(Math.random() * 10001)}_${(new Date().toJSON().slice(0,10))}_${file.name}`;
   const imageUrl = `/images/${new Date().getTime()}_${file.name}`;
   const imagePath = path.join(process.cwd(), `/public${imageUrl}`);
 

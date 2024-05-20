@@ -18,7 +18,7 @@ type Props = {
 }
 
 const Article = ({ post }: Props) => {
-    console.log(post);
+    console.log(post.image);
 
     return (
         <Card className="flex flex-col justify-center items-between rounded-lg border-2 m-2 h-[100%] ">
@@ -26,7 +26,7 @@ const Article = ({ post }: Props) => {
                 <CardHeader>
                     <div className="aspect-square relative mb-2">
                         <Image
-                            src={`/images${post.image}`}
+                            src={`${post.image}`}
                             alt={post?.content}
                             fill
                             className="aspect-square object-cover transition-all duration-300 hover:scale-110"
