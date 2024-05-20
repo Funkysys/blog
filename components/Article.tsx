@@ -35,7 +35,7 @@ const Article = ({ post }: Props) => {
                     <CardTitle className="font-semibold text-md">{post.title}</CardTitle>
                     <CardDescription dangerouslySetInnerHTML={{
                             __html: post.content as string ? post.content.substring(0, 50) : ""
-                        }} />
+                        }}>{`...`}</CardDescription>
                 </CardHeader>
             </Link>
             <CardContent>
