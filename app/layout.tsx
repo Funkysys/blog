@@ -1,12 +1,11 @@
+import Footer from "@/components/Footer";
+import Header from "@/components/Header";
+import ThemeProviders from "@/providers/ThemeProviders";
+import AuthProvider from "@/providers/auth-provider";
+import QueryProvider from "@/providers/query-provider";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Link from "next/link";
-import Header from "@/components/Header";
-import ThemeProviders from "@/providers/ThemeProviders";
-import Footer from "@/components/Footer";
-import QueryProvider from "@/providers/query-provider";
-import AuthProvider from "@/providers/auth-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,8 +20,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" >
-      <body className={`${inter.className} flex flex-col flex-between min-h-screen mx-auto w-full max-w-7xl`}>
+    <html lang="en">
+      <head>
+        <title>Discophiles ! Share your favorite albums</title>
+        <meta
+          name="description"
+          content="Share your favorite albums with community of music lovers"
+        />
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link rel="stylesheet" />
+      </head>
+      <body
+        className={`${inter.className} flex flex-col flex-between min-h-screen mx-auto w-full max-w-7xl`}
+      >
         <QueryProvider>
           <AuthProvider>
             <ThemeProviders
