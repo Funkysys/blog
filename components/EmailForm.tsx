@@ -1,14 +1,15 @@
 "use client";
 
 import { emailSend } from "@/app/api/email/email.action";
+import { useEmails } from "@/hook/useEmail";
 import { FormEventHandler, useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 
-export type EmailFormProps = {};
-
-export const EmailForm = (props: EmailFormProps) => {
+export const EmailForm = () => {
   const [emailIsSend, setEmailIsSend] = useState(false);
+  const { data } = useEmails();
+  console.log(data);
 
   const submitEmail: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
