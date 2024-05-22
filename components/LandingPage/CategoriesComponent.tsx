@@ -8,7 +8,7 @@ import { Category } from '@/types';
 const CategoriesComponent = () => {
     const {data: categories} = useCategories();
     return (
-        <section className='gap-4 my-6 md:my-10 flex flex-col md:flex-row justify-center items-center border-t border-b py-4'>
+        <div className='gap-4 my-6 md:my-10 flex flex-col md:flex-row justify-center items-center border-t border-b py-4'>
             {
                 categories?.map((category: Category) => (
                     <Link
@@ -24,7 +24,7 @@ const CategoriesComponent = () => {
                     </Link>
                 ))
             }
-        </section>
+        </div>
     )
 }
 
