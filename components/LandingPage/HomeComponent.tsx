@@ -1,9 +1,6 @@
 import { Separator } from "@/components/ui/separator";
-import { SubscriptionsEmail } from "@/emails/index";
-import { resend } from "@/lib/resend";
 import { Disc } from "lucide-react";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
+import { EmailForm } from "../EmailForm";
 
 const HomeComponent = () => {
   return (
@@ -26,38 +23,7 @@ const HomeComponent = () => {
               DiscoPhiles
             </h1>
           </div>
-          <form
-            action={async (formData) => {
-              "use server";
-              const email = formData.get("email") as string;
-              console.log(formData);
-
-              await resend.emails.send({
-                from: "http://localhost:3000",
-                to: email,
-                subject: "Welcome to DiscoPhiles",
-                react: SubscriptionsEmail({
-                  subscriptions: "http://localhost:3000",
-                }),
-              });
-            }}
-          >
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              placeholder="Your email..."
-              className=" mt-5"
-              required
-            />
-            <Button
-              size="lg"
-              className="bg-red-800 dark:bg-amber-300 w-full py-6 text-xl mt-4"
-              type="submit"
-            >
-              Subscribe to our newsletter
-            </Button>
-          </form>
+          <EmailForm />
         </div>
       </div>
       <Separator />
