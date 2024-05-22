@@ -33,23 +33,28 @@ export const EmailForm = () => {
 
   const submitEmail: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
+    const formData = new FormData(e.currentTarget);
     const { data } = await axios.get(`/api/email/${email}`);
     setEmailExist(data ? true : false);
 
     if (emailExist) {
       return;
     }
-    if (emailExist && email.length > 0) {
-      try {
-        const formData = new FormData(e.currentTarget);
+    console.log(data);
+    console.log(emailExist);
+    console.log(email);
 
+    if (!emailExist && email.length > 0) {
+      try {
         await mutate({
           email: email,
         });
-        if (mutateEmail) {
-          const res = await emailSend(formData);
-          setEmailIsSend(true);
-        }
+        console.log(mutateEmail);
+
+        const res = await emailSend(formData);
+        console.log(res);
+
+        setEmailIsSend(true);
 
         return;
       } catch (error) {
