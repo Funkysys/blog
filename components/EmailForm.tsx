@@ -2,21 +2,41 @@
 
 import { emailSend } from "@/app/api/email/email.action";
 import { useEmails } from "@/hook/useEmail";
+import { Email } from "@prisma/client";
+import axios from "axios";
 import { FormEventHandler, useState } from "react";
+import { useMutation } from "react-query";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 
 export const EmailForm = () => {
   const [emailIsSend, setEmailIsSend] = useState(false);
+  const [emailExist, setEmailExist] = useState(false);
   const { data } = useEmails();
-  console.log(data);
+  const createEmail = (newEmail: Partial<Email>) =>
+    axios.post("/api/email", newEmail).then((res) => res.data);
+  const { mutate, isLoading } = useMutation(createEmail, {
+    onSuccess: (data: Email) => {
+      console.log(data);
+    },
+  });
 
   const submitEmail: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     try {
       const formData = new FormData(e.currentTarget);
-      console.log(formData);
 
+      if (
+        data?.find(
+          (email: { email: string }) =>
+            email.email === e.currentTarget.email.value
+        )
+      ) {
+        return setEmailExist(true);
+      }
+      await mutate({
+        email: e.currentTarget.email.value as string,
+      });
       const res = await emailSend(formData);
       console.log(res);
 
@@ -26,8 +46,12 @@ export const EmailForm = () => {
       console.error("Error in uploadImage : ", error);
     }
   };
-  console.log(emailIsSend);
-
+  if (emailExist)
+    return (
+      <div className="p-4 bg-gray-200 rounded-lg">
+        <p className="text-green-800">Email already exist !!!</p>
+      </div>
+    );
   if (emailIsSend)
     return (
       <div className="p-4 bg-gray-200 rounded-lg">
