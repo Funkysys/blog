@@ -17,8 +17,6 @@ interface SubscriptionsEmailProps {
   subscriptions: string;
 }
 
-const baseUrl = process.env.NEXTAUTH_URL ? `${process.env.NEXTAUTH_URL}` : "";
-
 export const SubscriptionsEmail = ({
   subscriptions,
 }: SubscriptionsEmailProps) => (

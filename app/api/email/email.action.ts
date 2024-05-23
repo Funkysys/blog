@@ -12,7 +12,7 @@ export const emailSend = async (formData: FormData) => {
     to: email,
     subject: "Welcome to DiscoPhiles",
     react: SubscriptionsEmail({
-      subscriptions: "http://localhost:3000",
+      subscriptions: process.env.NEXTAUTH_URL || "https://discophiles-blog.eu/",
     }),
   });
   console.log(emailSend);
