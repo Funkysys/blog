@@ -72,7 +72,7 @@ model Post {
   image String?
   nbView Int @default(0)
   nbComments Int @default(0)
-  comments Comment[]
+  comments Comment[] 
   // user
   user User @relation(fields: [userEmail, userName, userImage], references: [email, name, image])
   userEmail String
@@ -100,7 +100,7 @@ model Comment {
   userEmail String
   user User @relation(fields: [userEmail], references: [email])
   postSlug String
-  post Post @relation(fields: [postSlug], references: [slug])
+  post Post @relation(fields: [postSlug], references: [slug], onDelete: Cascade)
 }
 
 model Email {

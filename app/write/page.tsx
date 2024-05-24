@@ -63,7 +63,7 @@ export default function WritePage() {
     },
   });
 
-  const { data: session, status } = useSession();
+  const { status } = useSession();
 
   const onChangeFile = (e: SyntheticEvent) => {
     const files = (e.target as HTMLInputElement).files;
