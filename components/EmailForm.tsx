@@ -13,6 +13,7 @@ export const EmailForm = () => {
   const [emailIsSend, setEmailIsSend] = useState(false);
   const [emailExist, setEmailExist] = useState(false);
   const [loader, setLoader] = useState(false);
+  const [formData, setFormData] = useState<FormData>(new FormData());
 
   const createEmail = (newEmail: Partial<Email>) =>
     axios.post("/api/email", newEmail).then((res) => res.data);
@@ -23,7 +24,12 @@ export const EmailForm = () => {
     data: mutateEmail,
   } = useMutation(createEmail, {
     onSuccess: (data: Email) => {
-      console.log("Welcome to Discopholies !");
+      const sendingEmail = async () => {
+        const res = await emailSend(formData);
+        res && setEmailIsSend(true);
+        console.log("Welcome to Discopholies !");
+      };
+      sendingEmail();
     },
   });
 
@@ -33,7 +39,7 @@ export const EmailForm = () => {
 
   const submitEmail: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
+    setFormData(new FormData(e.currentTarget));
     const { data } = await axios.get(`/api/email/${email}`);
     await setEmailExist(data ? true : false);
 
@@ -46,8 +52,6 @@ export const EmailForm = () => {
           email: email,
         });
         if (mutateEmail) {
-          const res = await emailSend(formData);
-          setEmailIsSend(true);
         }
 
         return;
