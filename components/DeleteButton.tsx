@@ -1,5 +1,6 @@
+"use client";
 import { deletePost } from "@/app/api/posts/[slug]/deletePost.action";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "./ui/button";
 
