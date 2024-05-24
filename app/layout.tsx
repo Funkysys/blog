@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" >
-      <body className={`${inter.className} flex flex-col flex-between min-h-screen mx-auto w-full max-w-7xl`}>
+      <body className={`${inter.className} flex flex-col flex-between min-h-screen mx-auto w-full md:w-[70%]`}>
         <QueryProvider>
           <AuthProvider>
             <ThemeProviders

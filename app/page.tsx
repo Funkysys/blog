@@ -20,7 +20,7 @@ export default function Home() {
       <section className=" ">
         <CategoriesComponent />
       </section>
-      <section className="h-[100vh] ">
+      <section className="md:h-[100vh] ">
         <ArticlesListComponent slug={""}/>
       </section>
     </main>
