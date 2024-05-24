@@ -33,16 +33,15 @@ export const EmailForm = () => {
 
   const submitEmail: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
+    const formData = new FormData(e.currentTarget);
     const { data } = await axios.get(`/api/email/${email}`);
-    setEmailExist(data ? true : false);
+    await setEmailExist(data ? true : false);
 
     if (emailExist) {
       return;
     }
-    if (emailExist && email.length > 0) {
+    if (!emailExist && email.length > 0) {
       try {
-        const formData = new FormData(e.currentTarget);
-
         await mutate({
           email: email,
         });
