@@ -51,7 +51,7 @@ const PostsPage = ({ params }: Props) => {
         </div>
         {session && session.user?.email === post.userEmail && (
           <div className="w-full relative top-2 left-2">
-            <DeleteButton url={`/api/posts/${post.slug}`} id={post.id} />
+            <DeleteButton id={post.id} />
           </div>
         )}
         <div className="flex items-center pt-4">
