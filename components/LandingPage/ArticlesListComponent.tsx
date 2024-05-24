@@ -22,14 +22,14 @@ const ArticlesListComponent = ({ slug }: Props) => {
 
     <>
     <PageTitle title={slug} />
-      <section className='gap-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-col-5'>
+      <div className='gap-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-col-5'>
         {posts?.map((post: PostWithCategory) => (
           <Article
             key={post.id}
             post={post}
           />
         ))}
-      </section>
+      </div>
     </>
   )
 }

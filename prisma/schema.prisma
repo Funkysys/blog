@@ -94,3 +94,9 @@ model Comment {
   postSlug String
   post Post @relation(fields: [postSlug], references: [slug])
 }
+
+model Email {
+  id String @id @default(cuid())
+  createdAt DateTime @default(now())
+  email String @unique
+}
