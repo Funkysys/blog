@@ -1,7 +1,6 @@
 import HomeComponent from "@/components/LandingPage/HomeComponent";
 import CategoriesComponent from "@/components/LandingPage/CategoriesComponent";
 import ArticlesListComponent from "@/components/LandingPage/ArticlesListComponent";
-import { POSTS } from "@/utils/posts";
 
 export default function Home() {
   
