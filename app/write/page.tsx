@@ -1,16 +1,10 @@
 "use client";
 
+import { DatePickerDemo } from "@/components/DatePicker";
 import PageTitle from "@/components/PageTitle";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useCategories } from "@/hook/useCategories";
-import { Category, Post } from "@prisma/client";
+import { Post } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import {
@@ -20,7 +14,6 @@ import {
   useLayoutEffect,
   useState,
 } from "react";
-
 import "react-quill/dist/quill.snow.css";
 
 import dynamic from "next/dynamic";
@@ -34,6 +27,8 @@ import { slugify } from "@/utils/slugify";
 import axios from "axios";
 import Image from "next/image";
 import { useMutation } from "react-query";
+import Select from "react-select";
+import CreatableSelect from "react-select/creatable";
 import { uploadFile } from "../api/upload/upload.action";
 
 export default function WritePage() {
@@ -42,6 +37,12 @@ export default function WritePage() {
   const [content, setContent] = useState("");
   const [imageUrl, setImageUrl] = useState<string>("");
   const [isSubmit, setIsSubmit] = useState(false);
+  const [artist, setArtist] = useState("");
+  const [team, setTeam] = useState<string[]>([]);
+  const [tempTrack, setTempTrack] = useState<string>("");
+  const [links, setLinks] = useState<string[]>([]);
+  const [tempLink, setTempLink] = useState<string>("");
+  const [date, setDate] = useState<Date | null>(null);
 
   const [file, setFile] = useState<File>();
   const [imageObjectUrl, setImageObjectUrl] = useState<string | null>(null);
@@ -90,6 +91,7 @@ export default function WritePage() {
         content !== "" &&
         catSlug !== "" &&
         imageUrl !== "" &&
+        artist !== "" &&
         !createPostData
       ) {
         await mutate({
@@ -98,11 +100,24 @@ export default function WritePage() {
           catSlug,
           slug: slugify(title),
           image: imageUrl,
+          release: date,
         });
       }
     };
     submitDatas();
-  }, [isSubmit, title, content, catSlug, imageUrl, mutate, createPostData]);
+  }, [
+    isSubmit,
+    title,
+    content,
+    catSlug,
+    imageUrl,
+    mutate,
+    createPostData,
+    artist,
+    date,
+    links,
+    team,
+  ]);
 
   const uploadImage: FormEventHandler<HTMLFormElement> = async (e) => {
     try {
@@ -120,6 +135,17 @@ export default function WritePage() {
       return;
     }
   }, [router, status]);
+
+  const handleOnChangeTeam = (data: any) => {
+    setTeam(data);
+  };
+  const handleOnChangeTracks = (data: any) => {
+    setTeam(data);
+  };
+  const handleOnChangeLinks = (data: any) => {
+    setTeam(data);
+  };
+  console.log(categories);
 
   return (
     <main>
@@ -147,22 +173,71 @@ export default function WritePage() {
             className="mb-6"
             onChange={(e) => setTitle(e.target.value)}
           />
+          <Input
+            type="text"
+            placeholder="Artist"
+            className="mb-6"
+            onChange={(e) => setArtist(e.target.value)}
+          />
+          <div className="flex flex-col gap-3 mb-5">
+            <label htmlFor="team">Team :</label>
+            <CreatableSelect
+              isClearable
+              isMulti
+              onChange={handleOnChangeTeam}
+            />
+            <label htmlFor="tracks">Tracks :</label>
+            <CreatableSelect
+              isClearable
+              isMulti
+              onChange={handleOnChangeTracks}
+            />
+            <label htmlFor="Links">Links :</label>
+
+            {/* Affecté link's name et link's url puis dupliquer onClick */}
+
+            <div className="grid md:grid-cols-2 gap-2">
+              <Input
+                type="text"
+                placeholder="Link's name"
+                onChange={(e) => setTempLink(e.target.value)}
+              />
+              <Input
+                type="text"
+                placeholder="Link's url"
+                onChange={(e) => setTempLink(e.target.value)}
+              />
+            </div>
+            <div className="flex mb-5">
+              <Button onClick={() => {}}>Add Another Link ?</Button>
+            </div>
+          </div>
+          <div className="mb-5">
+            <DatePickerDemo setDate={setDate} date={date} />
+          </div>
           {/* Category / select */}
           {isFetching ? (
             <p>Loading categories</p>
           ) : (
-            <Select onValueChange={(value) => setCatSlug(value)}>
-              <SelectTrigger>
-                <SelectValue placeholder="select a category" />
-              </SelectTrigger>
-              <SelectContent>
-                {categories.map((category: Category) => (
-                  <SelectItem key={category.id} value={category.slug}>
-                    {category.title}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="text-slate-800">
+              <Select
+                options={categories.map((el: { id: string; title: string }) => {
+                  return {
+                    id: el.id,
+                    value: el.title,
+                    label: el.title,
+                  };
+                })}
+                onChange={(
+                  newValue: { slug: string } | null,
+                  actionMeta: any
+                ) => {
+                  if (newValue) {
+                    setCatSlug(newValue.slug);
+                  }
+                }}
+              />
+            </div>
           )}
           {/* Content */}
           <ReactQuill
