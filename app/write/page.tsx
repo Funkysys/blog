@@ -211,17 +211,22 @@ export default function WritePage() {
                 />
               </div>
             )}
-            <label htmlFor="image" className="text-slate-50 mb-3">
-              Image (optional) :
-            </label>
-            <p>Upload an image or paste an image url </p>
-            <Input type="file" name="image" onChange={onChangeFile} />
-            <Input
-              type="string"
-              name="imageUrl"
-              placeholder="Image url"
-              onChange={(e) => setImageUrl(e.target.value)}
-            />
+            <div className="flex flex-col gap-2">
+              <label htmlFor="image" className="text-slate-50 mb-3">
+                Image (optional) :
+              </label>
+              <p className="text-slate-400 text-sm">Upload an image </p>
+              <Input type="file" name="image" onChange={onChangeFile} />
+              <p className="text-slate-400 text-sm">
+                Upload an image or paste an image url{" "}
+              </p>
+              <Input
+                type="string"
+                name="imageUrl"
+                placeholder="Image url"
+                onChange={(e) => setImageUrl(e.target.value)}
+              />
+            </div>
           </div>
           {/* Title post */}
 

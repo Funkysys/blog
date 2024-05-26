@@ -45,7 +45,7 @@ const PostsPage = ({ params }: Props) => {
         ) : (
           <div
             className="rounded-full border-2 border-gray-500 aspect-square md:aspect-[1/1] overflow-hidden bg-cover w-[30%] m-auto p-6"
-            style={{ backgroundImage: `url(/img/img.jpg)` }}
+            style={{ backgroundImage: `url(/img/disque.jpg)` }}
           />
         )}
       </section>
