@@ -6,20 +6,36 @@ export type Category = {
   slug: string;
   description: string;
 };
+type Track = {
+  id: string;
+  name: string;
+  number: string;
+};
+
+type Link = {
+  id: string;
+  name: string;
+  url: string;
+};
 
 export type Post = {
-  id: number;
-  category: string;
+  id: string;
   title: string;
-  image: string;
-  caption: string;
-  date: string | Date;
-  minutesToRead: number;
-  author: string;
-  nbViews: number;
-  nbComments: number;
   slug: string;
-  content?: string;
+  content: string;
+  image: string;
+  nbView: number;
+  nbComments: number;
+  userEmail: string;
+  userName: string;
+  userImage: string;
+  catSlug: string;
+  catTitle: string;
+  artist: string;
+  team: string[];
+  trackList: Track[];
+  links: Link[];
+  createdAt: string;
 };
 
 export type PostWithCategory = Prisma.PostGetPayload<{

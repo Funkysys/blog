@@ -13,12 +13,15 @@ export const GET = async (req: Request) => {
         ...(catSlug && catSlug !== "null" && catSlug !== "" && { catSlug }),
       },
       include: {
-        cat: true
+        cat: true,
       },
     });
     return NextResponse.json(posts, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Something went wrong" },
+      { status: 500 }
+    );
   }
 };
 
@@ -27,7 +30,10 @@ export const POST = async (req: Request) => {
     const session = await getAuthSession();
 
     if (!session || !session.user) {
-      return NextResponse.json({ message: "You are not authorized" }, { status: 403 });
+      return NextResponse.json(
+        { message: "You are not authorized" },
+        { status: 403 }
+      );
     }
 
     const body = await req.json();
@@ -36,21 +42,30 @@ export const POST = async (req: Request) => {
       content: body.content,
       slug: body.slug,
       catSlug: body.catSlug,
-      image: body.image, 
-      userEmail: session.user.email || "", 
-      userName: session.user.name || "", 
-      userImage: session.user.image || "" 
-    }
+      catTitle: body.catTitle,
+      image: body.image,
+      userEmail: session.user.email || "",
+      userName: session.user.name || "",
+      userImage: session.user.image || "",
+      release: body.release,
+      artist: body.artist,
+      team: body.team,
+      trackList: body.trackList,
+      links: body.links,
+    };
     const post = await prisma.post.create({
       data: {
-        ...dataFromBody
+        ...dataFromBody,
       },
-    })
+    });
 
     return NextResponse.json(post, { status: 200 });
   } catch (error) {
     console.log(error);
 
-    return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Something went wrong" },
+      { status: 500 }
+    );
   }
 };

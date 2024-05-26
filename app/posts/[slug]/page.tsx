@@ -18,23 +18,6 @@ type Props = {
   };
 };
 
-type Post = {
-  id: string;
-  title: string;
-  userEmail: string;
-  userImage: string;
-  userName: string;
-  createdAt: string;
-  image: string;
-  nbComments: number;
-  nbView: number;
-  artiste: string;
-  team: string[];
-  trackList: string[];
-  links: { [key: string]: string }[];
-  content: string;
-};
-
 const PostsPage = ({ params }: Props) => {
   const { data: session } = useSession();
   const { slug } = params;
@@ -58,6 +41,7 @@ const PostsPage = ({ params }: Props) => {
 
   if (isFetching) return <p>Loading...</p>;
   if (error) return <p>Error!</p>;
+  console.log(post);
 
   return post ? (
     <main className="flex flex-col flex-grow justify-center py-10 px-4">
@@ -104,7 +88,7 @@ const PostsPage = ({ params }: Props) => {
       <Separator />
       <section className="mt-10 dark:text-slate-200">
         <h3 className="dark:text-slate-300">
-          Artistes/Band: <span className="text-slate-200">{post.artiste}</span>
+          Artistes/Band: <span className="text-slate-200">{post.artist}</span>
         </h3>
         <div className="mt-3">
           <div className="flex gap-2">
@@ -120,28 +104,33 @@ const PostsPage = ({ params }: Props) => {
           <div className="flex gap-2">
             <h3>Tracks: </h3>
             <div>
-              {post.trackList.map((track) => (
-                <p key={track}>{track}</p>
-              ))}
+              {post?.trackList?.map(
+                (track) =>
+                  track && (
+                    <div key={track.id} className="flex gap-3">
+                      <p> - {track.number} -</p>
+                      <p>{track.name}</p>
+                    </div>
+                  )
+              )}
             </div>
           </div>
         </div>
         <div className="mt-3">
           <div className="flex gap-2">
             <h3>Links: </h3>
-            <div>
-              {linksArray.map((link, index) =>
-                Object.keys(link).map((key) => (
-                  <p key={`${index}-${key}`}>
-                    {key}:
+            <div className="flex flex-col gap-2">
+              {post?.links?.map(
+                (track) =>
+                  track && (
                     <Link
-                      href={link[key]}
-                      className="text-blue-500 hover:underline"
+                      key={track.id}
+                      href={track.url}
+                      className="text-blue-400 hover:underline"
                     >
-                      <span> {link[key]}</span>
+                      {track.name}
                     </Link>
-                  </p>
-                ))
+                  )
               )}
             </div>
           </div>

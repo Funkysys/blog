@@ -4,13 +4,12 @@ import { DatePickerDemo } from "@/components/DatePicker";
 import PageTitle from "@/components/PageTitle";
 import { Input } from "@/components/ui/input";
 import { useCategories } from "@/hook/useCategories";
-import { Post } from "@prisma/client";
+import { Post, Prisma } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import {
   FormEventHandler,
   SyntheticEvent,
-  useEffect,
   useLayoutEffect,
   useState,
 } from "react";
@@ -31,6 +30,17 @@ import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
 import { uploadFile } from "../api/upload/upload.action";
 
+type Link = {
+  id: number;
+  name: string;
+  url: string;
+};
+type Track = {
+  id: number;
+  name: string;
+  number?: string;
+};
+
 export default function WritePage() {
   const [title, setTitle] = useState("");
   const [catSlug, setCatSlug] = useState("");
@@ -39,9 +49,12 @@ export default function WritePage() {
   const [isSubmit, setIsSubmit] = useState(false);
   const [artist, setArtist] = useState("");
   const [team, setTeam] = useState<string[]>([]);
-  const [tempTrack, setTempTrack] = useState<string>("");
-  const [links, setLinks] = useState<string[]>([]);
-  const [tempLink, setTempLink] = useState<string>("");
+  const [trackList, setTrackList] = useState<Prisma.JsonArray>([]);
+  const [tracks, setTracks] = useState<Track[]>([{ id: 1, name: "" }]);
+  const [links, setLinks] = useState<Prisma.JsonArray>([]);
+  const [tempLink, setTempLink] = useState<Link[]>([
+    { id: 1, name: "", url: "" },
+  ]);
   const [date, setDate] = useState<Date | null>(null);
 
   const [file, setFile] = useState<File>();
@@ -75,49 +88,43 @@ export default function WritePage() {
     setImageObjectUrl(URL.createObjectURL(files[0]));
   };
 
+  console.log(team, tempLink, tracks);
+
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
     const image = await uploadImage(e);
 
-    setIsSubmit(true);
-  };
+    setLinks(tempLink as Prisma.JsonArray);
 
-  useEffect(() => {
-    const submitDatas = async () => {
-      if (
-        isSubmit &&
-        title !== "" &&
-        content !== "" &&
-        catSlug !== "" &&
-        imageUrl !== "" &&
-        artist !== "" &&
-        !createPostData
-      ) {
-        await mutate({
-          title,
-          content,
-          catSlug,
-          slug: slugify(title),
-          image: imageUrl,
-          release: date,
-        });
-      }
-    };
-    submitDatas();
-  }, [
-    isSubmit,
-    title,
-    content,
-    catSlug,
-    imageUrl,
-    mutate,
-    createPostData,
-    artist,
-    date,
-    links,
-    team,
-  ]);
+    console.log({
+      title,
+      content,
+      catSlug,
+      catTitle: catSlug,
+      slug: slugify(title),
+      image: imageUrl,
+      release: date,
+      artist,
+      team,
+      trackList: trackList,
+      links: links,
+    });
+
+    await mutate({
+      title,
+      content,
+      catSlug: slugify(catSlug),
+      catTitle: catSlug,
+      slug: slugify(title),
+      image: imageUrl,
+      release: date,
+      artist,
+      team,
+      trackList: trackList,
+      links: links,
+    });
+  };
 
   const uploadImage: FormEventHandler<HTMLFormElement> = async (e) => {
     try {
@@ -137,15 +144,54 @@ export default function WritePage() {
   }, [router, status]);
 
   const handleOnChangeTeam = (data: any) => {
-    setTeam(data);
+    setTeam(data.map((el: { value: string }) => el.value as string));
   };
-  const handleOnChangeTracks = (data: any) => {
-    setTeam(data);
+  const handleOnChangeTrackName = (data: any, el: Track) => {
+    const tempTracks = tracks.map((item) => {
+      if (item.id === el.id) {
+        return { ...item, name: data.target.value };
+      }
+      return item;
+    });
+    setTracks(tempTracks);
   };
-  const handleOnChangeLinks = (data: any) => {
-    setTeam(data);
+  const handleOnChangeTrackNumber = (data: any, el: Track) => {
+    const tempTracks = tracks.map((item) => {
+      if (item.id === el.id) {
+        return { ...item, number: data.target.value };
+      }
+      return item;
+    });
+    setTracks(tempTracks);
+    setTrackList(tempTracks as Prisma.JsonArray);
   };
-  console.log(categories);
+  const handleOnChangeLinkName = (data: any, el: Link) => {
+    console.log(data.target.value);
+    const tempLinkName = tempLink.map((item) => {
+      if (item.id === el.id) {
+        return { ...item, name: data.target.value };
+      }
+      return item;
+    });
+    setTempLink(tempLinkName);
+    setLinks(tempLinkName as Prisma.JsonArray);
+  };
+  const handleOnChangeLinkUrl = (data: any, el: Link) => {
+    const tempLinkUrl = tempLink.map((item) => {
+      if (item.id === el.id) {
+        return { ...item, url: data.target.value };
+      }
+      return item;
+    });
+    setTempLink(tempLinkUrl);
+  };
+
+  const AddNewLink = () => {
+    setTempLink([...tempLink, { id: tempLink.length + 1, name: "", url: "" }]);
+  };
+  const AddNewTrack = () => {
+    setTracks([...tracks, { id: tempLink.length + 1, name: "" }]);
+  };
 
   return (
     <main>
@@ -164,62 +210,138 @@ export default function WritePage() {
                 />
               </div>
             )}
+            <label htmlFor="image" className="text-slate-50 mb-3">
+              Image (optional) :
+            </label>
+            <p>if no image upload, we use first link image</p>
             <Input type="file" name="image" onChange={onChangeFile} />
           </div>
           {/* Title post */}
+
+          <label htmlFor="artist" className="text-slate-50 mb-3">
+            Artists or Band :
+          </label>
+          <Input
+            type="text"
+            placeholder="Artist or band"
+            className="mb-6"
+            onChange={(e) => setArtist(e.target.value)}
+          />
+
+          <label htmlFor="title" className="text-slate-50 mb-3">
+            Title :
+          </label>
           <Input
             type="text"
             placeholder="Title"
             className="mb-6"
             onChange={(e) => setTitle(e.target.value)}
           />
-          <Input
-            type="text"
-            placeholder="Artist"
-            className="mb-6"
-            onChange={(e) => setArtist(e.target.value)}
-          />
+
           <div className="flex flex-col gap-3 mb-5">
-            <label htmlFor="team">Team :</label>
+            <label htmlFor="team" className="mb-3">
+              Team :
+            </label>
             <CreatableSelect
               isClearable
               isMulti
               onChange={handleOnChangeTeam}
             />
-            <label htmlFor="tracks">Tracks :</label>
-            <CreatableSelect
-              isClearable
-              isMulti
-              onChange={handleOnChangeTracks}
-            />
-            <label htmlFor="Links">Links :</label>
-
-            {/* Affecté link's name et link's url puis dupliquer onClick */}
-
-            <div className="grid md:grid-cols-2 gap-2">
-              <Input
-                type="text"
-                placeholder="Link's name"
-                onChange={(e) => setTempLink(e.target.value)}
-              />
-              <Input
-                type="text"
-                placeholder="Link's url"
-                onChange={(e) => setTempLink(e.target.value)}
-              />
-            </div>
+            <label htmlFor="Links" className="underline mb-3">
+              Tracks
+            </label>
+            {tracks.map((el, index) => (
+              <div key={index} className="grid md:grid-cols-2 gap-2">
+                <div>
+                  <label
+                    htmlFor="name"
+                    id="name"
+                    className="text-sm text-slate-400 mb-3"
+                  >
+                    Name :
+                  </label>
+                  <Input
+                    type="text"
+                    placeholder="Track's name"
+                    onChange={(data) => handleOnChangeTrackName(data, el)}
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="number"
+                    id="number"
+                    className="text-sm text-slate-400 mb-3"
+                  >
+                    track number :
+                  </label>
+                  <Input
+                    type="number"
+                    placeholder="Track's number"
+                    onChange={(data) => handleOnChangeTrackNumber(data, el)}
+                  />
+                </div>
+              </div>
+            ))}
             <div className="flex mb-5">
-              <Button onClick={() => {}}>Add Another Link ?</Button>
+              <Button type="button" onClick={AddNewTrack}>
+                Add Another Track ?
+              </Button>
+            </div>
+            <label htmlFor="Links" className="underline mb-3">
+              Links{" "}
+            </label>
+            {tempLink.map((el: Link, index) => (
+              <div key={index} className="grid md:grid-cols-2 gap-2">
+                <div>
+                  <label
+                    htmlFor="name"
+                    id="name"
+                    className="text-sm text-slate-400 mb-3"
+                  >
+                    Name :
+                  </label>
+                  <Input
+                    type="text"
+                    placeholder="Link's name"
+                    onChange={(data) => handleOnChangeLinkName(data, el)}
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="link"
+                    id="link"
+                    className="text-sm text-slate-400 mb-3"
+                  >
+                    Link :
+                  </label>
+                  <Input
+                    type="text"
+                    placeholder="Link's url"
+                    onChange={(data) => handleOnChangeLinkUrl(data, el)}
+                  />
+                </div>
+              </div>
+            ))}
+            <div className="flex mb-5">
+              <Button type="button" onClick={AddNewLink}>
+                Add Another Link ?
+              </Button>
             </div>
           </div>
-          <div className="mb-5">
+          <div className="flex flex-col mb-5">
+            <label htmlFor="date" className="mb-3">
+              Release :{" "}
+            </label>
             <DatePickerDemo setDate={setDate} date={date} />
           </div>
           {/* Category / select */}
           {isFetching ? (
             <p>Loading categories</p>
           ) : (
-            <div className="text-slate-800">
+            <div className="text-slate-800 mb-10">
+              <label htmlFor="category" className="text-slate-50 mb-3">
+                Category
+              </label>
               <Select
                 options={categories.map((el: { id: string; title: string }) => {
                   return {
@@ -229,19 +351,17 @@ export default function WritePage() {
                   };
                 })}
                 onChange={(
-                  newValue: { slug: string } | null,
-                  actionMeta: any
-                ) => {
-                  if (newValue) {
-                    setCatSlug(newValue.slug);
-                  }
-                }}
+                  newValue: { id: number; value: string; label: string } | null
+                ) => newValue?.value && setCatSlug(newValue?.value)}
               />
             </div>
           )}
           {/* Content */}
+          <label htmlFor="content" className="text-slate-50">
+            Why do you like this album ?
+          </label>
           <ReactQuill
-            className="mt-6"
+            className="mt-3"
             placeholder="Write post content here..."
             value={content}
             onChange={setContent}

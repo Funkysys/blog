@@ -80,13 +80,13 @@ model Post {
   userImage String
   // category
   catSlug String
-  catTitle String?
-  cat Category? @relation(fields: [catSlug, catTitle], references: [slug, title])
-  artiste String?
+  catTitle String
+  cat Category @relation(fields: [catSlug, catTitle], references: [slug, title])
+  artist String?
   team String[]
-  trackList String[]
+  trackList Json[]
   release DateTime?
-  links Json?
+  links Json[]
 
   // @@unique([userEmail, userName, userImage])
 }
