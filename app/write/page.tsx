@@ -184,6 +184,7 @@ export default function WritePage() {
       return item;
     });
     setTempLink(tempLinkUrl);
+    setLinks(tempLinkUrl as Prisma.JsonArray);
   };
 
   const AddNewLink = () => {
@@ -213,8 +214,14 @@ export default function WritePage() {
             <label htmlFor="image" className="text-slate-50 mb-3">
               Image (optional) :
             </label>
-            <p>if no image upload, we use first link image</p>
+            <p>Upload an image or paste an image url </p>
             <Input type="file" name="image" onChange={onChangeFile} />
+            <Input
+              type="string"
+              name="imageUrl"
+              placeholder="Image url"
+              onChange={(e) => setImageUrl(e.target.value)}
+            />
           </div>
           {/* Title post */}
 

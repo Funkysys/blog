@@ -53,6 +53,8 @@ export const POST = async (req: Request) => {
       trackList: body.trackList,
       links: body.links,
     };
+    console.log(dataFromBody);
+
     const post = await prisma.post.create({
       data: {
         ...dataFromBody,

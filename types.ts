@@ -36,6 +36,7 @@ export type Post = {
   trackList: Track[];
   links: Link[];
   createdAt: string;
+  release: string;
 };
 
 export type PostWithCategory = Prisma.PostGetPayload<{

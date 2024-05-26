@@ -10,7 +10,6 @@ import { usePost } from "@/hook/usePost";
 import { Eye, MessageCircle } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 type Props = {
   params: {
@@ -21,23 +20,10 @@ type Props = {
 const PostsPage = ({ params }: Props) => {
   const { data: session } = useSession();
   const { slug } = params;
-  const [linksArray, setLinksArray] = useState<{ [key: string]: string }[]>([]);
 
   const { data: post, isFetching, error } = usePost(slug);
 
-  useEffect(() => {
-    if (post && Array.isArray(post.links)) {
-      const validLinks = post.links.filter(
-        (link) =>
-          typeof link === "object" &&
-          link !== null &&
-          !Array.isArray(link) &&
-          Object.values(link).every((value) => typeof value === "string")
-      ) as { [key: string]: string }[];
-
-      setLinksArray(validLinks);
-    }
-  }, [post]);
+  const releaseDate = post ? new Date(post.release).toLocaleDateString() : "";
 
   if (isFetching) return <p>Loading...</p>;
   if (error) return <p>Error!</p>;
@@ -135,16 +121,22 @@ const PostsPage = ({ params }: Props) => {
             </div>
           </div>
         </div>
+        <div>
+          <h3 className="mt-5">Release: {releaseDate}</h3>
+        </div>
         <Link href={post.catSlug}>
           category :{" "}
           <Button variant={"outline"} className="my-5 dark:text-slate-50">
             {post.catTitle}
           </Button>
         </Link>
-        <div
-          className="mt-5 dark:text-slate-50"
-          dangerouslySetInnerHTML={{ __html: post.content || "" }}
-        />
+        <div className="border-2 border-slate-100 rounded-lg p-4">
+          <h3 className="underline italic">Why this album :</h3>
+          <div
+            className="mt-5 dark:text-slate-300 text-sm"
+            dangerouslySetInnerHTML={{ __html: post.content || "" }}
+          />
+        </div>
         <Comments postSlug={slug} />
       </section>
     </main>
