@@ -7,15 +7,23 @@ export const GET = async (req: Request) => {
   try {
     const { searchParams } = new URL(req.url);
     const catSlug = searchParams.get("cat");
+    const page: number = Number(searchParams.get("page"));
+    console.log("page", page);
 
     const posts = await prisma.post.findMany({
+      skip: page * 6,
+      take: 6,
       where: {
         ...(catSlug && catSlug !== "null" && catSlug !== "" && { catSlug }),
       },
       include: {
         cat: true,
       },
+      orderBy: {
+        release: "asc",
+      },
     });
+
     return NextResponse.json(posts, { status: 200 });
   } catch (error) {
     return NextResponse.json(

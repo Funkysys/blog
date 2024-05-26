@@ -1,31 +1,63 @@
 "use client";
 import { usePosts } from "@/hook/usePosts";
 import { PostWithCategory } from "@/types";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 import Article from "../Article";
 import PageTitle from "../PageTitle";
+import { Button } from "../ui/button";
 
 type Props = {
   slug: string;
 };
 
 const ArticlesListComponent = ({ slug }: Props) => {
-  const { data: posts, isFetching, error } = usePosts(slug && slug);
-  const router = useRouter();
+  const [page, setPage] = useState(0);
+  const { data: posts, isFetching } = usePosts(slug && slug, page);
 
-  // if (posts && posts?.length === 0 ) {
-  //   router.push("/not-found")
-  // }
+  const nextPageFunc = () => {
+    setPage((prev) => prev + 1);
+    // refetch();
+  };
+  const previousPageFunc = () => {
+    setPage((prev) => prev - 1);
+    // refetch();
+  };
+  console.log(posts);
 
   return (
-    <>
+    <div className="flex flex-col justify-center">
       <PageTitle title={slug} />
-      <div className="gap-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-col-4">
-        {posts?.map((post: PostWithCategory) => (
-          <Article key={post.id} post={post} />
-        ))}
+
+      <div className="min-hh-[90vh] gap-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-col-4">
+        {isFetching ? (
+          <p>Loading...</p>
+        ) : (
+          <>
+            {posts.length > 0 ? (
+              <>
+                {posts?.map((post: PostWithCategory) => (
+                  <Article key={post.id} post={post} />
+                ))}
+              </>
+            ) : (
+              <div className="h-[90vh] p-5">
+                <p>No posts found</p>
+              </div>
+            )}
+          </>
+        )}
       </div>
-    </>
+      <div className=" relative bottom-2 m-auto w-full flex justify-center gap-3 mt-5">
+        {page > 0 && (
+          <Button variant="outline" type="button" onClick={previousPageFunc}>
+            Previous
+          </Button>
+        )}
+        <Button variant="outline" type="button" onClick={nextPageFunc}>
+          Next ALbums
+        </Button>
+      </div>
+    </div>
   );
 };
 
