@@ -27,7 +27,6 @@ const PostsPage = ({ params }: Props) => {
 
   if (isFetching) return <p>Loading...</p>;
   if (error) return <p>Error!</p>;
-  console.log(post);
 
   return post ? (
     <main className="flex flex-col flex-grow justify-center py-10 px-4">
@@ -38,10 +37,17 @@ const PostsPage = ({ params }: Props) => {
             <DeleteButton id={post.id} />
           )}
         </div>
-        <div
-          className="rounded-full border-2 border-gray-500 aspect-square md:aspect-[1/1] overflow-hidden bg-cover w-[30%] m-auto p-6"
-          style={{ backgroundImage: `url(${post.image})` }}
-        />
+        {post.image ? (
+          <div
+            className="rounded-full border-2 border-gray-500 aspect-square md:aspect-[1/1] overflow-hidden bg-cover w-[30%] m-auto p-6"
+            style={{ backgroundImage: `url(${post.image})` }}
+          />
+        ) : (
+          <div
+            className="rounded-full border-2 border-gray-500 aspect-square md:aspect-[1/1] overflow-hidden bg-cover w-[30%] m-auto p-6"
+            style={{ backgroundImage: `url(/img/img.jpg)` }}
+          />
+        )}
       </section>
       <section className="flex justify-between items-center p-5 mb-5 ">
         <div className="flex justify-center items-center gap-3 mt-5">
