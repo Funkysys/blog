@@ -7,6 +7,7 @@ import { FormEventHandler, useState } from "react";
 import { useMutation } from "react-query";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
+import { BounceLoader } from "react-spinners";
 
 export const EmailForm = () => {
   const [email, setEmail] = useState("");
@@ -77,8 +78,8 @@ export const EmailForm = () => {
     );
   if (isLoading)
     return (
-      <div className="p-4 mt-2 bg-gray-200 rounded-lg">
-        <p className="text-green-800">Something happens...</p>
+      <div className="h-[90vh] flex flx-col item-center justify-center">
+        <BounceLoader color="#36d7b7" />
       </div>
     );
   return (

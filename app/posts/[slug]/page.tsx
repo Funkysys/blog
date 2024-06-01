@@ -3,6 +3,7 @@
 import Comments from "@/components/Comments";
 import { DeleteButton } from "@/components/DeleteButton";
 import PageTitle from "@/components/PageTitle";
+import { UpdateButton } from "@/components/UpdateButton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -10,6 +11,7 @@ import { usePost } from "@/hook/usePost";
 import { Eye, MessageCircle } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { BounceLoader } from "react-spinners";
 
 type Props = {
   params: {
@@ -25,7 +27,12 @@ const PostsPage = ({ params }: Props) => {
 
   const releaseDate = post ? new Date(post.release).toLocaleDateString() : "";
 
-  if (isFetching) return <p>Loading...</p>;
+  if (isFetching)
+    return (
+      <div className="h-[90vh] flex flx-col item-center justify-center">
+        <BounceLoader color="#36d7b7" />
+      </div>
+    );
   if (error) return <p>Error!</p>;
 
   return post ? (
@@ -34,7 +41,10 @@ const PostsPage = ({ params }: Props) => {
         <div className="flex justify-center items-center m-auto mb-10 mt-3 gap-4">
           <PageTitle title={post.title} />
           {session && session.user?.email === post.userEmail && (
-            <DeleteButton id={post.id} />
+            <>
+              <DeleteButton id={post.id} />
+              <UpdateButton slug={slug} />
+            </>
           )}
         </div>
         {post.image ? (

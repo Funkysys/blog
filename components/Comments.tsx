@@ -12,6 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 import { Textarea } from "./ui/textarea";
+import { BounceLoader } from "react-spinners";
 
 function Comments({ postSlug }: { postSlug: string }) {
   const { status } = useSession();
@@ -66,7 +67,9 @@ function Comments({ postSlug }: { postSlug: string }) {
       {/* List of comments */}
       <>
         {isFetching ? (
-          <p>Loading comments...</p>
+          <div className="h-[90vh] flex flx-col item-center justify-center">
+            <BounceLoader color="#36d7b7" />
+          </div>
         ) : (
           comments.map((comment: CommentWithUser) => (
             <div className="flex items-center mt-4" key={comment.id}>

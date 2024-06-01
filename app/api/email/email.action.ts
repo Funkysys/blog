@@ -5,7 +5,6 @@ import { resend } from "@/lib/resend";
 
 export const emailSend = async (formData: FormData) => {
   const email = formData.get("email") as string;
-  console.log(formData);
 
   const emailSend = await resend.emails.send({
     from: "contact@discophiles-blog.eu",
@@ -15,7 +14,6 @@ export const emailSend = async (formData: FormData) => {
       subscriptions: process.env.NEXTAUTH_URL as string,
     }),
   });
-  console.log(emailSend);
 
   return emailSend;
 };

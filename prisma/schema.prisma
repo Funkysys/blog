@@ -81,7 +81,7 @@ model Post {
   // category
   catSlug String
   catTitle String
-  cat Category @relation(fields: [catSlug, catTitle], references: [slug, title])
+  cat Category @relation(fields: [catSlug, catTitle], references: [slug, title], onDelete: Cascade)
   artist String?
   team String[]
   trackList Json[]

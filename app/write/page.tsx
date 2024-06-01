@@ -17,7 +17,11 @@ import "react-quill/dist/quill.snow.css";
 
 import dynamic from "next/dynamic";
 const ReactQuill = dynamic(() => import("react-quill"), {
-  loading: () => <p>Loading...</p>,
+  loading: () => (
+    <div className="h-[90vh] flex flx-col item-center justify-center">
+      <BounceLoader color="#36d7b7" />
+    </div>
+  ),
   ssr: false,
 });
 
@@ -29,6 +33,7 @@ import { useMutation } from "react-query";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
 import { uploadFile } from "../api/upload/upload.action";
+import { BounceLoader } from "react-spinners";
 
 type Link = {
   id: number;
@@ -88,28 +93,12 @@ export default function WritePage() {
     setImageObjectUrl(URL.createObjectURL(files[0]));
   };
 
-  console.log(team, tempLink, tracks);
-
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
     const image = await uploadImage(e);
 
     setLinks(tempLink as Prisma.JsonArray);
-
-    console.log({
-      title,
-      content,
-      catSlug,
-      catTitle: catSlug,
-      slug: slugify(title),
-      image: imageUrl,
-      release: date,
-      artist,
-      team,
-      trackList: trackList,
-      links: links,
-    });
 
     await mutate({
       title,
@@ -166,7 +155,6 @@ export default function WritePage() {
     setTrackList(tempTracks as Prisma.JsonArray);
   };
   const handleOnChangeLinkName = (data: any, el: Link) => {
-    console.log(data.target.value);
     const tempLinkName = tempLink.map((item) => {
       if (item.id === el.id) {
         return { ...item, name: data.target.value };
@@ -348,7 +336,9 @@ export default function WritePage() {
           </div>
           {/* Category / select */}
           {isFetching ? (
-            <p>Loading categories</p>
+            <div className="h-[90vh] flex flx-col item-center justify-center">
+              <BounceLoader color="#36d7b7" />
+            </div>
           ) : (
             <div className="text-slate-800 mb-10">
               <label htmlFor="category" className="text-slate-50 mb-3">

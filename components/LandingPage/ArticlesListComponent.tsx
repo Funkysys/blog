@@ -2,6 +2,7 @@
 import { usePosts } from "@/hook/usePosts";
 import { PostWithCategory } from "@/types";
 import { useState } from "react";
+import { BounceLoader } from "react-spinners";
 import Article from "../Article";
 import PageTitle from "../PageTitle";
 import { Button } from "../ui/button";
@@ -22,7 +23,6 @@ const ArticlesListComponent = ({ slug }: Props) => {
     setPage((prev) => prev - 1);
     // refetch();
   };
-  console.log(posts);
 
   return (
     <div className="flex flex-col justify-center">
@@ -30,7 +30,9 @@ const ArticlesListComponent = ({ slug }: Props) => {
 
       <div className="min-hh-[90vh] gap-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-col-4">
         {isFetching ? (
-          <p>Loading...</p>
+          <div className="h-[90vh] flex flx-col item-center justify-center">
+            <BounceLoader color="#36d7b7" />
+          </div>
         ) : (
           <>
             {posts.length > 0 ? (

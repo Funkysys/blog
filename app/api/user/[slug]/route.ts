@@ -9,12 +9,15 @@ export const GET = async (
   const { slug } = params;
 
   try {
-    const post = await prisma.post.update({
-      where: { slug },
-      data: { nbView: { increment: 1 } },
+    const user = await prisma.user.findUnique({
+      where: { email: slug },
     });
-    return NextResponse.json(post, { status: 200 });
+
+    return NextResponse.json(user, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: error }, { status: 500 });
+    return NextResponse.json(
+      { error: "something went wrong !" },
+      { status: 500 }
+    );
   }
 };

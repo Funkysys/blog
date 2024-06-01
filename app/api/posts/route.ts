@@ -8,7 +8,6 @@ export const GET = async (req: Request) => {
     const { searchParams } = new URL(req.url);
     const catSlug = searchParams.get("cat");
     const page: number = Number(searchParams.get("page"));
-    console.log("page", page);
 
     const posts = await prisma.post.findMany({
       skip: page * 6,
@@ -45,6 +44,7 @@ export const POST = async (req: Request) => {
     }
 
     const body = await req.json();
+
     const dataFromBody = {
       title: body.title,
       content: body.content,
@@ -61,7 +61,6 @@ export const POST = async (req: Request) => {
       trackList: body.trackList,
       links: body.links,
     };
-    console.log(dataFromBody);
 
     const post = await prisma.post.create({
       data: {
@@ -71,8 +70,6 @@ export const POST = async (req: Request) => {
 
     return NextResponse.json(post, { status: 200 });
   } catch (error) {
-    console.log(error);
-
     return NextResponse.json(
       { error: "Something went wrong" },
       { status: 500 }
