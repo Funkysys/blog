@@ -93,23 +93,22 @@ const PostsPage = ({ params }: Props) => {
             </>
           )}
         </div>
-        <div className="rounded-full border-2 border-gray-500 aspect-square md:aspect-[1/1] overflow-hidden bg-cover w-[40%] m-auto">
+        <div className="relative rounded-full border-2 border-gray-500 aspect-square md:aspect-[1/1] overflow-hidden bg-cover w-[40%] m-auto">
           {post.image ? (
             <Image
               src={post.image}
               alt={post.title}
-              layout="responsive"
               fill
               onError={(e) => (e.currentTarget.src = "/img/disque.jpg")}
+              className="rounded-full  object-cover "
             />
           ) : (
             <Image
               src="/img/disque.jpg"
               alt={post.title}
               layout="responsive"
-              width={500}
-              height={500}
-              className="rounded-full  object-cover w-full h-full"
+              fill
+              className="rounded-full  object-cover "
             />
           )}
         </div>

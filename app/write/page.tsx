@@ -26,9 +26,7 @@ const ReactQuill = dynamic(() => import("react-quill"), {
 });
 
 import { Button } from "@/components/ui/button";
-import { slugify } from "@/utils/slugify";
 import axios from "axios";
-import Image from "next/image";
 import { useMutation } from "react-query";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
@@ -61,6 +59,7 @@ export default function WritePage() {
   ]);
   const [date, setDate] = useState<Date | null>(null);
   const [isImage, setIsImage] = useState(false);
+  const [imageSizeError, setImageSizeError] = useState(false);
 
   const [file, setFile] = useState<File>();
   const [imageObjectUrl, setImageObjectUrl] = useState<string | null>(null);
@@ -101,29 +100,38 @@ export default function WritePage() {
 
     setLinks(tempLink as Prisma.JsonArray);
 
-    await mutate({
-      title,
-      content,
-      catSlug: slugify(catSlug),
-      catTitle: catSlug,
-      slug: slugify(title),
-      image: imageUrl && imageUrl,
-      release: date,
-      artist,
-      team,
-      trackList: trackList,
-      links: links,
-    });
+    // await mutate({
+    //   title,
+    //   content,
+    //   catSlug: slugify(catSlug),
+    //   catTitle: catSlug,
+    //   slug: slugify(title),
+    //   image: imageUrl && imageUrl,
+    //   release: date,
+    //   artist,
+    //   team,
+    //   trackList: trackList,
+    //   links: links,
+    // });
   };
-
   const uploadImage: FormEventHandler<HTMLFormElement> = async (e) => {
     try {
       if (!isImage) return;
       const formData = new FormData(e.currentTarget);
-      const url = await uploadFile(formData);
-      url && (await setImageUrl(url));
+      const imageFile = formData.get("image");
+      if (imageFile && imageFile instanceof File) {
+        const size = imageFile.size;
+        if (size > 2 * 1024 * 1024) {
+          setImageSizeError(true);
+          return;
+        }
+        const url = await uploadFile(formData);
+        if (url) {
+          setImageUrl(url);
+        }
+      }
     } catch (error) {
-      console.error("Error in uploadImage : ", error);
+      console.error("Error in uploadImage:", error);
     }
   };
 
@@ -191,25 +199,20 @@ export default function WritePage() {
           <PageTitle title="Write a new post" />
           {/* Image */}
           <div className="mb-6">
-            {imageObjectUrl && (
-              <div className="relative w-60 h-60 mx-auto mb-3 flex">
-                <Image
-                  className="object-cover rounded-full"
-                  src={imageUrl ? imageUrl : imageObjectUrl}
-                  fill
-                  alt={title}
-                />
-              </div>
-            )}
             <div className="flex flex-col gap-2">
               <label htmlFor="image" className="text-slate-50 mb-3">
                 Image (optional) :
               </label>
-              <p className="text-slate-400 text-sm">Upload an image </p>
+              {!imageSizeError ? (
+                <p className="text-slate-400 text-sm">
+                  Upload an image with max size 2Mb{" "}
+                </p>
+              ) : (
+                <p className="text-red-500 text-sm">
+                  Image size should be less than 2Mb
+                </p>
+              )}
               <Input type="file" name="image" onChange={onChangeFile} />
-              <p className="text-slate-400 text-sm">
-                Upload an image or paste an image url{" "}
-              </p>
               {/* <Input
                 type="string"
                 name="imageUrl"

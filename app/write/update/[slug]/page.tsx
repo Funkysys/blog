@@ -277,16 +277,15 @@ export default function UpdatePostePage({ params }: Props) {
             <PageTitle title="Write a new post" />
             {/* Image */}
             <div className="mb-6">
-              {imageObjectUrl && (
-                <div className="relative w-60 h-60 mx-auto mb-3 flex">
-                  <Image
-                    className="object-cover rounded-full"
-                    src={imageUrl ? imageUrl : imageObjectUrl}
-                    fill
-                    alt={title}
-                  />
-                </div>
-              )}
+              <div className="relative w-60 h-60 mx-auto mb-3 flex">
+                <Image
+                  className="object-cover rounded-full"
+                  src={imageUrl ? imageUrl : "/img/disque.jpg"}
+                  alt={title}
+                  fill
+                />
+              </div>
+
               <div className="flex flex-col gap-2">
                 <label htmlFor="image" className="text-slate-50 mb-3">
                   Image (optional) :

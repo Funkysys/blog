@@ -16,12 +16,7 @@ const Login = () => {
       <section className="flex flex-col gap-4">
         <Button onClick={onLogin("discord")}>
           <div className="w-7 h-7 mr-3 aspect-square relative ">
-            <Image
-              alt="discord icon"
-              className="w-10 h-10"
-              src={"/icons/discord.svg"}
-              fill
-            />
+            <Image alt="discord icon" src={"/icons/discord.svg"} fill />
           </div>
           Sign In With Discord
         </Button>
