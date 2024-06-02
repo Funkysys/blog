@@ -7,7 +7,7 @@ const nextConfig = {
         headers: [
           {
             key: "Access-Control-Allow-Origin",
-            value: "https://discophiles.vercel.app", // Set your origin
+            value: "https://discophiles-blog.eu", // Set your origin
           },
           {
             key: "Access-Control-Allow-Methods",
