@@ -46,3 +46,11 @@ export type PostWithCategory = Prisma.PostGetPayload<{
 export type CommentWithUser = Prisma.CommentGetPayload<{
   include: { user: true };
 }>;
+export type User = {
+  id: string;
+  name: string;
+  email: string;
+  emailVerified: Date | null;
+  role: string;
+  image: string;
+};

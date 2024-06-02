@@ -8,7 +8,7 @@ export const UpdateButton = ({ slug }: UpdateButtonProps) => {
   return (
     <Button
       variant={"outline"}
-      className="bg-amber-500"
+      className="bg-amber-400 hover:bg-amber-800 text-black"
       onClick={() => router.push(`/write/update/${slug}`)}
     >
       Update

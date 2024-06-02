@@ -25,7 +25,7 @@ export const DeleteButton = (props: DeleteButtonProps) => {
   return (
     <Button
       variant={"destructive"}
-      className="bg-red-400"
+      className="bg-red-600"
       onClick={handleOnDelete}
     >
       Delete

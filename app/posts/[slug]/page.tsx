@@ -8,9 +8,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { usePost } from "@/hook/usePost";
+import axios from "axios";
 import { Eye, MessageCircle } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { useState } from "react";
 import { BounceLoader } from "react-spinners";
 
 type Props = {
@@ -19,13 +21,34 @@ type Props = {
   };
 };
 
+type User = {
+  id: string;
+  name: string;
+  email: string;
+  emailVerified: Date | null;
+  role: string;
+  image: string;
+};
+
 const PostsPage = ({ params }: Props) => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const { slug } = params;
+  const [user, setUser] = useState<User>();
 
   const { data: post, isFetching, error } = usePost(slug);
 
   const releaseDate = post ? new Date(post.release).toLocaleDateString() : "";
+
+  if (status === "loading") {
+    <BounceLoader color="#36d7b7" />;
+  }
+  const fetchUser = async () => {
+    const { data } = await axios.get(`/api/user/${session?.user?.email}`);
+    setUser(data);
+  };
+  if (status === "authenticated" && !user) {
+    fetchUser();
+  }
 
   if (isFetching)
     return (
@@ -40,12 +63,13 @@ const PostsPage = ({ params }: Props) => {
       <section key={post.id} className="w-full">
         <div className="flex justify-center items-center m-auto mb-10 mt-3 gap-4">
           <PageTitle title={post.title} />
-          {session && session.user?.email === post.userEmail && (
-            <>
-              <DeleteButton id={post.id} />
-              <UpdateButton slug={slug} />
-            </>
-          )}
+          {(session && session.user?.email === post.userEmail) ||
+            ((user?.role === "ADMIN" || user?.role === "MODERATOR") && (
+              <>
+                <DeleteButton id={post.id} />
+                <UpdateButton slug={slug} />
+              </>
+            ))}
         </div>
         {post.image ? (
           <div

@@ -74,7 +74,7 @@ model Post {
   nbComments Int @default(0)
   comments Comment[] 
   // user
-  user User @relation(fields: [userEmail, userName, userImage], references: [email, name, image])
+  user User @relation(fields: [userEmail, userName, userImage], references: [email, name, image], onDelete: Cascade)
   userEmail String
   userName String
   userImage String
@@ -105,7 +105,7 @@ model Comment {
   createdAt DateTime @default(now())
   content String
   userEmail String
-  user User @relation(fields: [userEmail], references: [email])
+  user User @relation(fields: [userEmail], references: [email], onDelete: Cascade)
   postSlug String
   post Post @relation(fields: [postSlug], references: [slug], onDelete: Cascade)
 }

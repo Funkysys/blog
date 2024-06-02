@@ -51,7 +51,6 @@ export default function WritePage() {
   const [catSlug, setCatSlug] = useState("");
   const [content, setContent] = useState("");
   const [imageUrl, setImageUrl] = useState<string>("");
-  const [isSubmit, setIsSubmit] = useState(false);
   const [artist, setArtist] = useState("");
   const [team, setTeam] = useState<string[]>([]);
   const [trackList, setTrackList] = useState<Prisma.JsonArray>([]);

@@ -1,8 +1,5 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import Link from "next/link"
-import { cn } from "@/lib/utils"
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -11,42 +8,95 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu"
-import { Category } from "@/types"
-import { useCategories } from "@/hook/useCategories"
-
+} from "@/components/ui/navigation-menu";
+import { useCategories } from "@/hook/useCategories";
+import { cn } from "@/lib/utils";
+import { Category, User } from "@/types";
+import axios from "axios";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
+import * as React from "react";
+import { UpdateRoleModale } from "./UpdateRoleModale";
+import { Button } from "./ui/button";
 
 export function HeaderNavigation() {
-  const {data: categories} = useCategories()
+  const { data: session, status } = useSession();
+  const { data: categories } = useCategories();
+  const [link, setLink] = React.useState<string>("");
+  const [changeRole, setChangeRole] = React.useState<Boolean>(false);
+  const [buttonRole, SetButtonRole] = React.useState(false);
+  const [user, setUser] = React.useState<User>();
+
+  const fetchUser = async () => {
+    const { data } = await axios.get(`/api/user/${session?.user?.email}`);
+    setUser(data);
+  };
+  if (status === "authenticated" && !user) {
+    fetchUser();
+  }
+
+  if (user?.role === "USER" && !buttonRole) {
+    SetButtonRole(true);
+  }
+  if (
+    (user?.role === "EDITOR" ||
+      user?.role === "MODERATOR" ||
+      user?.role === "ADMIN") &&
+    link !== "/write"
+  ) {
+    SetButtonRole(false);
+    setLink("/write");
+  }
+  if (
+    (!user || status === "unauthenticated" || !session) &&
+    link !== "/login"
+  ) {
+    setLink("/login");
+  }
+
   return (
-    <NavigationMenu className="hidden md:block">
-      <NavigationMenuList>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger>categories</NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-            {categories?.map((category: Category) => (
-                <ListItem
-                  key={category.id}
-                  title={category.title}
-                  href={`/categories/${category.slug}`}
-                >
-                  {category.description} 
-                </ListItem>
-              ))}
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <Link href="/write" legacyBehavior passHref>
-            <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-              Add an album
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
-      </NavigationMenuList>
-    </NavigationMenu>
-  )
+    <>
+      {changeRole && user && <UpdateRoleModale changeRole={setChangeRole} />}
+      <NavigationMenu className="hidden md:block">
+        <NavigationMenuList>
+          <NavigationMenuItem>
+            <NavigationMenuTrigger>categories</NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+                {categories?.map((category: Category) => (
+                  <ListItem
+                    key={category.id}
+                    title={category.title}
+                    href={`/categories/${category.slug}`}
+                  >
+                    {category.description}
+                  </ListItem>
+                ))}
+              </ul>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            {!buttonRole && link !== "" && (
+              <Link href={link} legacyBehavior passHref>
+                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                  Add an album
+                </NavigationMenuLink>
+              </Link>
+            )}
+            {buttonRole && (
+              <Button
+                variant="outline"
+                className="bg-blue-600"
+                onClick={() => setChangeRole(true)}
+              >
+                Become a contributor
+              </Button>
+            )}
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
+    </>
+  );
 }
 
 const ListItem = React.forwardRef<
@@ -71,6 +121,6 @@ const ListItem = React.forwardRef<
         </a>
       </NavigationMenuLink>
     </li>
-  )
-})
-ListItem.displayName = "ListItem"
+  );
+});
+ListItem.displayName = "ListItem";

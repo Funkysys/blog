@@ -8,7 +8,7 @@ import Image from "next/image";
 
 const Login = () => {
   const onLogin = (provider: string) => () => {
-    signIn(provider);
+    signIn(provider, { callbackUrl: "/" });
   };
   return (
     <main className="flex flex-col flex-grow gap-10 justify-center items-center px-4">
