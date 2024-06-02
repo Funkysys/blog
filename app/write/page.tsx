@@ -32,8 +32,8 @@ import Image from "next/image";
 import { useMutation } from "react-query";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
-import { uploadFile } from "../api/upload/upload.action";
 import { BounceLoader } from "react-spinners";
+import { uploadFile } from "../api/upload/upload.action";
 
 type Link = {
   id: number;
@@ -60,6 +60,7 @@ export default function WritePage() {
     { id: 1, name: "", url: "" },
   ]);
   const [date, setDate] = useState<Date | null>(null);
+  const [isImage, setIsImage] = useState(false);
 
   const [file, setFile] = useState<File>();
   const [imageObjectUrl, setImageObjectUrl] = useState<string | null>(null);
@@ -84,6 +85,7 @@ export default function WritePage() {
   const { status } = useSession();
 
   const onChangeFile = (e: SyntheticEvent) => {
+    setIsImage(true);
     const files = (e.target as HTMLInputElement).files;
 
     if (!files || !files[0]) return;
@@ -105,7 +107,7 @@ export default function WritePage() {
       catSlug: slugify(catSlug),
       catTitle: catSlug,
       slug: slugify(title),
-      image: imageUrl,
+      image: imageUrl && imageUrl,
       release: date,
       artist,
       team,
@@ -116,6 +118,7 @@ export default function WritePage() {
 
   const uploadImage: FormEventHandler<HTMLFormElement> = async (e) => {
     try {
+      if (!isImage) return;
       const formData = new FormData(e.currentTarget);
       const url = await uploadFile(formData);
       url && (await setImageUrl(url));

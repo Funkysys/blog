@@ -33,8 +33,8 @@ import axios from "axios";
 import Image from "next/image";
 import { useMutation } from "react-query";
 import CreatableSelect from "react-select/creatable";
-import { uploadFile } from "../../../api/upload/upload.action";
 import { BounceLoader } from "react-spinners";
+import { uploadFile } from "../../../api/upload/upload.action";
 
 type Link = {
   id: number;
@@ -87,7 +87,6 @@ export default function UpdatePostePage({ params }: Props) {
   const [imageUrl, setImageUrl] = useState<string>("");
   const [artist, setArtist] = useState("");
   const [team, setTeam] = useState<string[]>([]);
-  const [trackList, setTrackList] = useState<Prisma.JsonArray>([]);
   const [tracks, setTracks] = useState<Track[]>([{ id: 1, name: "" }]);
   const [links, setLinks] = useState<Prisma.JsonArray>([]);
   const [tempLink, setTempLink] = useState<Link[]>([
@@ -148,7 +147,6 @@ export default function UpdatePostePage({ params }: Props) {
       setImageUrl(post.image);
       setArtist(post.artist);
       setTeam(post.team);
-      setTrackList(post.trackList);
       setDate(new Date(post.release));
       setTracks(
         post.trackList.map((track) => ({
@@ -194,7 +192,7 @@ export default function UpdatePostePage({ params }: Props) {
       release: date,
       artist,
       team,
-      trackList: trackList,
+      trackList: tracks,
       links: links,
     });
   };
@@ -236,7 +234,6 @@ export default function UpdatePostePage({ params }: Props) {
       return item;
     });
     setTracks(tempTracks);
-    setTrackList(tempTracks as Prisma.JsonArray);
   };
   const handleOnChangeLinkName = (data: any, el: Link) => {
     const tempLinkName = tempLink.map((item) => {
@@ -264,6 +261,12 @@ export default function UpdatePostePage({ params }: Props) {
   };
   const AddNewTrack = () => {
     setTracks([...tracks, { id: tempLink.length + 1, name: "" }]);
+  };
+  const supressTrack = () => {
+    setTracks(tracks.slice(0, tracks.length - 1));
+  };
+  const supressLink = () => {
+    setTempLink(tempLink.slice(0, tempLink.length - 1));
   };
 
   return (
@@ -366,12 +369,21 @@ export default function UpdatePostePage({ params }: Props) {
                     >
                       track number :
                     </label>
-                    <Input
-                      value={el.number}
-                      type="number"
-                      placeholder="Track's number"
-                      onChange={(data) => handleOnChangeTrackNumber(data, el)}
-                    />
+                    <div className="flex gap-3">
+                      <Input
+                        value={el.number}
+                        type="number"
+                        placeholder="Track's number"
+                        onChange={(data) => handleOnChangeTrackNumber(data, el)}
+                      />
+                      <Button
+                        className="bg-red-600"
+                        type="button"
+                        onClick={supressTrack}
+                      >
+                        X
+                      </Button>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -408,12 +420,17 @@ export default function UpdatePostePage({ params }: Props) {
                     >
                       Link :
                     </label>
-                    <Input
-                      value={el.url}
-                      type="text"
-                      placeholder="Link's url"
-                      onChange={(data) => handleOnChangeLinkUrl(data, el)}
-                    />
+                    <div className="flex bg-red-600">
+                      <Input
+                        value={el.url}
+                        type="text"
+                        placeholder="Link's url"
+                        onChange={(data) => handleOnChangeLinkUrl(data, el)}
+                      />
+                      <Button type="button" onClick={supressLink}>
+                        x
+                      </Button>
+                    </div>
                   </div>
                 </div>
               ))}

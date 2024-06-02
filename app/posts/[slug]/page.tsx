@@ -11,8 +11,9 @@ import { usePost } from "@/hook/usePost";
 import axios from "axios";
 import { Eye, MessageCircle } from "lucide-react";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BounceLoader } from "react-spinners";
 
 type Props = {
@@ -34,8 +35,28 @@ const PostsPage = ({ params }: Props) => {
   const { data: session, status } = useSession();
   const { slug } = params;
   const [user, setUser] = useState<User>();
-
+  const [role, setRole] = useState<string>("");
+  const [right, setRight] = useState<Boolean>(false);
   const { data: post, isFetching, error } = usePost(slug);
+
+  if (user && role === "") {
+    setRole(user.role);
+  }
+  useEffect(() => {
+    if (role === "ADMIN" || (role === "MODERATOR" && !right)) {
+      setRight(true);
+    } else if (post?.userEmail === session?.user?.email && !right) {
+      setRight(true);
+    }
+  }, [role, right, post, session]);
+
+  if (status === "unauthenticated") {
+    return <p>Unauthenticated</p>;
+  }
+
+  if (status === "loading") {
+    <BounceLoader color="#36d7b7" />;
+  }
 
   const releaseDate = post ? new Date(post.release).toLocaleDateString() : "";
 
@@ -46,7 +67,8 @@ const PostsPage = ({ params }: Props) => {
     const { data } = await axios.get(`/api/user/${session?.user?.email}`);
     setUser(data);
   };
-  if (status === "authenticated" && !user) {
+
+  if (!user) {
     fetchUser();
   }
 
@@ -57,31 +79,40 @@ const PostsPage = ({ params }: Props) => {
       </div>
     );
   if (error) return <p>Error!</p>;
+  console.log(user?.role, post?.userEmail, session?.user?.email);
 
   return post ? (
     <main className="flex flex-col flex-grow justify-center py-10 px-4">
       <section key={post.id} className="w-full">
         <div className="flex justify-center items-center m-auto mb-10 mt-3 gap-4">
           <PageTitle title={post.title} />
-          {(session && session.user?.email === post.userEmail) ||
-            ((user?.role === "ADMIN" || user?.role === "MODERATOR") && (
-              <>
-                <DeleteButton id={post.id} />
-                <UpdateButton slug={slug} />
-              </>
-            ))}
+          {right && (
+            <>
+              <DeleteButton id={post.id} />
+              <UpdateButton slug={slug} />
+            </>
+          )}
         </div>
-        {post.image ? (
-          <div
-            className="rounded-full border-2 border-gray-500 aspect-square md:aspect-[1/1] overflow-hidden bg-cover w-[30%] m-auto p-6"
-            style={{ backgroundImage: `url(${post.image})` }}
-          />
-        ) : (
-          <div
-            className="rounded-full border-2 border-gray-500 aspect-square md:aspect-[1/1] overflow-hidden bg-cover w-[30%] m-auto p-6"
-            style={{ backgroundImage: `url(/img/disque.jpg)` }}
-          />
-        )}
+        <div className="rounded-full border-2 border-gray-500 aspect-square md:aspect-[1/1] overflow-hidden bg-cover w-[40%] m-auto">
+          {post.image ? (
+            <Image
+              src={post.image}
+              alt={post.title}
+              layout="responsive"
+              fill
+              onError={(e) => (e.currentTarget.src = "/img/disque.jpg")}
+            />
+          ) : (
+            <Image
+              src="/img/disque.jpg"
+              alt={post.title}
+              layout="responsive"
+              width={500}
+              height={500}
+              className="rounded-full  object-cover w-full h-full"
+            />
+          )}
+        </div>
       </section>
       <section className="flex justify-between items-center p-5 mb-5 ">
         <div className="flex justify-center items-center gap-3 mt-5">
