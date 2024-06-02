@@ -210,12 +210,12 @@ export default function WritePage() {
               <p className="text-slate-400 text-sm">
                 Upload an image or paste an image url{" "}
               </p>
-              <Input
+              {/* <Input
                 type="string"
                 name="imageUrl"
                 placeholder="Image url"
                 onChange={(e) => setImageUrl(e.target.value)}
-              />
+              /> */}
             </div>
           </div>
           {/* Title post */}
