@@ -78,7 +78,7 @@ const ProfileButton = () => {
           </DropdownMenuItem>
           {(user?.role === "ADMIN" || user?.role === "MODERATOR") && (
             <DropdownMenuItem
-              onClick={() => router.push("/moderator/create-category")}
+              onClick={() => router.push("/moderator/category")}
               className="cursor-pointer"
             >
               <Button

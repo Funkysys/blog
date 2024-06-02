@@ -26,6 +26,7 @@ const ReactQuill = dynamic(() => import("react-quill"), {
 });
 
 import { Button } from "@/components/ui/button";
+import { slugify } from "@/utils/slugify";
 import axios from "axios";
 import { useMutation } from "react-query";
 import Select from "react-select";
@@ -100,19 +101,19 @@ export default function WritePage() {
 
     setLinks(tempLink as Prisma.JsonArray);
 
-    // await mutate({
-    //   title,
-    //   content,
-    //   catSlug: slugify(catSlug),
-    //   catTitle: catSlug,
-    //   slug: slugify(title),
-    //   image: imageUrl && imageUrl,
-    //   release: date,
-    //   artist,
-    //   team,
-    //   trackList: trackList,
-    //   links: links,
-    // });
+    await mutate({
+      title,
+      content,
+      catSlug: slugify(catSlug),
+      catTitle: catSlug,
+      slug: slugify(title),
+      image: imageUrl && imageUrl,
+      release: date,
+      artist,
+      team,
+      trackList: trackList,
+      links: links,
+    });
   };
   const uploadImage: FormEventHandler<HTMLFormElement> = async (e) => {
     try {

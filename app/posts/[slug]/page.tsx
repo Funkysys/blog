@@ -98,7 +98,8 @@ const PostsPage = ({ params }: Props) => {
             <Image
               src={post.image}
               alt={post.title}
-              fill
+              width={500}
+              height={500}
               onError={(e) => (e.currentTarget.src = "/img/disque.jpg")}
               className="rounded-full  object-cover "
             />
@@ -107,7 +108,8 @@ const PostsPage = ({ params }: Props) => {
               src="/img/disque.jpg"
               alt={post.title}
               layout="responsive"
-              fill
+              width={500}
+              height={500}
               className="rounded-full  object-cover "
             />
           )}
