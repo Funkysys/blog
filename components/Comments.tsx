@@ -1,5 +1,6 @@
 "use client";
 
+import { deleteComment } from "@/app/api/comments/deleteComment.action";
 import { useComments } from "@/hook/useComments";
 import { CommentWithUser } from "@/types";
 import { Comment } from "@prisma/client";
@@ -8,14 +9,19 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { SyntheticEvent, useState } from "react";
 import { useMutation } from "react-query";
+import { BounceLoader } from "react-spinners";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
 import { Textarea } from "./ui/textarea";
-import { BounceLoader } from "react-spinners";
 
-function Comments({ postSlug }: { postSlug: string }) {
-  const { status } = useSession();
+type CommentProps = {
+  postSlug: string;
+  role: string;
+};
+
+function Comments({ postSlug, role }: CommentProps) {
+  const { data: session, status } = useSession();
   const [content, setContent] = useState("");
 
   const createComment = (newComment: Partial<Comment>) => {
@@ -34,6 +40,10 @@ function Comments({ postSlug }: { postSlug: string }) {
     setContent("");
   };
 
+  const handleOnDeleteComment = async (id: string) => {
+    const commentDeleted = await deleteComment(id);
+    if (commentDeleted) refetch();
+  };
   const { data: comments, isFetching, refetch } = useComments(postSlug);
 
   return (
@@ -72,26 +82,46 @@ function Comments({ postSlug }: { postSlug: string }) {
           </div>
         ) : (
           comments.map((comment: CommentWithUser) => (
-            <div className="flex items-center mt-4" key={comment.id}>
-              <Avatar>
-                <AvatarImage
-                  src={comment.user.image || "/img/shadcn_avatar.jpg"}
-                  alt=""
-                />
-                <AvatarFallback>{comment.user.name}</AvatarFallback>
-              </Avatar>
+            <>
+              {console.log(
+                comment?.user.email === session?.user?.email ||
+                  role === "ADMIN" ||
+                  role === "MODERATOR"
+              )}
+              <div className="flex items-center mt-4" key={comment.id}>
+                <Avatar>
+                  <AvatarImage
+                    src={comment.user.image || "/img/shadcn_avatar.jpg"}
+                    alt=""
+                  />
+                  <AvatarFallback>{comment.user.name}</AvatarFallback>
+                </Avatar>
 
-              <div className="ml-3 p-4 border border-slate-400 rounded-lg">
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold">{comment.user.name}</span>
-                  <span className="text-sm text-slate-500">
-                    {new Date(comment.createdAt).toLocaleDateString()}
-                  </span>
+                <div className="ml-3 p-4 border border-slate-400 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold">{comment.user.name}</span>
+                    <span className="text-sm text-slate-500">
+                      {new Date(comment.createdAt).toLocaleDateString()}
+                    </span>
+                    {(comment?.user.email === session?.user?.email ||
+                      role === "ADMIN" ||
+                      role === "MODERATOR") && (
+                      <>
+                        <Button
+                          variant={"outline"}
+                          className=" bg-red-500 text-white"
+                          onClick={() => handleOnDeleteComment(comment.id)}
+                        >
+                          X
+                        </Button>
+                      </>
+                    )}
+                  </div>
+
+                  <p className="mt-2">{comment.content}</p>
                 </div>
-
-                <p className="mt-2">{comment.content}</p>
               </div>
-            </div>
+            </>
           ))
         )}
       </>

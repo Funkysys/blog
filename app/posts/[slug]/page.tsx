@@ -90,8 +90,7 @@ const PostsPage = ({ params }: Props) => {
             <Image
               src={post.image}
               alt={post.title}
-              width={500}
-              height={500}
+              fill
               onError={(e) => (e.currentTarget.src = "/img/disque.jpg")}
               className="rounded-full  object-cover "
             />
@@ -201,7 +200,7 @@ const PostsPage = ({ params }: Props) => {
             dangerouslySetInnerHTML={{ __html: post.content || "" }}
           />
         </div>
-        <Comments postSlug={slug} />
+        <Comments postSlug={slug} role={role} />
       </section>
     </main>
   ) : (

@@ -43,6 +43,26 @@ export const UpdateRoleModale = ({ changeRole }: UpdateRoleProps) => {
       }, 2000);
     }
   };
+
+  const roleAndDescription = [
+    { name: "USER", descr: "As a user, all you have to do is enjoy the site" },
+    {
+      name: "EDITOR",
+      descr:
+        "As an editor, you will be able to create and manage your own posts",
+    },
+    {
+      name: "MODERATOR",
+      descr:
+        "As a moderator, you will be able to create and manage your own posts as well as those of others",
+    },
+    {
+      name: "ADMIN",
+      descr:
+        "As an administrator, you will be able to participate in the complete management of the site",
+    },
+  ];
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <form
@@ -83,34 +103,35 @@ export const UpdateRoleModale = ({ changeRole }: UpdateRoleProps) => {
         <Select
           className="mt-4 text-slate-800"
           options={[
+            { value: "USER", label: "User" },
             { value: "EDITOR", label: "Editor" },
             { value: "MODERATOR", label: "Moderator" },
             { value: "ADMIN", label: "Admin" },
           ]}
           onChange={(e) => setRole(e?.value)}
         />
-        {role === "USER" && (
-          <p className="text-slate-800">
-            As a user, all you have to do is enjoy the site
-          </p>
+        {role && (
+          <>
+            {roleAndDescription.map(
+              (roleAndDescription) =>
+                roleAndDescription.name === role &&
+                roleAndDescription.name !== user?.role && (
+                  <p key={role} className="text-green-800">
+                    selected role : {roleAndDescription.descr}
+                  </p>
+                )
+            )}
+            {roleAndDescription.map(
+              (roleAndDescription) =>
+                roleAndDescription.name === user?.role && (
+                  <p key={role} className="text-red-800">
+                    actual role : {roleAndDescription.descr}
+                  </p>
+                )
+            )}
+          </>
         )}
-        {role === "EDITOR" && (
-          <p className="text-slate-800">
-            As an editor, you will be able to create and manage your own posts
-          </p>
-        )}
-        {role === "MODERATOR" && (
-          <p className="text-slate-800">
-            As a moderator, you will be able to create and manage your own posts
-            as well as those of others
-          </p>
-        )}
-        {role === "ADMIN" && (
-          <p className="text-slate-800">
-            As an administrator, you will be able to participate in the complete
-            management of the site
-          </p>
-        )}
+
         <div className="flex gap-4 mt-4 w-full justify-center">
           <Button type="submit" variant="outline" className="bg-green-600">
             Update
