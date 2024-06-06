@@ -13,6 +13,7 @@ import { Eye, MessageCircle } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BounceLoader } from "react-spinners";
 
@@ -38,6 +39,7 @@ const PostsPage = ({ params }: Props) => {
   const [role, setRole] = useState<string>("");
   const [right, setRight] = useState<Boolean>(false);
   const { data: post, isFetching, error } = usePost(slug);
+  const router = useRouter();
 
   if (user && role === "") {
     setRole(user.role);
@@ -71,7 +73,6 @@ const PostsPage = ({ params }: Props) => {
       </div>
     );
   if (error) return <p>Error!</p>;
-  console.log(user?.role, post?.userEmail, session?.user?.email);
 
   return post ? (
     <main className="flex flex-col flex-grow justify-center py-10 px-4">
@@ -99,7 +100,8 @@ const PostsPage = ({ params }: Props) => {
               src="/img/disque.jpg"
               alt={post.title}
               layout="responsive"
-              fill
+              width={200}
+              height={200}
               className="rounded-full  object-cover "
             />
           )}
@@ -110,11 +112,26 @@ const PostsPage = ({ params }: Props) => {
           <Avatar>
             <AvatarImage src={post.userImage} />
             <AvatarFallback>
-              {post.userName ? post.userName : post.userEmail}
+              {post.userName ? (
+                <Button variant="ghost" className="">
+                  {post.userName}
+                </Button>
+              ) : (
+                post.userEmail
+              )}
             </AvatarFallback>
           </Avatar>
           <div>
-            <p>{post.userName ? post.userName : post.userEmail}</p>
+            {post.userName ? (
+              <Button
+                variant="outline"
+                onClick={() => router.push(`/from-user/${post.userName}`)}
+              >
+                {post.userName}
+              </Button>
+            ) : (
+              <p>{post.userEmail}</p>
+            )}
             <p className="text-slate-500 text-sm">
               Posted on {new Date(post.createdAt).toLocaleDateString()}
             </p>
