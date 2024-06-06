@@ -5,15 +5,16 @@ import { Email } from "@prisma/client";
 import axios from "axios";
 import { FormEventHandler, useState } from "react";
 import { useMutation } from "react-query";
+import { BounceLoader } from "react-spinners";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { BounceLoader } from "react-spinners";
 
 export const EmailForm = () => {
   const [email, setEmail] = useState("");
   const [emailIsSend, setEmailIsSend] = useState(false);
   const [emailExist, setEmailExist] = useState(false);
   const [loader, setLoader] = useState(false);
+  const [error, setError] = useState<boolean>(false);
   const [formData, setFormData] = useState<FormData>(new FormData());
 
   const createEmail = (newEmail: Partial<Email>) =>
@@ -31,6 +32,12 @@ export const EmailForm = () => {
         console.log("Welcome to Discopholies !");
       };
       sendingEmail();
+      setLoader(false);
+    },
+    onError: (error) => {
+      setLoader(false);
+      setError(true);
+      console.error("Error in createEmail : ", error);
     },
   });
 
@@ -40,6 +47,7 @@ export const EmailForm = () => {
 
   const submitEmail: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
+    setLoader(true);
     setFormData(new FormData(e.currentTarget));
     const { data } = await axios.get(`/api/email/${email}`);
     await setEmailExist(data ? true : false);
@@ -76,12 +84,20 @@ export const EmailForm = () => {
         <p className="text-green-800">Email already exist...</p>
       </div>
     );
-  if (isLoading)
+  if (loader)
     return (
       <div className="h-[90vh] flex flx-col item-center justify-center">
         <BounceLoader color="#36d7b7" />
       </div>
     );
+
+  if (error)
+    return (
+      <div className="h-[90vh] flex flx-col item-center justify-center">
+        <p className="text-red-800">Something went wrong... Sorry !</p>
+      </div>
+    );
+
   return (
     <form onSubmit={submitEmail}>
       <Input
