@@ -69,7 +69,7 @@ const PostsPage = ({ params }: Props) => {
   if (isFetching)
     return (
       <div className="h-[90vh] flex flx-col item-center justify-center">
-        <BounceLoader color="#36d7b7" />
+        <BounceLoader color="#36d7b7" className="mt-28" />
       </div>
     );
   if (error) return <p>Error!</p>;

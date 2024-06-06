@@ -26,13 +26,6 @@ const ResponsiveMenu = () => {
     if (deleteData) signOut({ callbackUrl: "/" });
   };
 
-  if (status === "unauthenticated") {
-    return (
-      <Link href={"/login"}>
-        <Button variant="outline">Login</Button>
-      </Link>
-    );
-  }
   if (status === "loading") {
     <BounceLoader color="#36d7b7" />;
   }
@@ -52,7 +45,13 @@ const ResponsiveMenu = () => {
         </SheetTrigger>
         <SheetContent side="left">
           <div className="flex flex-col gap-6 pl-5 ">
-            <ProfileButton />
+            {status === "unauthenticated" && (
+              <Link href={"/login"}>
+                <Button variant="outline">Login</Button>
+              </Link>
+            )}
+            {status === "loading" && <BounceLoader color="#36d7b7" />}
+            {status === "authenticated" && !user && <ProfileButton />}
             <ToggleTheme />
           </div>
           <div className="flex flex-col gap-4">

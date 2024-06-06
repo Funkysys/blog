@@ -28,10 +28,10 @@ const ArticlesListComponent = ({ slug }: Props) => {
     <div className="flex flex-col justify-center">
       <PageTitle title={slug} />
 
-      <div className="min-hh-[90vh] gap-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-col-4">
+      <div className="min-h-[90vh] gap-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-col-4">
         {isFetching ? (
-          <div className="h-[90vh] flex flx-col item-center justify-center">
-            <BounceLoader color="#36d7b7" />
+          <div className="h-[70vh] w-[70vw] flex item-center justify-center">
+            <BounceLoader color="#36d7b7" className="m-auto" />
           </div>
         ) : (
           <>
