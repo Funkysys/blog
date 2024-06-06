@@ -25,9 +25,8 @@ const Article = ({ post }: Props) => {
             <Image
               src={post.image ? `${post.image}` : "/img/disque.jpg"}
               alt={post?.title}
-              width={500}
-              height={500}
-              className="aspect-square object-cover "
+              fill
+              className="aspect-square object-cover transition-all duration-300 hover:scale-110"
             />
           </div>
           <CardTitle className="font-semibold text-md">{post.title}</CardTitle>
