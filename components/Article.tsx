@@ -18,7 +18,7 @@ type Props = {
 
 const Article = ({ post }: Props) => {
   return (
-    <Card className=" flex flex-col justify-center items-between rounded-lg border-2 m-2 h-[100%] ">
+    <Card className=" flex flex-col  items-between rounded-lg border-2 m-2 h-[100%] ">
       <Link href={`/posts/${post.slug}`}>
         <CardHeader>
           <div className="aspect-square relative mb-2">
@@ -26,7 +26,7 @@ const Article = ({ post }: Props) => {
               src={post.image ? `${post.image}` : "/img/disque.jpg"}
               alt={post?.title}
               fill
-              className="aspect-square object-cover transition-all duration-300 hover:scale-110"
+              className="aspect-square object-cover rounded-full border-2 shadow-sm shadow-slate-400 transition-all duration-300 hover:scale-110"
             />
           </div>
           <CardTitle className="font-semibold text-md">{post.title}</CardTitle>
