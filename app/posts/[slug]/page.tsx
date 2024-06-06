@@ -99,8 +99,7 @@ const PostsPage = ({ params }: Props) => {
               src="/img/disque.jpg"
               alt={post.title}
               layout="responsive"
-              width={500}
-              height={500}
+              fill
               className="rounded-full  object-cover "
             />
           )}
