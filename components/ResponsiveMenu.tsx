@@ -51,7 +51,7 @@ const ResponsiveMenu = () => {
           <Menu className="h-6 w-6 md:hidden" />
         </SheetTrigger>
         <SheetContent side="left">
-          <div className="flex flex-col gap-4 pl-5 ">
+          <div className="flex flex-col gap-6 pl-5 ">
             <ProfileButton />
             <ToggleTheme />
           </div>

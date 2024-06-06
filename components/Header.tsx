@@ -13,7 +13,7 @@ const Header = () => {
       </div>
 
       <HeaderNavigation />
-      <div className="hidden md:inline-flex items-center gap-2  ">
+      <div className="hidden md:inline-flex items-center gap-4  ">
         <ToggleTheme />
         <ProfileButton />
       </div>

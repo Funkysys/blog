@@ -62,7 +62,7 @@ const ProfileButton = () => {
       {changeRole && user && <UpdateRoleModale changeRole={setChangeRole} />}
       <DropdownMenu>
         <DropdownMenuTrigger>
-          <Avatar>
+          <Avatar className="w-12 h-12 rounded-full border-2 border-gray-400r">
             <AvatarImage src={session?.user?.image || "/img/morty.jpg"} />
             <AvatarFallback>{session?.user?.name}</AvatarFallback>
           </Avatar>
