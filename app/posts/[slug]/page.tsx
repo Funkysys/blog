@@ -50,14 +50,6 @@ const PostsPage = ({ params }: Props) => {
     }
   }, [role, right, post, session]);
 
-  if (status === "unauthenticated") {
-    return <p>Unauthenticated</p>;
-  }
-
-  if (status === "loading") {
-    <BounceLoader color="#36d7b7" />;
-  }
-
   const releaseDate = post ? new Date(post.release).toLocaleDateString() : "";
 
   if (status === "loading") {

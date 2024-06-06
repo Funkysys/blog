@@ -292,7 +292,7 @@ export default function UpdatePostePage({ params }: Props) {
                 </label>
                 <p className="text-slate-400 text-sm">Upload an image </p>
                 <Input type="file" name="image" onChange={onChangeFile} />
-                <p className="text-slate-400 text-sm">
+                {/* <p className="text-slate-400 text-sm">
                   Upload an image or paste an image url{" "}
                 </p>
                 <Input
@@ -300,13 +300,13 @@ export default function UpdatePostePage({ params }: Props) {
                   name="imageUrl"
                   placeholder="Image url"
                   onChange={(e) => setImageUrl(e.target.value)}
-                />
+                /> */}
               </div>
             </div>
             {/* Title post */}
 
             <label htmlFor="artist" className="text-slate-50 mb-3">
-              Artists or Band :
+              Artists or Band * :
             </label>
             <Input
               type="text"
@@ -317,7 +317,7 @@ export default function UpdatePostePage({ params }: Props) {
             />
 
             <label htmlFor="title" className="text-slate-50 mb-3">
-              Title :
+              Title * :
             </label>
             <Input
               type="text"

@@ -225,23 +225,25 @@ export default function WritePage() {
           {/* Title post */}
 
           <label htmlFor="artist" className="text-slate-50 mb-3">
-            Artists or Band :
+            Artists or Band * :
           </label>
           <Input
             type="text"
             placeholder="Artist or band"
             className="mb-6"
             onChange={(e) => setArtist(e.target.value)}
+            required={true}
           />
 
           <label htmlFor="title" className="text-slate-50 mb-3">
-            Title :
+            Title * :
           </label>
           <Input
             type="text"
             placeholder="Title"
             className="mb-6"
             onChange={(e) => setTitle(e.target.value)}
+            required={true}
           />
 
           <div className="flex flex-col gap-3 mb-5">
@@ -252,6 +254,7 @@ export default function WritePage() {
               isClearable
               isMulti
               onChange={handleOnChangeTeam}
+              required={false}
             />
             <label htmlFor="Links" className="underline mb-3">
               Tracks
@@ -270,6 +273,7 @@ export default function WritePage() {
                     type="text"
                     placeholder="Track's name"
                     onChange={(data) => handleOnChangeTrackName(data, el)}
+                    required={false}
                   />
                 </div>
                 <div>
@@ -284,6 +288,7 @@ export default function WritePage() {
                     type="number"
                     placeholder="Track's number"
                     onChange={(data) => handleOnChangeTrackNumber(data, el)}
+                    required={false}
                   />
                 </div>
               </div>
@@ -310,6 +315,7 @@ export default function WritePage() {
                     type="text"
                     placeholder="Link's name"
                     onChange={(data) => handleOnChangeLinkName(data, el)}
+                    required={false}
                   />
                 </div>
                 <div>
@@ -324,6 +330,7 @@ export default function WritePage() {
                     type="text"
                     placeholder="Link's url"
                     onChange={(data) => handleOnChangeLinkUrl(data, el)}
+                    required={false}
                   />
                 </div>
               </div>
@@ -339,6 +346,12 @@ export default function WritePage() {
               Release :{" "}
             </label>
             <DatePickerDemo setDate={setDate} date={date} />
+            {/* <DayPicker captionLayout="dropdown" fromYear={1900} toYear={2030} />
+            <DayPicker
+              captionLayout="dropdown-buttons"
+              fromYear={1900}
+              toYear={2030}
+            />{" "} */}
           </div>
           {/* Category / select */}
           {isFetching ? (
@@ -348,7 +361,7 @@ export default function WritePage() {
           ) : (
             <div className="text-slate-800 mb-10">
               <label htmlFor="category" className="text-slate-50 mb-3">
-                Category
+                Category *
               </label>
               <Select
                 options={categories.map((el: { id: string; title: string }) => {
