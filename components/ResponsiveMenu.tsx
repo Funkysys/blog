@@ -56,9 +56,11 @@ const ResponsiveMenu = () => {
             <ToggleTheme />
           </div>
           <div className="flex flex-col gap-4">
-            <Link href={"/write"}>
-              <Button variant={"ghost"}>Add an album</Button>
-            </Link>
+            {status === "authenticated" && (
+              <Link href={"/write"}>
+                <Button variant={"ghost"}>Add an album</Button>
+              </Link>
+            )}
             <p>Categories</p>
             <h3>Something went wrong... sorry !</h3>
           </div>
@@ -83,47 +85,56 @@ const ResponsiveMenu = () => {
           <div className="flex flex-col gap-4 pl-5 mb-5">
             <ProfileButton />
             <ToggleTheme />
-            <Link href={"/write"}>
-              <Button
-                className="bg-violet-600 hover:bg-violet-300 text-withe text-center text-slate-100 w-full"
-                variant={"ghost"}
-              >
-                Add an album
-              </Button>
-            </Link>
-
-            {(user?.role === "ADMIN" || user?.role === "MODERATOR") && (
-              <Link href={"/moderator/category"} className="w-full">
+            {status === "loading" && <BounceLoader color="#36d7b7" />}
+            {status === "authenticated" && (
+              <Link href={"/write"}>
                 <Button
-                  variant="ghost"
-                  className="bg-lime-600 hover:bg-lime-300 text-slate-100 w-full"
+                  className="bg-violet-600 hover:bg-violet-300 text-withe text-center text-slate-100 w-full"
+                  variant={"ghost"}
+                  onClick={() => setOpenMenu(false)}
                 >
-                  Create Category
+                  Add an album
                 </Button>
               </Link>
             )}
 
-            <Button
-              onClick={() => (setChangeRole(true), setOpenMenu(false))}
-              variant="ghost"
-              className="bg-amber-700 text-slate-100 hover:bg-amber-300 hover:text-slate-800 w-full"
-            >
-              Change Role
-            </Button>
-            <Button
-              variant="ghost"
-              className="bg-blue-800 hover:bg-blue-300 text-slate-100"
-              onClick={() => (signOut(), setOpenMenu(false))}
-            >
-              Log Out
-            </Button>
-            <Button
-              onClick={() => (setDelete(true), setOpenMenu(false))}
-              variant="ghost"
-              className="bg-red-600 hover:bg-red-300 text-slate-50 "
-            >
-              Delete Account
-            </Button>
+            {(user?.role === "ADMIN" || user?.role === "MODERATOR") &&
+              status === "authenticated" && (
+                <Link href={"/moderator/category"} className="w-full">
+                  <Button
+                    variant="ghost"
+                    className="bg-lime-600 hover:bg-lime-300 text-slate-100 w-full"
+                    onClick={() => setOpenMenu(false)}
+                  >
+                    Create Category
+                  </Button>
+                </Link>
+              )}
+            {status === "authenticated" && (
+              <>
+                <Button
+                  onClick={() => (setChangeRole(true), setOpenMenu(false))}
+                  variant="ghost"
+                  className="bg-amber-700 text-slate-100 hover:bg-amber-300 hover:text-slate-800 w-full"
+                >
+                  Change Role
+                </Button>
+                <Button
+                  variant="ghost"
+                  className="bg-blue-800 hover:bg-blue-300 text-slate-100"
+                  onClick={() => (signOut(), setOpenMenu(false))}
+                >
+                  Log Out
+                </Button>
+                <Button
+                  onClick={() => (setDelete(true), setOpenMenu(false))}
+                  variant="ghost"
+                  className="bg-red-600 hover:bg-red-300 text-slate-50 "
+                >
+                  Delete Account
+                </Button>
+              </>
+            )}
           </div>
           <div className="flex flex-col gap-4 w-full text-center">
             <p className=" underline text-lg">Categories</p>
@@ -137,6 +148,7 @@ const ResponsiveMenu = () => {
                   <Button
                     className="bg-slate-700 hover:bg-slate-300 text-slate-50"
                     variant={"ghost"}
+                    onClick={() => setOpenMenu(false)}
                   >
                     {category.title}
                   </Button>
