@@ -13,7 +13,7 @@ type Props = {
 
 const ArticlesListComponent = ({ slug }: Props) => {
   const [page, setPage] = useState(0);
-  const { data: posts, isFetching } = usePosts(slug && slug, page);
+  const { data: postsAndCount, isFetching } = usePosts(slug && slug, page);
 
   const nextPageFunc = () => {
     setPage((prev) => prev + 1);
@@ -35,9 +35,9 @@ const ArticlesListComponent = ({ slug }: Props) => {
           </div>
         ) : (
           <>
-            {posts.length > 0 ? (
+            {postsAndCount.posts.length > 0 ? (
               <>
-                {posts?.map((post: PostWithCategory) => (
+                {postsAndCount.posts?.map((post: PostWithCategory) => (
                   <Article key={post.id} post={post} />
                 ))}
               </>
@@ -55,9 +55,11 @@ const ArticlesListComponent = ({ slug }: Props) => {
             Previous
           </Button>
         )}
-        <Button variant="outline" type="button" onClick={nextPageFunc}>
-          Next ALbums
-        </Button>
+        {Math.round(postsAndCount?.count / 6) - 1 > page && (
+          <Button variant="outline" type="button" onClick={nextPageFunc}>
+            Next ALbums
+          </Button>
+        )}
       </div>
     </div>
   );

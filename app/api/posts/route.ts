@@ -9,12 +9,21 @@ export const GET = async (req: Request) => {
     const catSlug = searchParams.get("cat");
     const page: number = Number(searchParams.get("page"));
 
+    const count = await prisma.post.count({
+      where: {
+        ...(catSlug && catSlug !== "null" && catSlug !== "" && { catSlug }),
+      },
+    });
+
+    console.log("count", count);
+
     const posts = await prisma.post.findMany({
       skip: page * 6,
       take: 6,
       where: {
         ...(catSlug && catSlug !== "null" && catSlug !== "" && { catSlug }),
       },
+
       include: {
         cat: true,
       },
@@ -23,7 +32,12 @@ export const GET = async (req: Request) => {
       },
     });
 
-    return NextResponse.json(posts, { status: 200 });
+    const postsAndCount = {
+      posts,
+      count,
+    };
+
+    return NextResponse.json(postsAndCount, { status: 200 });
   } catch (error) {
     return NextResponse.json(
       { error: "Something went wrong" },
