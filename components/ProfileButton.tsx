@@ -68,43 +68,49 @@ const ProfileButton = () => {
           </Avatar>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem onClick={onLogout} className="cursor-pointer">
-            <Button
-              variant="ghost"
-              className="bg-blue-400 text-black hover:bg-blue-800"
-            >
-              Log Out
-            </Button>
-          </DropdownMenuItem>
-          {(user?.role === "ADMIN" || user?.role === "MODERATOR") && (
-            <DropdownMenuItem
-              onClick={() => router.push("/moderator/category")}
-              className="cursor-pointer"
-            >
-              <Button
-                variant="ghost"
-                className="bg-lime-600 text-black hover:bg-lime-800"
-              >
-                Create Category
-              </Button>
-            </DropdownMenuItem>
-          )}
           <DropdownMenuItem
-            onClick={() => setChangeRole(true)}
-            className="cursor-pointer"
+            onClick={onLogout}
+            className="fixed  cursor-pointer flex flex-col gap-6 w-[200px] bg-slate-600 hover:bg-slate-400 text-slate-100 p-4 rounded-md border-2 border-slate-300 z-50"
           >
+            <Link href={"/write"} className="w-full">
+              <Button
+                className="bg-violet-600 hover:bg-violet-300 text-withe text-center text-slate-100 w-full"
+                variant={"ghost"}
+              >
+                Add an album
+              </Button>
+            </Link>
+
+            {(user?.role === "ADMIN" || user?.role === "MODERATOR") && (
+              <Link href={"/moderator/category"} className="w-full">
+                <Button
+                  variant="ghost"
+                  className="bg-lime-600 hover:bg-lime-300 text-slate-100 w-full"
+                >
+                  Create Category
+                </Button>
+              </Link>
+            )}
+
             <Button
+              onClick={() => setChangeRole(true)}
               variant="ghost"
-              className="bg-amber-400 text-black hover:bg-amber-800"
+              className="bg-amber-700 text-slate-100 hover:bg-amber-300 hover:text-slate-800 w-full"
             >
               Change Role
             </Button>
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => setDelete(true)}
-            className="cursor-pointer"
-          >
-            <Button variant="ghost" className="bg-red-600">
+            <Button
+              variant="ghost"
+              className="bg-blue-800 hover:bg-blue-300 text-slate-100 w-full"
+              onClick={() => signOut()}
+            >
+              Log Out
+            </Button>
+            <Button
+              onClick={() => setDelete(true)}
+              variant="ghost"
+              className="bg-red-600 hover:bg-red-300 text-slate-50 w-full"
+            >
               Delete Account
             </Button>
           </DropdownMenuItem>

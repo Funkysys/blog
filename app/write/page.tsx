@@ -142,6 +142,13 @@ export default function WritePage() {
       return;
     }
   }, [router, status]);
+  if (status === "loading") {
+    return (
+      <div className="h-[90vh] flex flx-col item-center justify-center">
+        <BounceLoader color="#36d7b7" />
+      </div>
+    );
+  }
 
   const handleOnChangeTeam = (data: any) => {
     setTeam(data.map((el: { value: string }) => el.value as string));

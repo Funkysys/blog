@@ -9,7 +9,9 @@ import { slugify } from "@/utils/slugify";
 import { Category, User } from "@prisma/client";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { BounceLoader } from "react-spinners";
 
 const CreateCategory = () => {
   const [data, setData] = useState(false);
@@ -21,18 +23,33 @@ const CreateCategory = () => {
   const [deleteCat, setDeleteCat] = useState(false);
   const [deleteId, setDeleteId] = useState<string>();
   const [deleteValidation, setDeleteValidation] = useState(false);
+  const router = useRouter();
 
   const fetchUser = async () => {
     const { data } = await axios.get(`/api/user/${session?.user?.email}`);
     setUser(data);
   };
+  const { data: categories, isFetching, refetch } = useCategories();
 
   if (status === "authenticated" && !user) {
     fetchUser();
   }
 
-  const { data: categories, isFetching, refetch } = useCategories();
-
+  if (status === "loading") {
+    return (
+      <div>
+        <BounceLoader color="#36d7b7" />
+      </div>
+    );
+  }
+  if (status === "unauthenticated") {
+    router.push("/login");
+    return (
+      <div>
+        <p>You need to login to access this page</p>
+      </div>
+    );
+  }
   const handleOnchange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
 

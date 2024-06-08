@@ -15,6 +15,7 @@ import { Button } from "./ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 
 const ResponsiveMenu = () => {
+  const [openMenu, setOpenMenu] = useState(false);
   const { data: categories, isLoading, isError } = useCategories();
   const { data: session, status } = useSession();
   const [user, setUser] = useState<User>();
@@ -74,7 +75,7 @@ const ResponsiveMenu = () => {
         />
       )}
       {changeRole && user && <UpdateRoleModale changeRole={setChangeRole} />}
-      <Sheet>
+      <Sheet open={openMenu} onOpenChange={() => setOpenMenu(!openMenu)}>
         <SheetTrigger>
           <Menu className="h-6 w-6 md:hidden" />
         </SheetTrigger>
@@ -82,42 +83,47 @@ const ResponsiveMenu = () => {
           <div className="flex flex-col gap-4 pl-5 mb-5">
             <ProfileButton />
             <ToggleTheme />
-            <Button
-              variant="ghost"
-              className="bg-blue-400 text-black hover:bg-blue-800"
-            >
-              Log Out
-            </Button>
-            {(user?.role === "ADMIN" || user?.role === "MODERATOR") && (
-              <Button
-                variant="ghost"
-                className="bg-lime-600 text-black hover:bg-lime-800"
-              >
-                Create Category
-              </Button>
-            )}
-            <Button
-              onClick={() => setChangeRole(true)}
-              variant="ghost"
-              className="bg-amber-400 text-black hover:bg-amber-800"
-            >
-              Change Role
-            </Button>
-            <Button
-              onClick={() => setDelete(true)}
-              variant="ghost"
-              className="bg-red-600"
-            >
-              Delete Account
-            </Button>
             <Link href={"/write"}>
               <Button
-                className="bg-violet-600 text-withe text-center w-full"
+                className="bg-violet-600 hover:bg-violet-300 text-withe text-center text-slate-100 w-full"
                 variant={"ghost"}
               >
                 Add an album
               </Button>
             </Link>
+
+            {(user?.role === "ADMIN" || user?.role === "MODERATOR") && (
+              <Link href={"/moderator/category"} className="w-full">
+                <Button
+                  variant="ghost"
+                  className="bg-lime-600 hover:bg-lime-300 text-slate-100 w-full"
+                >
+                  Create Category
+                </Button>
+              </Link>
+            )}
+
+            <Button
+              onClick={() => (setChangeRole(true), setOpenMenu(false))}
+              variant="ghost"
+              className="bg-amber-700 text-slate-100 hover:bg-amber-300 hover:text-slate-800 w-full"
+            >
+              Change Role
+            </Button>
+            <Button
+              variant="ghost"
+              className="bg-blue-800 hover:bg-blue-300 text-slate-100"
+              onClick={() => (signOut(), setOpenMenu(false))}
+            >
+              Log Out
+            </Button>
+            <Button
+              onClick={() => (setDelete(true), setOpenMenu(false))}
+              variant="ghost"
+              className="bg-red-600 hover:bg-red-300 text-slate-50 "
+            >
+              Delete Account
+            </Button>
           </div>
           <div className="flex flex-col gap-4 w-full text-center">
             <p className=" underline text-lg">Categories</p>
@@ -128,7 +134,10 @@ const ResponsiveMenu = () => {
                   href={`/categories/${category.slug}`}
                   className="block px-2 py-1 text-lg"
                 >
-                  <Button className="bg-slate-700" variant={"ghost"}>
+                  <Button
+                    className="bg-slate-700 hover:bg-slate-300 text-slate-50"
+                    variant={"ghost"}
+                  >
                     {category.title}
                   </Button>
                 </Link>
