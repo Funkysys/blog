@@ -18,7 +18,7 @@ const Layout = ({
   }
   if (status === "unauthenticated") {
     return (
-      <div className="h-[90vh] flex flx-col item-center justify-center">
+      <div className="h-[90vh] w-[90vh] flex flx-col item-center justify-center items-center">
         <h1>You are not authenticated</h1>
         <Button variant="outline" onClick={() => signIn()}>
           Sign In
