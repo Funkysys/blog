@@ -1,22 +1,18 @@
 "use client";
 
 import { User } from "@/types";
-import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import axios from "axios";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BounceLoader } from "react-spinners";
 import { DeleteAccountModale } from "./DeleteAccountModale";
 import { UpdateRoleModale } from "./UpdateRoleModale";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
-import {
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
+import { DropdownMenuContent, DropdownMenuItem } from "./ui/dropdown-menu";
 
 const ProfileButton = () => {
   const [user, setUser] = useState<User>();
@@ -24,11 +20,22 @@ const ProfileButton = () => {
   const [deleteAccount, setDelete] = useState(false);
   const { data: session, status } = useSession();
   const router = useRouter();
+  const [open, setOpen] = useState(false);
 
   const handleOnDeleteAccount = async () => {
     const deleteData = await axios.delete(`/api/user/${session?.user?.email}`);
     if (deleteData) signOut({ callbackUrl: "/" });
   };
+
+  useEffect(() => {
+    if (status === "authenticated" && !user) {
+      const fetchUser = async () => {
+        const { data } = await axios.get(`/api/user/${session?.user?.email}`);
+        setUser(data);
+      };
+      fetchUser();
+    }
+  }, [status, session, user]);
 
   if (status === "unauthenticated") {
     return (
@@ -37,20 +44,16 @@ const ProfileButton = () => {
       </Link>
     );
   }
+
   if (status === "loading") {
-    <BounceLoader color="#36d7b7" />;
-  }
-  const fetchUser = async () => {
-    const { data } = await axios.get(`/api/user/${session?.user?.email}`);
-    setUser(data);
-  };
-  if (status === "authenticated" && !user) {
-    fetchUser();
+    return <BounceLoader color="#36d7b7" />;
   }
 
-  const onLogout = () => {
-    signOut({ callbackUrl: "/" });
+  const handleNavigation = (path: string) => {
+    setOpen(false);
+    router.push(path);
   };
+
   return (
     <>
       {deleteAccount && (
@@ -60,18 +63,15 @@ const ProfileButton = () => {
         />
       )}
       {changeRole && user && <UpdateRoleModale changeRole={setChangeRole} />}
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          <Avatar className="w-12 h-12 rounded-full border-2 border-gray-400r">
+      <DropdownMenu.Root open={open} onOpenChange={setOpen}>
+        <DropdownMenu.Trigger asChild>
+          <Avatar className="w-12 h-12 rounded-full border-2 border-gray-400">
             <AvatarImage src={session?.user?.image || "/img/morty.jpg"} />
             <AvatarFallback>{session?.user?.name}</AvatarFallback>
           </Avatar>
-        </DropdownMenuTrigger>
+        </DropdownMenu.Trigger>
         <DropdownMenuContent>
-          <DropdownMenuItem
-            onClick={onLogout}
-            className="fixed  cursor-pointer flex flex-col gap-6 w-[200px] bg-slate-600 hover:bg-slate-400 text-slate-100 p-4 rounded-md border-2 border-slate-300 z-50"
-          >
+          <DropdownMenuItem className="fixed  cursor-pointer flex flex-col gap-6 w-[200px] bg-slate-600 hover:bg-slate-400 text-slate-100 p-4 rounded-md border-2 border-slate-300 z-50">
             <Link href={"/write"} className="w-full">
               <Button
                 className="bg-violet-600 hover:bg-violet-300 text-withe text-center text-slate-100 w-full"
@@ -115,7 +115,7 @@ const ProfileButton = () => {
             </Button>
           </DropdownMenuItem>
         </DropdownMenuContent>
-      </DropdownMenu>
+      </DropdownMenu.Root>
     </>
   );
 };

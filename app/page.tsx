@@ -2,13 +2,6 @@ import ArticlesListComponent from "@/components/LandingPage/ArticlesListComponen
 import CategoriesComponent from "@/components/LandingPage/CategoriesComponent";
 import HomeComponent from "@/components/LandingPage/HomeComponent";
 
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import { ScrollToPlugin } from "gsap/ScrollToPlugin";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, useGSAP);
-
 export default function Home() {
   return (
     <main className=" flex-grow py-10 px-4 ">
