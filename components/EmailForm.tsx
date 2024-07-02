@@ -29,7 +29,7 @@ export const EmailForm = () => {
       const sendingEmail = async () => {
         const res = await emailSend(formData);
         res && setEmailIsSend(true);
-        console.log("Welcome to Discopholies !");
+        console.log("Welcome to Discophiles !");
       };
       sendingEmail();
       setLoader(false);
@@ -74,7 +74,7 @@ export const EmailForm = () => {
     return (
       <div className="p-4 bg-gray-200 rounded-lg">
         <p className="text-green-800">
-          Email send !!! Welcome to Discopholies !
+          Email send !!! Welcome to Discophiles !
         </p>
       </div>
     );
