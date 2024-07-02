@@ -20,7 +20,11 @@ const Layout = ({
     return (
       <div className="h-[90vh] w-[100vw] flex flex-col item-center justify-center items-center">
         <h1 className="mb-2">You are not authenticated</h1>
-        <Button variant="outline" onClick={() => signIn()}>
+        <Button
+          variant="outline"
+          className="bg-lime-800 hover:bg-lime-600"
+          onClick={() => signIn()}
+        >
           Sign In
         </Button>
       </div>
