@@ -8,7 +8,7 @@ export default function Home() {
       <section className="h-[100vh] pt-14">
         <HomeComponent />
       </section>
-      <section className=" ">
+      <section>
         <CategoriesComponent />
       </section>
       <section className="md:min-h-[100vh] ">

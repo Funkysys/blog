@@ -10,7 +10,7 @@ const CategoriesComponent = () => {
   const [windowWidth, setWindowWidth] = useState<number>(0);
 
   return (
-    <div className="invisible sm:visible gap-4 my-6 md:my-10 flex flex-col max-h-[30%] flex-wrap md:flex-row justify-center items-center border-t border-b py-4">
+    <div className="invisible sm:visible md:gap-4 md:my-10 md:max-h-[30%] md:flex-wrap md:flex-row md:justify-center md:items-center md:border-t md:border-b py-4">
       {categories?.map((category: Category) => (
         <Link key={category.id} href={`/categories/${category.slug}`}>
           <Button variant="outline" className="py-4">
