@@ -107,7 +107,7 @@ const CreateCategory = () => {
                 </p>
               </div>
             )}
-            <div className="flex flex-col md:flex-row gap-4 mt-4 w-full justify-center">
+            <div className="flex gap-4 mt-4 w-full justify-center">
               <Button
                 onClick={() => setDeleteCat(false)}
                 variant="outline"
@@ -146,9 +146,9 @@ const CreateCategory = () => {
         <div className="w-[80%] flex flex-col justify-center items-center p-5 border-2 border-slate-600 rounded-lg">
           <h2 className="text-lg underline mb-6">Categories</h2>
           {isFetching && <p>Loading...</p>}
-          <div className="grid grid-cols-4 gap-4 text-center">
+          <div className="grid grid-cols-1 gap-1 sm:grid-cols-2 sm:gap-2 xl:grid-cols-3 xl:gap-3 text-center">
             {categories?.map((category: Category) => (
-              <div key={category.id} className="flex gap-1 items-center">
+              <div key={category.id} className="flex gap-1 mb-2 items-center">
                 <p className="bg-blue-600 px-4 py-2 rounded-l-md">
                   {category.title}
                 </p>
