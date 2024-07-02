@@ -71,7 +71,7 @@ const ProfileButton = () => {
           </Avatar>
         </DropdownMenu.Trigger>
         <DropdownMenuContent>
-          <DropdownMenuItem className="fixed  cursor-pointer flex flex-col gap-6 w-[200px] bg-slate-600 hover:bg-slate-400 text-slate-100 p-4 rounded-md border-2 border-slate-300 z-50">
+          <DropdownMenuItem className="fixed right-0 cursor-pointer flex flex-col gap-6 w-[200px] bg-slate-600 hover:bg-slate-400 text-slate-100 p-4 rounded-md border-2 border-slate-300 z-50">
             <Link href={"/write"} className="w-full">
               <Button
                 className="bg-violet-600 hover:bg-violet-300 text-withe text-center text-slate-100 w-full"

@@ -1,12 +1,31 @@
+"use client";
 import { Separator } from "@/components/ui/separator";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollToPlugin } from "gsap/ScrollToPlugin";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Disc } from "lucide-react";
+import { useEffect, useRef } from "react";
 import { EmailForm } from "../EmailForm";
+gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, useGSAP);
 
 const HomeComponent = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const tl = gsap.timeline({
+      smoothChildTiming: true,
+    });
+    tl.fromTo(
+      containerRef.current,
+      { opacity: 0, duration: 5 },
+      { opacity: 1, duration: 3 }
+    );
+  }, []);
   return (
     <div
-      style={{ backgroundImage: "url(/img/disque.jpg)" }}
-      className="rounded-full w-[90%] md:w-[50%] m-auto aspect-square md:aspect-[1/1] overflow-hidden bg-cover"
+      ref={containerRef}
+      style={{ backgroundImage: "url(/img/disque.jpg)", opacity: 0 }}
+      className="rounded-full w-[90%] md:w-[50%] m-auto aspect-square md:aspect-[1/1] overflow-hidden bg-cover "
     >
       <div className="h-full w-full flex flex-col justify-center items-center">
         <div className="absolute w-96 h-96 bg-slate-600/80 dark:bg-slate-800/80 p-4 rounded-full flex flex-col justify-center items-center">
