@@ -5,6 +5,7 @@ import AuthProvider from "@/providers/auth-provider";
 import QueryProvider from "@/providers/query-provider";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import Head from "next/head";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -21,6 +22,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <Head>
+        <title>Discophiles-blog</title>
+        <meta
+          name="description"
+          content="Discophiles-blog, share your favorite albums"
+        />
+      </Head>
       <body
         className={`${inter.className} flex flex-col flex-between min-h-screen mx-auto w-full md:w-[70%] overscroll-hidden`}
       >
