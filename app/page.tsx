@@ -5,7 +5,7 @@ import HomeComponent from "@/components/LandingPage/HomeComponent";
 export default function Home() {
   return (
     <main className=" flex-grow py-10 px-4 ">
-      <section className="h-[100vh] pt-14">
+      <section className="h-[70vh] md:h-[100vh] pt-14">
         <HomeComponent />
       </section>
       <section>
