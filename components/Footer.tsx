@@ -14,10 +14,7 @@ const Footer = () => {
         <div className="flex items-center justify-center m-5 p-5 w-full">
           <HeaderNavigation />
         </div>
-        <Button
-          variant="ghost"
-          onClick={() => router.push("/mentions-legales")}
-        >
+        <Button variant="ghost" onClick={() => router.push("/legals")}>
           Contact
         </Button>
       </div>

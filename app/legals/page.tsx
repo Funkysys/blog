@@ -1,6 +1,6 @@
 "use client";
 
-const Legales = ({}) => {
+export default function Legals(props: any) {
   return (
     <main className="flex flex-col flex-grow gap-10 justify-center items-center px-4">
       <div className="p-8 font-sans">
@@ -50,5 +50,4 @@ const Legales = ({}) => {
       </div>
     </main>
   );
-};
-export default Legales;
+}

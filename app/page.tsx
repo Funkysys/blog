@@ -1,7 +1,11 @@
 import ArticlesListComponent from "@/components/LandingPage/ArticlesListComponent";
 import CategoriesComponent from "@/components/LandingPage/CategoriesComponent";
 import HomeComponent from "@/components/LandingPage/HomeComponent";
-
+import type { Metadata } from "next";
+export const metadata: Metadata = {
+  title: "discophiles-blog",
+  description: "CouCou",
+};
 export default function Home() {
   return (
     <main className=" flex-grow md:py-10 px-4 ">
