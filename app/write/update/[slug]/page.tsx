@@ -179,8 +179,10 @@ export default function UpdatePostePage({ params }: Props) {
     e.preventDefault();
     let url = "";
     try {
-      const formData = new FormData(e.currentTarget);
-      url = await uploadFile(formData);
+      if (file) {
+        const formData = new FormData(e.currentTarget);
+        url = await uploadFile(formData);
+      }
     } catch (error) {
       console.error("Error in uploadImage : ", error);
     }
@@ -206,7 +208,6 @@ export default function UpdatePostePage({ params }: Props) {
     try {
       const formData = new FormData(e.currentTarget);
       const url = await uploadFile(formData);
-      console.log(url);
 
       url && setImageUrl(url);
     } catch (error) {
@@ -262,12 +263,13 @@ export default function UpdatePostePage({ params }: Props) {
     setTempLink(tempLinkUrl);
     setLinks(tempLinkUrl as Prisma.JsonArray);
   };
+  console.log(tempLink);
 
   const AddNewLink = () => {
     setTempLink([...tempLink, { id: tempLink.length + 1, name: "", url: "" }]);
   };
   const AddNewTrack = () => {
-    setTracks([...tracks, { id: tempLink.length + 1, name: "" }]);
+    setTracks([...tracks, { id: tracks.length + 1, name: "exemple" }]);
   };
   const supressTrack = () => {
     setTracks(tracks.slice(0, tracks.length - 1));

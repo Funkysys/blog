@@ -196,7 +196,7 @@ export default function WritePage() {
     setTempLink([...tempLink, { id: tempLink.length + 1, name: "", url: "" }]);
   };
   const AddNewTrack = () => {
-    setTracks([...tracks, { id: tempLink.length + 1, name: "" }]);
+    setTracks([...tracks, { id: tracks.length + 1, name: "exemple" }]);
   };
 
   return (
