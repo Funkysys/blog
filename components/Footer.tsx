@@ -9,7 +9,15 @@ const Footer = () => {
   const router = useRouter();
   return (
     <footer className="p-4 border-t">
-      <div className="w-full h-20vh bg-blue-950 text-slate-900 rounded-md flex justify-center p-4">
+      <div className="w-full h-20vh bg-indigo-950 text-slate-900 rounded-md flex flex-col items-center justify-center p-4">
+        <div>
+          <p className="text-center text-slate-200 mb-4">
+            Since all our applications are free and we strive to provide you
+            with ever more efficient and secure tools, we invite you to support
+            us in our efforts through a donation in the form of your choice.
+            Thank you!
+          </p>
+        </div>
         <Button
           variant="outline"
           className="bg-amber-400"
