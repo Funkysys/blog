@@ -47,8 +47,6 @@ const PostsPage = ({ params }: Props) => {
   useEffect(() => {
     if ((role === "ADMIN" || role === "MODERATOR") && !right) {
       setRight(true);
-    } else if (post?.userEmail === session?.user?.email && !right) {
-      setRight(true);
     }
   }, [role, right, post, session]);
 
