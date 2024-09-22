@@ -55,13 +55,18 @@ const PostsPage = ({ params }: Props) => {
   if (status === "loading") {
     <BounceLoader color="#36d7b7" />;
   }
-  const fetchUser = async () => {
-    const { data } = await axios.get(`/api/user/${session?.user?.email}`);
-    setUser(data);
-  };
+  if (status === "unauthenticated") {
+    return;
+  }
+  if (status === "authenticated") {
+    const fetchUser = async () => {
+      const { data } = await axios.get(`/api/user/${session?.user?.email}`);
+      setUser(data);
+    };
 
-  if (!user) {
-    fetchUser();
+    if (!user) {
+      fetchUser();
+    }
   }
 
   if (isFetching)
