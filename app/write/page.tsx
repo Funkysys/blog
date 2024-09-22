@@ -96,26 +96,8 @@ export default function WritePage() {
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-
-    const image = await uploadImage(e);
-
-    setLinks(tempLink as Prisma.JsonArray);
-
-    await mutate({
-      title,
-      content,
-      catSlug: slugify(catSlug),
-      catTitle: catSlug,
-      slug: slugify(title),
-      image: imageUrl && imageUrl,
-      release: date,
-      artist,
-      team,
-      trackList: trackList,
-      links: links,
-    });
-  };
-  const uploadImage: FormEventHandler<HTMLFormElement> = async (e) => {
+    let url = "";
+    // const image = await uploadImage(e);
     try {
       if (!isImage) return;
       const formData = new FormData(e.currentTarget);
@@ -126,7 +108,7 @@ export default function WritePage() {
           setImageSizeError(true);
           return;
         }
-        const url = await uploadFile(formData);
+        url = await uploadFile(formData);
         if (url) {
           setImageUrl(url);
         }
@@ -134,7 +116,24 @@ export default function WritePage() {
     } catch (error) {
       console.error("Error in uploadImage:", error);
     }
+
+    setLinks(tempLink as Prisma.JsonArray);
+
+    await mutate({
+      title,
+      content,
+      catSlug: slugify(catSlug),
+      catTitle: catSlug,
+      slug: slugify(title),
+      image: url,
+      release: date,
+      artist,
+      team,
+      trackList: trackList,
+      links: links,
+    });
   };
+  const uploadImage: FormEventHandler<HTMLFormElement> = async (e) => {};
 
   useLayoutEffect(() => {
     if (status === "unauthenticated") {

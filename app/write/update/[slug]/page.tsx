@@ -177,8 +177,13 @@ export default function UpdatePostePage({ params }: Props) {
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-
-    const image = await uploadImage(e);
+    let url = "";
+    try {
+      const formData = new FormData(e.currentTarget);
+      url = await uploadFile(formData);
+    } catch (error) {
+      console.error("Error in uploadImage : ", error);
+    }
 
     setLinks(tempLink as Prisma.JsonArray);
 
@@ -188,7 +193,7 @@ export default function UpdatePostePage({ params }: Props) {
       catSlug: slugify(catSlug),
       catTitle: catSlug,
       slug: slugify(title),
-      image: imageUrl,
+      image: url,
       release: date,
       artist,
       team,
@@ -201,7 +206,9 @@ export default function UpdatePostePage({ params }: Props) {
     try {
       const formData = new FormData(e.currentTarget);
       const url = await uploadFile(formData);
-      url && (await setImageUrl(url));
+      console.log(url);
+
+      url && setImageUrl(url);
     } catch (error) {
       console.error("Error in uploadImage : ", error);
     }
