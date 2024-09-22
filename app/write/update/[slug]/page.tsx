@@ -193,7 +193,7 @@ export default function UpdatePostePage({ params }: Props) {
       catSlug: slugify(catSlug),
       catTitle: catSlug,
       slug: slugify(title),
-      image: url,
+      image: url !== "" ? url : imageUrl,
       release: date,
       artist,
       team,
