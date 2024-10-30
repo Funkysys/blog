@@ -23,7 +23,7 @@ const Article = ({ post }: Props) => {
     <Card
       className={
         pathname.includes("categories")
-          ? "flex flex-col items-between rounded-lg border-2 m-2  max-h-[40vh]"
+          ? "flex flex-col items-between rounded-lg border-2 m-2  max-h-[50vh]"
           : "flex flex-col items-between rounded-lg border-2 m-2 "
       }
     >
