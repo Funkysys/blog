@@ -10,6 +10,7 @@ import { PostWithCategory } from "@/types";
 import { Eye, MessageCircle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Badge } from "./ui/badge";
 
 type Props = {
@@ -17,8 +18,15 @@ type Props = {
 };
 
 const Article = ({ post }: Props) => {
+  const pathname = usePathname();
   return (
-    <Card className=" flex flex-col  items-between rounded-lg border-2 m-2 h-[100%] ">
+    <Card
+      className={
+        pathname.includes("categories")
+          ? "flex flex-col items-between rounded-lg border-2 m-2  max-h-[40vh]"
+          : "flex flex-col items-between rounded-lg border-2 m-2 "
+      }
+    >
       <Link href={`/posts/${post.slug}`}>
         <CardHeader>
           <div className="aspect-square relative mb-2">
