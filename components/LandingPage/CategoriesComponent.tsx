@@ -10,7 +10,11 @@ const CategoriesComponent = () => {
   return (
     <div className="invisible sm:visible md:gap-4 md:my-10 md:max-h-[30%] md:flex-wrap md:flex-row md:justify-center md:items-center md:border-t md:border-b py-4">
       {categories?.map((category: Category) => (
-        <Link key={category.id} href={`/categories/${category.slug}`}>
+        <Link
+          key={category.id}
+          className="mr-2"
+          href={`/categories/${category.slug}`}
+        >
           <Button variant="outline" className="py-4">
             {category.title}
           </Button>
