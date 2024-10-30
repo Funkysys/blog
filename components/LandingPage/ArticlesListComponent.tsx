@@ -28,6 +28,7 @@ const ArticlesListComponent = ({ slug }: Props) => {
 
     fetchAllPosts();
   }, []);
+  console.log(Math.round(allPosts / 6), page);
 
   console.log(allPosts);
 
@@ -66,11 +67,12 @@ const ArticlesListComponent = ({ slug }: Props) => {
         )}
       </div>
       <div className=" relative bottom-2 m-auto w-full flex justify-center gap-3 mt-5">
-        {Math.round(allPosts / 6) > page ? (
+        {Math.round(allPosts / 6) > page && (
           <Button variant="outline" type="button" onClick={nextPageFunc}>
             Next ALbums
           </Button>
-        ) : (
+        )}
+        {Math.round(allPosts / 6) > 0 && page > 0 && (
           <Button variant="outline" type="button" onClick={previousPageFunc}>
             Previous
           </Button>
