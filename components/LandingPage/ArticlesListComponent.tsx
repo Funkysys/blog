@@ -1,7 +1,8 @@
 "use client";
+import { addAllPosts } from "@/app/api/posts/addAllPosts";
 import { usePosts } from "@/hook/usePosts";
 import { PostWithCategory } from "@/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BounceLoader } from "react-spinners";
 import Article from "../Article";
 import PageTitle from "../PageTitle";
@@ -13,7 +14,22 @@ type Props = {
 
 const ArticlesListComponent = ({ slug }: Props) => {
   const [page, setPage] = useState(0);
+  const [allPosts, setAllPosts] = useState(0);
   const { data: postsAndCount, isFetching } = usePosts(slug && slug, page);
+  useEffect(() => {
+    const fetchAllPosts = async () => {
+      try {
+        const posts = await addAllPosts();
+        setAllPosts(posts);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des bannières :", error);
+      }
+    };
+
+    fetchAllPosts();
+  }, []);
+
+  console.log(allPosts);
 
   const nextPageFunc = () => {
     setPage((prev) => prev + 1);
@@ -50,14 +66,13 @@ const ArticlesListComponent = ({ slug }: Props) => {
         )}
       </div>
       <div className=" relative bottom-2 m-auto w-full flex justify-center gap-3 mt-5">
-        {page > 0 && (
-          <Button variant="outline" type="button" onClick={previousPageFunc}>
-            Previous
-          </Button>
-        )}
-        {Math.round(postsAndCount?.count / 6) - 1 > page && (
+        {Math.round(allPosts / 6) > page ? (
           <Button variant="outline" type="button" onClick={nextPageFunc}>
             Next ALbums
+          </Button>
+        ) : (
+          <Button variant="outline" type="button" onClick={previousPageFunc}>
+            Previous
           </Button>
         )}
       </div>

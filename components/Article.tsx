@@ -24,7 +24,7 @@ const Article = ({ post }: Props) => {
       className={
         pathname.includes("categories")
           ? "flex flex-col items-between rounded-lg border-2 m-2  max-h-[50vh]"
-          : "flex flex-col items-between rounded-lg border-2 m-2 "
+          : "flex flex-col items-between rounded-lg border-2 m-2  max-h-[70vh]"
       }
     >
       <Link href={`/posts/${post.slug}`}>

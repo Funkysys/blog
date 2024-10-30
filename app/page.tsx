@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <main className=" flex-grow md:py-10 px-4 ">
-      <section className="h-[70vh] md:h-[100vh] pt-14">
+      <section className="h-[70vh] md:h-[80vh] pt-14">
         <HomeComponent />
       </section>
       <section>

@@ -1,7 +1,6 @@
 import { getAuthSession } from "@/lib/auth-options";
 import prisma from "@/lib/connect";
 import { NextResponse } from "next/server";
-// import { CATEGORY_SLUG } from "@/lib/constants";
 
 export const GET = async (req: Request) => {
   try {
@@ -15,8 +14,6 @@ export const GET = async (req: Request) => {
       },
     });
 
-    console.log("count", count);
-
     const posts = await prisma.post.findMany({
       skip: page * 6,
       take: 6,
@@ -28,10 +25,9 @@ export const GET = async (req: Request) => {
         cat: true,
       },
       orderBy: {
-        release: "asc",
+        createdAt: "desc",
       },
     });
-
     const postsAndCount = {
       posts,
       count,
