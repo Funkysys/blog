@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     site: "@discophiles-blog",
     title: "discophiles-blog",
     description: "Share your favorite albums and discover new ones",
-    images: "/logo.png",
+    images: "/images/discophiles.png",
   },
   openGraph: {
     title: "discophiles-blog",
