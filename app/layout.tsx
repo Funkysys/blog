@@ -14,11 +14,11 @@ export const metadata: Metadata = {
   description: "Share your favorite albums and discover new ones",
   robots: "follow, index",
   icons: {
-    icon: "/images/discophiles.png", // Chemin vers votre favicon
-    shortcut: "/images/discophiles.png", // Chemin pour le raccourci
-    apple: "/images/discophiles.png", // Favicon pour les appareils Apple
+    icon: "/img/discophiles.png", // Chemin vers votre favicon
+    shortcut: "/img/discophiles.png", // Chemin pour le raccourci
+    apple: "/img/discophiles.png", // Favicon pour les appareils Apple
     other: [
-      { rel: "mask-icon", url: "/images/discophiles.png", color: "#5bbad5" },
+      { rel: "mask-icon", url: "/img/discophiles.png", color: "#5bbad5" },
     ],
   },
   abstract: "Share your favorite albums and discover new ones",
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     site: "@discophiles-blog",
     title: "discophiles-blog",
     description: "Share your favorite albums and discover new ones",
-    images: "/images/discophiles.png",
+    images: "/img/discophiles.png",
   },
   openGraph: {
     title: "discophiles-blog",
