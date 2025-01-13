@@ -13,6 +13,14 @@ export const metadata: Metadata = {
   title: { default: "discophiles-blog", template: "%s | discophiles-blog" },
   description: "Share your favorite albums and discover new ones",
   robots: "follow, index",
+  icons: {
+    icon: "/images/discophiles.png", // Chemin vers votre favicon
+    shortcut: "/images/discophiles.png", // Chemin pour le raccourci
+    apple: "/images/discophiles.png", // Favicon pour les appareils Apple
+    other: [
+      { rel: "mask-icon", url: "/images/discophiles.png", color: "#5bbad5" },
+    ],
+  },
   abstract: "Share your favorite albums and discover new ones",
   keywords: ["music", "albums", "discophiles", "blog", "reviews"],
   twitter: {
