@@ -27,7 +27,7 @@ const Article = ({ post }: Props) => {
           : "flex flex-col items-between rounded-lg border-2 m-2  md:max-h-[70vh]"
       }
     >
-      <Link href={`/posts/${post.slug}`}>
+      <Link href={`/posts/${post.slug}`} legacyBehavior>
         <CardHeader>
           <div className="aspect-square relative mb-2">
             <Image
@@ -50,12 +50,12 @@ const Article = ({ post }: Props) => {
         </CardHeader>
       </Link>
       <CardContent>
-        <Link href={`/categories/${post.catSlug}`}>
+        <Link href={`/categories/${post.catSlug}`} legacyBehavior>
           <Badge variant="outline">{post.catSlug}</Badge>
         </Link>
       </CardContent>
       <CardFooter className="flex justify-between">
-        <Link href={`/posts/${post.slug}`}>
+        <Link href={`/posts/${post.slug}`} legacyBehavior>
           <Button variant="outline">Discover</Button>
         </Link>
         <div className="flex gap-2">

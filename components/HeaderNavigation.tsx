@@ -77,10 +77,8 @@ export function HeaderNavigation() {
           </NavigationMenuItem>
           <NavigationMenuItem>
             {!buttonRole && link !== "" && (
-              <Link href={link} legacyBehavior passHref>
-                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                  Add an album
-                </NavigationMenuLink>
+              <Link href={link} className={navigationMenuTriggerStyle()}>
+                Add an album
               </Link>
             )}
             {buttonRole && (

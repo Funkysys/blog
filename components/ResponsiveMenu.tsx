@@ -47,7 +47,7 @@ const ResponsiveMenu = () => {
         <SheetContent side="left">
           <div className="flex flex-col gap-6 pl-5 ">
             {status === "unauthenticated" && (
-              <Link href={"/login"}>
+              <Link href={"/login"} legacyBehavior>
                 <Button variant="outline">Login</Button>
               </Link>
             )}
@@ -57,7 +57,7 @@ const ResponsiveMenu = () => {
           </div>
           <div className="flex flex-col gap-4">
             {status === "authenticated" && (
-              <Link href={"/write"}>
+              <Link href={"/write"} legacyBehavior>
                 <Button variant={"ghost"}>Add an album</Button>
               </Link>
             )}
@@ -87,7 +87,7 @@ const ResponsiveMenu = () => {
             <ToggleTheme />
             {status === "loading" && <BounceLoader color="#36d7b7" />}
             {status === "authenticated" && (
-              <Link href={"/write"}>
+              <Link href={"/write"} legacyBehavior>
                 <Button
                   className="bg-violet-600 hover:bg-violet-300 text-withe text-center text-slate-100 w-full"
                   variant={"ghost"}
@@ -100,7 +100,7 @@ const ResponsiveMenu = () => {
 
             {(user?.role === "ADMIN" || user?.role === "MODERATOR") &&
               status === "authenticated" && (
-                <Link href={"/moderator/category"} className="w-full">
+                <Link href={"/moderator/category"} className="w-full" legacyBehavior>
                   <Button
                     variant="ghost"
                     className="bg-lime-600 hover:bg-lime-300 text-slate-100 w-full"
@@ -144,7 +144,7 @@ const ResponsiveMenu = () => {
                   key={category.id}
                   href={`/categories/${category.slug}`}
                   className="block px-2 py-1 text-lg"
-                >
+                  legacyBehavior>
                   <Button
                     className="bg-slate-700 hover:bg-slate-300 text-slate-50"
                     variant={"ghost"}

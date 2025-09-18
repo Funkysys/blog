@@ -8,20 +8,19 @@ datasource db {
 }
 
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String
-  type               String
-  provider           String
-  providerAccountId  String
-  refresh_token      String?  @db.Text
-  access_token       String?  @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  @db.Text
-  session_state      String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
@@ -34,25 +33,16 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-enum Role {
-  ADMIN
-  MODERATOR
-  EDITOR
-  USER
-}
-
 model User {
   id            String    @id @default(cuid())
   name          String?
   email         String?   @unique
   emailVerified DateTime?
-  role Role @default(USER)
   image         String?
   accounts      Account[]
+  Comment       Comment[]
+  Post          Post[]
   sessions      Session[]
-  posts         Post[]
-  comments      Comment[]
-  @@unique([email, name, image])
 }
 
 model VerificationToken {
@@ -64,54 +54,35 @@ model VerificationToken {
 }
 
 model Post {
-  id String @id @default(cuid())
-  createdAt DateTime @default(now())
-  title String
-  slug String @unique
-  content String @db.Text
-  image String?
-  nbView Int @default(0)
-  nbComments Int @default(0)
-  comments Comment[] 
-  // user
-  user User @relation(fields: [userEmail, userName, userImage], references: [email, name, image], onDelete: Cascade)
-  userEmail String
-  userName String
-  userImage String
-  // category
-  catSlug String
-  catTitle String
-  cat Category @relation(fields: [catSlug, catTitle], references: [slug, title], onDelete: Cascade)
-  artist String?
-  team String[]
-  trackList Json[]
-  release DateTime?
-  links Json[]
-
-  // @@unique([userEmail, userName, userImage])
+  id         String    @id @default(cuid())
+  createdAt  DateTime  @default(now())
+  title      String
+  slug       String    @unique
+  content    String
+  image      String?
+  nbView     Int       @default(0)
+  nbComments Int       @default(0)
+  userId     String
+  catSlug    String
+  comments   Comment[]
+  Category   Category  @relation(fields: [catSlug], references: [slug])
+  User       User      @relation(fields: [userId], references: [id])
 }
 
 model Category {
-  id String @id @default(cuid())
-  slug String @unique
+  id    String  @id @default(cuid())
+  slug  String  @unique
   title String
   image String?
-  posts Post[]
-  @@unique([slug, title])
+  Post  Post[]
 }
 
 model Comment {
-  id String @id @default(cuid())
+  id        String   @id @default(cuid())
   createdAt DateTime @default(now())
-  content String
-  userEmail String
-  user User @relation(fields: [userEmail], references: [email], onDelete: Cascade)
-  postSlug String
-  post Post @relation(fields: [postSlug], references: [slug], onDelete: Cascade)
-}
-
-model Email {
-  id String @id @default(cuid())
-  createdAt DateTime @default(now())
-  email String @unique
+  content   String
+  userId    String
+  postSlug  String
+  post      Post     @relation(fields: [postSlug], references: [slug])
+  User      User     @relation(fields: [userId], references: [id])
 }

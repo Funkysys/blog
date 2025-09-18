@@ -22,7 +22,7 @@ export const GET = async (req: Request) => {
       },
 
       include: {
-        cat: true,
+        Category: true,
       },
       orderBy: {
         createdAt: "desc",
@@ -35,8 +35,9 @@ export const GET = async (req: Request) => {
 
     return NextResponse.json(postsAndCount, { status: 200 });
   } catch (error) {
+    console.error("API /api/posts error:", error);
     return NextResponse.json(
-      { error: "Something went wrong" },
+      { error: error instanceof Error ? error.message : "Something went wrong" },
       { status: 500 }
     );
   }
@@ -55,26 +56,28 @@ export const POST = async (req: Request) => {
 
     const body = await req.json();
 
-    const dataFromBody = {
-      title: body.title,
-      content: body.content,
-      slug: body.slug,
-      catSlug: body.catSlug,
-      catTitle: body.catTitle,
-      image: body.image,
-      userEmail: session.user.email || "",
-      userName: session.user.name || "",
-      userImage: session.user.image || "",
-      release: body.release,
-      artist: body.artist,
-      team: body.team,
-      trackList: body.trackList,
-      links: body.links,
-    };
+
+    // Récupère l'id utilisateur via l'email
+    const user = await prisma.user.findUnique({
+      where: { email: session.user.email || "" },
+    });
+
+    if (!user) {
+      return NextResponse.json(
+        { error: "Utilisateur non trouvé" },
+        { status: 404 }
+      );
+    }
 
     const post = await prisma.post.create({
       data: {
-        ...dataFromBody,
+        title: body.title,
+        content: body.content,
+        slug: body.slug,
+        catSlug: body.catSlug,
+        image: body.image,
+        userId: user.id,
+        // Ajoute ici les autres champs du modèle Post si besoin
       },
     });
 

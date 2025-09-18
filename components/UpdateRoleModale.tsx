@@ -93,7 +93,7 @@ export const UpdateRoleModale = ({ changeRole }: UpdateRoleProps) => {
               to validate. In the email, please specify the reason for your
               choice.
             </p>
-            <Link href="mailto:contact@discophiles-blog.eu">
+            <Link href="mailto:contact@discophiles-blog.eu" legacyBehavior>
               <p className="text-blue-600 hover:underline">
                 contact@discophiles-blog.eu
               </p>

@@ -193,7 +193,7 @@ const PostsPage = ({ params }: Props) => {
                       key={track.id}
                       href={track.url}
                       className="text-blue-400 hover:underline"
-                    >
+                      legacyBehavior>
                       {track.name}
                     </Link>
                   )
@@ -204,7 +204,7 @@ const PostsPage = ({ params }: Props) => {
         <div>
           <h3 className="mt-5">Release: {releaseDate}</h3>
         </div>
-        <Link href={post.catSlug}>
+        <Link href={post.catSlug} legacyBehavior>
           category :{" "}
           <Button variant={"outline"} className="my-5 dark:text-slate-50">
             {post.catTitle}
