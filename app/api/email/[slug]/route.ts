@@ -3,17 +3,17 @@ import { NextResponse } from "next/server";
 
 export const GET = async (
   req: Request,
-  { params }: { params: { slug: string } }
+  context: { params: { slug: string } }
 ) => {
   try {
-    const { slug } = params;
-    const email = await prisma.email.findUnique({
+    const { slug } = context.params;
+    const user = await prisma.user.findUnique({
       where: {
         email: slug as string,
       },
     });
 
-    return NextResponse.json(email, { status: 200 });
+    return NextResponse.json(user, { status: 200 });
   } catch (error) {
     return NextResponse.json(
       { error: "Something went wrong" },

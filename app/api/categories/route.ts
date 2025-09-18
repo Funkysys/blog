@@ -6,7 +6,7 @@ import prisma from "@/lib/connect";
 import { NextResponse } from "next/server";
 
 // GET POST PUT
-export const GET = async (req: Request, res: Response) => {
+export const GET = async (req: Request) => {
   try {
     const categories = await prisma.category.findMany();
     return NextResponse.json(categories, { status: 200 });
@@ -19,7 +19,7 @@ export const GET = async (req: Request, res: Response) => {
   // get all categories
   // res.json({ categories: [] })
 };
-export const POST = async (req: Request, res: Response) => {
+export const POST = async (req: Request) => {
   // create a category
   try {
     const session = await getAuthSession();
