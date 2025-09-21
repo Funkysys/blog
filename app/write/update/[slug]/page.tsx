@@ -7,6 +7,7 @@ import { useCategories } from "@/hook/useCategories";
 import { Prisma } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { PostWithCategory } from "@/types";
 import {
   FormEventHandler,
   SyntheticEvent,
@@ -16,25 +17,7 @@ import {
   useState,
 } from "react";
 
-// Extend the Post type to include all fields we're working with
-interface Post {
-  id: string;
-  slug: string;
-  title: string;
-  catSlug: string;
-  content: string;
-  createdAt: Date;
-  image: string | null;
-  nbView: number;
-  nbComments: number;
-  userId: string;
-  release: Date | null;
-  artist: string;
-  team: string[];
-  trackList: any[];
-  links: any[];
-  catTitle?: string;
-}
+
 
 import dynamic from "next/dynamic";
 const ReactQuill = dynamic(() => import("react-quill"), {
@@ -122,7 +105,7 @@ export default function UpdatePostePage({ params }: Props) {
 
   const router = useRouter();
 
-  const updatePost = (updatePost: Partial<Post>) =>
+  const updatePost = (updatePost: Partial<PostWithCategory>) =>
     axios.put(`/api/update/${slug}`, updatePost).then((res) => res.data);
 
   const {
@@ -130,7 +113,7 @@ export default function UpdatePostePage({ params }: Props) {
     data: updatePostData,
     isLoading,
   } = useMutation(updatePost, {
-    onSuccess: (data: Post) => {
+    onSuccess: (data: PostWithCategory) => {
       router.push(`/posts/${data.slug}`);
     },
   });
