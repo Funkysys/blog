@@ -23,6 +23,7 @@ export const GET = async (req: Request) => {
 
       include: {
         Category: true,
+        User: true,
       },
       orderBy: {
         createdAt: "desc",

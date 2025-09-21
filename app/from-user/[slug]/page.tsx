@@ -54,14 +54,22 @@ const FromUsersPage = ({ params }: Props) => {
         )}
       </div>
       <div className=" relative bottom-2 m-auto w-full flex justify-center gap-3 mt-5">
-        {page > 0 && (
-          <Button variant="outline" type="button" onClick={previousPageFunc}>
-            Previous
+        {page == 0 && (
+          <Button variant="outline" type="button" onClick={nextPageFunc}>
+            Next ALbums
           </Button>
         )}
-        <Button variant="outline" type="button" onClick={nextPageFunc}>
-          Next ALbums
-        </Button>
+
+        {page > 0 && (
+          <>
+            <Button variant="outline" type="button" onClick={previousPageFunc}>
+              Previous
+            </Button>
+            <Button variant="outline" type="button" onClick={nextPageFunc}>
+              Next ALbums
+            </Button>
+          </>
+        )}
       </div>
     </div>
   );

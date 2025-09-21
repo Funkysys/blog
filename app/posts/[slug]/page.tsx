@@ -46,7 +46,8 @@ const PostsPage = ({ params }: Props) => {
     }
   }, [role, right, post, session]);
 
-  const releaseDate = post ? new Date(post.release).toLocaleDateString() : "";
+  const releaseDate =
+    post && post.release ? new Date(post.release).toLocaleDateString() : "";
   const imageUrl = post?.image ? `${post.image}` : "/img/disque.jpg";
 
   if (status === "loading") {
@@ -97,27 +98,27 @@ const PostsPage = ({ params }: Props) => {
       <section className="flex justify-between items-center p-5 mb-5 ">
         <div className="flex justify-center items-center gap-3 mt-5">
           <Avatar>
-            <AvatarImage src={post.userImage} />
+            <AvatarImage src={post.User?.image || ""} />
             <AvatarFallback>
-              {post.userName ? (
+              {post.User?.name ? (
                 <Button variant="ghost" className="">
-                  {post.userName}
+                  {post.User.name}
                 </Button>
               ) : (
-                post.userEmail
+                post.User?.email
               )}
             </AvatarFallback>
           </Avatar>
           <div>
-            {post.userName ? (
+            {post.User?.name ? (
               <Button
                 variant="outline"
-                onClick={() => router.push(`/from-user/${post.userName}`)}
+                onClick={() => router.push(`/from-user/${post.User?.name}`)}
               >
-                {post.userName}
+                {post.User.name}
               </Button>
             ) : (
-              <p>{post.userEmail}</p>
+              <p>{post.User?.email}</p>
             )}
             <p className="text-slate-500 text-sm">
               Posted on {new Date(post.createdAt).toLocaleDateString()}
@@ -146,9 +147,10 @@ const PostsPage = ({ params }: Props) => {
           <div className="flex gap-2">
             <h3>Team: </h3>
             <div>
-              {post.team.map((member) => (
-                <p key={member}>{member}</p>
-              ))}
+              {Array.isArray(post.team) &&
+                post.team.map((member, index) => (
+                  <p key={index}>{String(member)}</p>
+                ))}
             </div>
           </div>
         </div>
@@ -156,15 +158,16 @@ const PostsPage = ({ params }: Props) => {
           <div className="flex gap-2">
             <h3>Tracks: </h3>
             <div>
-              {post?.trackList?.map(
-                (track) =>
-                  track && (
-                    <div key={track.id} className="flex gap-3">
-                      <p> - {track.number} -</p>
-                      <p>{track.name}</p>
-                    </div>
-                  )
-              )}
+              {Array.isArray(post?.trackList) &&
+                post.trackList.map(
+                  (track: any, index) =>
+                    track && (
+                      <div key={track.id || index} className="flex gap-3">
+                        <p> - {track.number} -</p>
+                        <p>{track.name}</p>
+                      </div>
+                    )
+                )}
             </div>
           </div>
         </div>
@@ -172,28 +175,32 @@ const PostsPage = ({ params }: Props) => {
           <div className="flex gap-2">
             <h3>Links: </h3>
             <div className="flex flex-col gap-2">
-              {post?.links?.map(
-                (track) =>
-                  track && (
-                    <Link
-                      key={track.id}
-                      href={track.url}
-                      className="text-blue-400 hover:underline"
-                    >
-                      {track.name}
-                    </Link>
-                  )
-              )}
+              {Array.isArray(post?.links) &&
+                post.links.map(
+                  (link: any, index) =>
+                    link && (
+                      <Link
+                        key={link.id || index}
+                        href={link.url}
+                        className="text-blue-400 hover:underline"
+                      >
+                        {link.name}
+                      </Link>
+                    )
+                )}
             </div>
           </div>
         </div>
         <div>
           <h3 className="mt-5">Release: {releaseDate}</h3>
         </div>
-        <Link href={post.catSlug} className="inline-block">
+        <Link
+          href={`/categories/${post.Category.slug}`}
+          className="inline-block"
+        >
           category :{" "}
           <Button variant={"outline"} className="my-5 dark:text-slate-50">
-            {post.catTitle}
+            {post.Category.title}
           </Button>
         </Link>
         <div className="border-2 border-slate-100 rounded-lg p-4">

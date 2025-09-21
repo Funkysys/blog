@@ -41,6 +41,21 @@ const Article = ({ post }: Props) => {
           </div>
           <CardTitle className="font-semibold text-md">{post.title}</CardTitle>
 
+          {post.User && (
+            <div className="flex items-center gap-2 mb-2">
+              <Image
+                src={post.User.image || "/img/default-avatar.png"}
+                alt={post.User.name || "Author"}
+                width={20}
+                height={20}
+                className="rounded-full"
+              />
+              <span className="text-sm text-muted-foreground">
+                by {post.User.name}
+              </span>
+            </div>
+          )}
+
           <p
             className="text-sm text-muted-foreground"
             dangerouslySetInnerHTML={{

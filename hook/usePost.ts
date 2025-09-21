@@ -1,10 +1,10 @@
 import axios from "axios";
 import { useQuery } from "react-query";
-import { Post } from "../types";
+import { PostWithCategory } from "../types";
 
 const getPostBySlug = async (slug: string) => {
   const { data } = await axios.get(`/api/posts/${slug}`);
-  return data as Post;
+  return data as PostWithCategory;
 };
 
 export function usePost(slug: string) {
