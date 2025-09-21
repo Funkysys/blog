@@ -19,15 +19,7 @@ import {
 
 
 
-import dynamic from "next/dynamic";
-const ReactQuill = dynamic(() => import("react-quill"), {
-  loading: () => (
-    <div className="h-[90vh] flex flx-col item-center justify-center">
-      <BounceLoader color="#36d7b7" />
-    </div>
-  ),
-  ssr: false,
-});
+import QuillEditor from "@/components/QuillEditor";
 
 import { Button } from "@/components/ui/button";
 import { usePost } from "@/hook/usePost";
@@ -472,7 +464,7 @@ export default function UpdatePostePage({ params }: Props) {
             <label htmlFor="content" className="text-slate-50">
               Why do you like this album ?
             </label>
-            <ReactQuill
+            <QuillEditor
               className="mt-3"
               placeholder="Write post content here..."
               value={content}
