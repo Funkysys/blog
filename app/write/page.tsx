@@ -43,6 +43,12 @@ export default function WritePage() {
   const [imageUrl, setImageUrl] = useState<string>("");
   const [artist, setArtist] = useState("");
   const [team, setTeam] = useState<string[]>([]);
+  
+  // Debug function pour surveiller setTeam
+  const debugSetTeam = (newTeam: string[]) => {
+    console.log('setTeam called with:', newTeam, 'from:', new Error().stack);
+    setTeam(newTeam);
+  };
   const [trackList, setTrackList] = useState<Prisma.JsonArray>([]);
   const [tracks, setTracks] = useState<Track[]>([{ id: 1, name: "" }]);
   const [links, setLinks] = useState<Prisma.JsonArray>([]);
@@ -244,7 +250,7 @@ export default function WritePage() {
             <label htmlFor="team" className="mb-3">
               Team :
             </label>
-            <TeamSelector team={team} onChange={setTeam} className="mb-3" />
+            <TeamSelector team={team} onChange={debugSetTeam} className="mb-3" />
             <label htmlFor="Links" className="underline mb-3">
               Tracks
             </label>
