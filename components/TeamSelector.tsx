@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useArtists } from "@/hook/useArtists";
 import { X } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface TeamSelectorProps {
   team: string[];
@@ -17,6 +17,11 @@ const TeamSelector = ({ team, onChange, className }: TeamSelectorProps) => {
   const [inputValue, setInputValue] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const { data: artists = [], isLoading } = useArtists();
+
+  // Debug: surveiller les changements de team
+  useEffect(() => {
+    console.log('TeamSelector: team prop changed to:', team, 'length:', team.length);
+  }, [team]);
 
   // Filtrer les suggestions basées sur l'input
   const filteredSuggestions = artists.filter(
@@ -84,9 +89,11 @@ const TeamSelector = ({ team, onChange, className }: TeamSelectorProps) => {
     if (validMembers.length > 0) {
       const newTeam = [...team, ...validMembers];
       console.log("New team will be:", newTeam);
+      console.log("Calling onChange with:", newTeam);
       onChange(newTeam);
+      console.log("onChange called successfully");
 
-      // Clear input after successful addition
+      // Clear input after successful addition  
       setInputValue("");
       setShowSuggestions(false);
     } else {
