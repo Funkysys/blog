@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
+import { Textarea } from "@/components/ui/textarea";
+import { useState } from "react";
 
-// Import ReactQuill dynamically to avoid SSR issues
+// Import ReactQuill dynamically
 const ReactQuill = dynamic(() => import("react-quill"), {
   ssr: false,
   loading: () => (
@@ -20,47 +21,79 @@ interface QuillEditorProps {
   className?: string;
 }
 
-const QuillEditor = ({ value, onChange, placeholder, className }: QuillEditorProps) => {
-  const quillRef = useRef<any>(null);
+const QuillEditor = ({
+  value,
+  onChange,
+  placeholder,
+  className,
+}: QuillEditorProps) => {
+  const [useSimpleEditor, setUseSimpleEditor] = useState(false);
 
-  useEffect(() => {
-    // Suppress findDOMNode warnings in development
-    if (process.env.NODE_ENV === 'development') {
-      const originalError = console.error;
-      console.error = (...args) => {
-        if (typeof args[0] === 'string' && args[0].includes('findDOMNode')) {
-          return;
-        }
-        originalError.call(console, ...args);
-      };
-    }
-  }, []);
+  // Fallback to simple textarea if ReactQuill fails
+  if (useSimpleEditor) {
+    return (
+      <div className={className}>
+        <div className="mb-2">
+          <button
+            type="button"
+            onClick={() => setUseSimpleEditor(false)}
+            className="text-sm text-blue-500 hover:underline"
+          >
+            Basculer vers l&apos;éditeur riche
+          </button>
+        </div>
+        <Textarea
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={placeholder}
+          className="min-h-32"
+          rows={10}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className={className}>
-      <ReactQuill
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        theme="snow"
-        modules={{
-          toolbar: [
-            [{ 'header': [1, 2, 3, false] }],
-            ['bold', 'italic', 'underline', 'strike'],
-            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-            ['blockquote', 'code-block'],
-            ['link'],
-            ['clean']
-          ],
-        }}
-        formats={[
-          'header',
-          'bold', 'italic', 'underline', 'strike',
-          'list', 'bullet',
-          'blockquote', 'code-block',
-          'link'
-        ]}
-      />
+      <div className="mb-2">
+        <button
+          type="button"
+          onClick={() => setUseSimpleEditor(true)}
+          className="text-sm text-blue-500 hover:underline"
+        >
+          Basculer vers l&apos;éditeur simple
+        </button>
+      </div>
+      <div
+        onError={() => setUseSimpleEditor(true)}
+      >
+        <ReactQuill
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          theme="snow"
+          modules={{
+            toolbar: [
+              [{ header: [1, 2, 3, false] }],
+              ["bold", "italic", "underline"],
+              [{ list: "ordered" }, { list: "bullet" }],
+              ["blockquote"],
+              ["link"],
+              ["clean"],
+            ],
+          }}
+          formats={[
+            "header",
+            "bold",
+            "italic",
+            "underline",
+            "list",
+            "bullet",
+            "blockquote",
+            "link",
+          ]}
+        />
+      </div>
     </div>
   );
 };

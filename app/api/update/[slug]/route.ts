@@ -22,6 +22,7 @@ export async function PUT(
       title: body.title,
       content: body.content,
       image: body.image,
+      catSlug: body.catSlug,
       release: body.release,
       artist: body.artist,
       team: body.team,

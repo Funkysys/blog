@@ -4,10 +4,10 @@ import { DatePickerDemo } from "@/components/DatePicker";
 import PageTitle from "@/components/PageTitle";
 import { Input } from "@/components/ui/input";
 import { useCategories } from "@/hook/useCategories";
+import { PostWithCategory } from "@/types";
 import { Prisma } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { PostWithCategory } from "@/types";
 import {
   FormEventHandler,
   SyntheticEvent,
@@ -16,8 +16,6 @@ import {
   useLayoutEffect,
   useState,
 } from "react";
-
-
 
 import QuillEditor from "@/components/QuillEditor";
 
@@ -28,7 +26,6 @@ import axios from "axios";
 import Image from "next/image";
 import { useMutation } from "react-query";
 import CreatableSelect from "react-select/creatable";
-import { BounceLoader } from "react-spinners";
 import { uploadFile } from "../../../api/upload/upload.action";
 
 type Link = {
