@@ -1,9 +1,28 @@
-# Fichiers de dump contenant des secrets
-db_cluster-23-02-2025@13-21-10.backup
-db_cluster-utf8.sql
+# Fichiers de dump et migration contenant des secrets
+db_cluster-*.backup
+db_cluster-*.sql
 db_dump.bak
 postgres_only.sql
+tables_only.sql
+data_only.sql
+posts_data.txt
 restore.log
+
+# Scripts temporaires de migration
+export-data.js
+import-data.js
+extract-images.js
+test-images.js
+fix-broken-images.js
+fix-images.js
+data-export.json
+extracted-images.json
+MIGRATION-GUIDE.md
+
+# Fichiers de backup PostgreSQL
+*.backup
+*.dump
+*.bak
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies

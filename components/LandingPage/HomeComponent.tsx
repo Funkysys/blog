@@ -25,7 +25,7 @@ const HomeComponent = () => {
       <div
         ref={containerRef}
         style={{ backgroundImage: "url(/img/disque.jpg)", opacity: 0 }}
-        className="rounded-full w-[90%] md:w-[50%] m-auto aspect-square md:aspect-[1/1] overflow-hidden bg-cover relative motion-safe:animate-spin hover:animate-out"
+        className="rounded-full w-[90%] md:w-[50%] m-auto aspect-square md:aspect-[1/1] overflow-hidden bg-cover relative animate-spin"
       ></div>
       <div className="absolute top-0 h-full w-full flex flex-col justify-center items-center ">
         <div className="absolute w-96 h-96 bg-slate-600/80 dark:bg-slate-800/80 p-4 rounded-full flex flex-col justify-center items-center">
