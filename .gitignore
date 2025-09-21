@@ -19,6 +19,15 @@ data-export.json
 extracted-images.json
 MIGRATION-GUIDE.md
 
+# Scripts OAuth temporaires
+export-complete.js
+complete-export.json
+extract-oauth.js
+import-oauth-distant.js
+oauth-data.json
+fix-oauth.js
+fix-distant-oauth.js
+
 # Fichiers de backup PostgreSQL
 *.backup
 *.dump
