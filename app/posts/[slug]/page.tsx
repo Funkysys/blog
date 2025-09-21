@@ -183,6 +183,7 @@ const PostsPage = ({ params }: Props) => {
                         key={link.id || index}
                         href={link.url}
                         className="text-blue-400 hover:underline"
+                        target="_blank"
                       >
                         {link.name}
                       </Link>
