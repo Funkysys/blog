@@ -140,49 +140,57 @@ export default function UpdatePostePage({ params }: Props) {
   useEffect(() => {
     if (post && post.id) {
       setOldPost({
-        artist: post.artist,
-        catTitle: post.catTitle,
-        content: post.content,
+        artist: post.artist || "",
+        catTitle: post.Category?.title || "",
+        content: post.content || "",
         id: post.id,
-        image: post.image,
-        date: new Date(post.release),
-        links: post.links.map((link) => ({
-          id: Number(link.id),
-          name: link.name,
-          url: link.url,
-        })),
+        image: post.image || "",
+        date: post.release ? new Date(post.release) : new Date(),
+        links: Array.isArray(post.links)
+          ? post.links.map((link: any) => ({
+              id: Number(link.id),
+              name: link.name,
+              url: link.url,
+            }))
+          : [],
         nbComments: post.nbComments,
         nbView: post.nbView,
         slug: post.slug,
-        team: post.team,
-        title: post.title,
-        trackList: post.trackList.map((track) => ({
-          id: Number(track.id),
-          name: track.name,
-          number: Number(track.number),
-        })),
+        team: Array.isArray(post.team) ? post.team.map(String) : [],
+        title: post.title || "",
+        trackList: Array.isArray(post.trackList)
+          ? post.trackList.map((track: any) => ({
+              id: Number(track.id),
+              name: track.name,
+              number: Number(track.number),
+            }))
+          : [],
       });
-      setTitle(post.title);
-      setCatSlug(post.catSlug);
-      setContent(post.content);
-      setImageUrl(post.image);
-      setArtist(post.artist);
-      setTeam(post.team);
-      setDate(new Date(post.release));
+      setTitle(post.title || "");
+      setCatSlug(post.Category?.slug || "");
+      setContent(post.content || "");
+      setImageUrl(post.image || "");
+      setArtist(post.artist || "");
+      setTeam(Array.isArray(post.team) ? post.team.map(String) : []);
+      setDate(post.release ? new Date(post.release) : new Date());
       setTracks(
-        post.trackList.map((track) => ({
-          id: Number(track.id),
-          name: track.name,
-          number: Number(track.number),
-        }))
+        Array.isArray(post.trackList)
+          ? post.trackList.map((track: any) => ({
+              id: Number(track.id),
+              name: track.name,
+              number: Number(track.number),
+            }))
+          : []
       );
-      setLinks(post.links);
+      setLinks(Array.isArray(post.links) ? post.links : []);
       setTempLink(
-        post.links.map((link) => ({
-          id: Number(link.id),
-          name: link.name,
-          url: link.url,
-        }))
+        Array.isArray(post.links)
+          ? post.links.map((link: any) => ({
+              id: Number(link.id),
+              name: link.name,
+              url: link.url,
+            }))
+          : []
       );
     }
   }, [post]);
