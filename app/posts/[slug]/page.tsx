@@ -58,6 +58,7 @@ const PostsPage = ({ params }: Props) => {
     const fetchUser = async () => {
       const { data } = await axios.get(`/api/user/${session?.user?.email}`);
       setUser(data);
+      setRole(data.role || "");
     };
 
     if (!user) {
