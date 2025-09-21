@@ -3,18 +3,18 @@ import Article from "@/components/Article";
 import { Button } from "@/components/ui/button";
 import { usePostFromUser } from "@/hook/usePostFromUser";
 import { PostWithCategory } from "@/types";
-import { useState } from "react";
+import { use, useState } from "react";
 import { BounceLoader } from "react-spinners";
 import PageTitle from "../../../components/PageTitle";
 
 type Props = {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 };
 
 const FromUsersPage = ({ params }: Props) => {
-  const { slug } = params;
+  const { slug } = use(params);
   const [page, setPage] = useState(0);
   const { data: posts, isFetching } = usePostFromUser(slug);
 

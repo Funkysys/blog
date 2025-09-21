@@ -4,9 +4,9 @@ import { NextResponse } from "next/server";
 // GET SINGLE POST
 export const GET = async (
   req: Request,
-  { params }: { params: { slug: string } }
+  context: { params: Promise<{ slug: string }> }
 ) => {
-  const { slug } = params;
+  const { slug } = await context.params;
 
   try {
     const post = await prisma.post.update({

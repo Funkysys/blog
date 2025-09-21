@@ -4,17 +4,37 @@ import { DatePickerDemo } from "@/components/DatePicker";
 import PageTitle from "@/components/PageTitle";
 import { Input } from "@/components/ui/input";
 import { useCategories } from "@/hook/useCategories";
-import { Post, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import {
   FormEventHandler,
   SyntheticEvent,
+  use,
   useEffect,
   useLayoutEffect,
   useState,
 } from "react";
-import "react-quill/dist/quill.snow.css";
+
+// Extend the Post type to include all fields we're working with
+interface Post {
+  id: string;
+  slug: string;
+  title: string;
+  catSlug: string;
+  content: string;
+  createdAt: Date;
+  image: string | null;
+  nbView: number;
+  nbComments: number;
+  userId: string;
+  release: Date | null;
+  artist: string;
+  team: string[];
+  trackList: any[];
+  links: any[];
+  catTitle?: string;
+}
 
 import dynamic from "next/dynamic";
 const ReactQuill = dynamic(() => import("react-quill"), {
@@ -52,10 +72,11 @@ type Category = {
   title: string;
 };
 
+// Type pour les paramètres Next.js 15+
 type Props = {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 };
 
 type oldPost = {
@@ -75,7 +96,7 @@ type oldPost = {
 };
 
 export default function UpdatePostePage({ params }: Props) {
-  const { slug } = params;
+  const { slug } = use(params);
 
   const [oldPost, setOldPost] = useState<oldPost>({} as oldPost);
 
@@ -193,7 +214,7 @@ export default function UpdatePostePage({ params }: Props) {
       title,
       content,
       catSlug: slugify(catSlug),
-      catTitle: catSlug,
+      // catTitle supprimé car non attendu par le type Post
       slug: slugify(title),
       image: url !== "" ? url : imageUrl,
       release: date,

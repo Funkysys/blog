@@ -14,13 +14,13 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { BounceLoader } from "react-spinners";
 
 type Props = {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 };
 
 type User = {
@@ -34,16 +34,12 @@ type User = {
 
 const PostsPage = ({ params }: Props) => {
   const { data: session, status } = useSession();
-  const { slug } = params;
+  const { slug } = use(params);
   const [user, setUser] = useState<User>();
   const [role, setRole] = useState<string>("");
-  const [right, setRight] = useState<Boolean>(false);
-  const { data: post, isFetching, error } = usePost(slug);
+  const [right, setRight] = useState<boolean>(false);
   const router = useRouter();
-
-  if (user && role === "") {
-    setRole(user.role);
-  }
+  const { data: post, isFetching, error } = usePost(slug);
   useEffect(() => {
     if ((role === "ADMIN" || role === "MODERATOR") && !right) {
       setRight(true);
@@ -51,6 +47,7 @@ const PostsPage = ({ params }: Props) => {
   }, [role, right, post, session]);
 
   const releaseDate = post ? new Date(post.release).toLocaleDateString() : "";
+  const imageUrl = post?.image ? `${post.image}` : "/img/disque.jpg";
 
   if (status === "loading") {
     <BounceLoader color="#36d7b7" />;
@@ -88,24 +85,13 @@ const PostsPage = ({ params }: Props) => {
           )}
         </div>
         <div className="relative rounded-full border-2 border-gray-500 aspect-square md:aspect-[1/1] overflow-hidden bg-cover w-[40%] m-auto">
-          {post.image ? (
-            <Image
-              src={post.image}
-              alt={post.title}
-              fill
-              onError={(e) => (e.currentTarget.src = "/img/disque.jpg")}
-              className="rounded-full  object-cover "
-            />
-          ) : (
-            <Image
-              src="/img/disque.jpg"
-              alt={post.title}
-              layout="responsive"
-              width={200}
-              height={200}
-              className="rounded-full  object-cover "
-            />
-          )}
+          <Image
+            src={imageUrl}
+            alt={post.title}
+            fill
+            onError={(e) => (e.currentTarget.src = "/img/disque.jpg")}
+            className="rounded-full  object-cover "
+          />
         </div>
       </section>
       <section className="flex justify-between items-center p-5 mb-5 ">
@@ -193,7 +179,7 @@ const PostsPage = ({ params }: Props) => {
                       key={track.id}
                       href={track.url}
                       className="text-blue-400 hover:underline"
-                      legacyBehavior>
+                    >
                       {track.name}
                     </Link>
                   )
@@ -204,7 +190,7 @@ const PostsPage = ({ params }: Props) => {
         <div>
           <h3 className="mt-5">Release: {releaseDate}</h3>
         </div>
-        <Link href={post.catSlug} legacyBehavior>
+        <Link href={post.catSlug} className="inline-block">
           category :{" "}
           <Button variant={"outline"} className="my-5 dark:text-slate-50">
             {post.catTitle}

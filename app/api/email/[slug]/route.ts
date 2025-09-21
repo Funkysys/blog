@@ -3,10 +3,10 @@ import { NextResponse } from "next/server";
 
 export const GET = async (
   req: Request,
-  context: { params: { slug: string } }
+  context: { params: Promise<{ slug: string }> }
 ) => {
   try {
-    const { slug } = context.params;
+    const { slug } = await context.params;
     const user = await prisma.user.findUnique({
       where: {
         email: slug as string,

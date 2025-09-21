@@ -14,7 +14,7 @@ const CategoriesComponent = () => {
           key={category.id}
           className="mr-2"
           href={`/categories/${category.slug}`}
-          legacyBehavior>
+        >
           <Button variant="outline" className="py-4">
             {category.title}
           </Button>

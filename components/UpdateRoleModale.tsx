@@ -35,7 +35,7 @@ export const UpdateRoleModale = ({ changeRole }: UpdateRoleProps) => {
       setModerator(true);
       return;
     }
-    const result = await updateRole(user?.email, Role.EDITOR);
+    const result = await updateRole(user?.email, Role.MODERATOR);
     if (result) {
       setResult(true);
       setTimeout(() => {
@@ -47,14 +47,9 @@ export const UpdateRoleModale = ({ changeRole }: UpdateRoleProps) => {
   const roleAndDescription = [
     { name: "USER", descr: "As a user, all you have to do is enjoy the site" },
     {
-      name: "EDITOR",
-      descr:
-        "As an editor, you will be able to create and manage your own posts",
-    },
-    {
       name: "MODERATOR",
       descr:
-        "As a moderator, you will be able to create and manage your own posts as well as those of others",
+        "As a moderator, you will be able to moderate content and manage posts",
     },
     {
       name: "ADMIN",
@@ -93,10 +88,11 @@ export const UpdateRoleModale = ({ changeRole }: UpdateRoleProps) => {
               to validate. In the email, please specify the reason for your
               choice.
             </p>
-            <Link href="mailto:contact@discophiles-blog.eu" legacyBehavior>
-              <p className="text-blue-600 hover:underline">
-                contact@discophiles-blog.eu
-              </p>
+            <Link
+              href="mailto:contact@discophiles-blog.eu"
+              className="text-blue-600 hover:underline"
+            >
+              contact@discophiles-blog.eu
             </Link>
           </div>
         )}

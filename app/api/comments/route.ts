@@ -1,6 +1,6 @@
 import { getAuthSession } from "@/lib/auth-options";
-import { NextResponse } from "next/server";
 import prisma from "@/lib/connect";
+import { NextResponse } from "next/server";
 
 export const GET = async (req: Request) => {
   try {
@@ -15,7 +15,7 @@ export const GET = async (req: Request) => {
 
     const comments = await prisma.comment.findMany({
       where: { postSlug },
-      include: { user: true },
+      include: { User: true }, // Correction du nom de la relation
     });
 
     return NextResponse.json(comments, { status: 200 });

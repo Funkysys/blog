@@ -19,6 +19,7 @@ type Props = {
 
 const Article = ({ post }: Props) => {
   const pathname = usePathname();
+
   return (
     <Card
       className={
@@ -27,13 +28,14 @@ const Article = ({ post }: Props) => {
           : "flex flex-col items-between rounded-lg border-2 m-2  md:max-h-[70vh]"
       }
     >
-      <Link href={`/posts/${post.slug}`} legacyBehavior>
+      <Link href={`/posts/${post.slug}`}>
         <CardHeader>
           <div className="aspect-square relative mb-2">
             <Image
               src={post.image ? `${post.image}` : "/img/disque.jpg"}
               alt={post?.title}
               fill
+              onError={(e) => (e.currentTarget.src = "/img/disque.jpg")}
               className="aspect-square object-cover rounded-full border-2 shadow-sm shadow-slate-400 transition-all duration-300 hover:scale-110"
             />
           </div>
@@ -50,12 +52,12 @@ const Article = ({ post }: Props) => {
         </CardHeader>
       </Link>
       <CardContent>
-        <Link href={`/categories/${post.catSlug}`} legacyBehavior>
+        <Link href={`/categories/${post.catSlug}`}>
           <Badge variant="outline">{post.catSlug}</Badge>
         </Link>
       </CardContent>
       <CardFooter className="flex justify-between">
-        <Link href={`/posts/${post.slug}`} legacyBehavior>
+        <Link href={`/posts/${post.slug}`}>
           <Button variant="outline">Discover</Button>
         </Link>
         <div className="flex gap-2">

@@ -84,26 +84,26 @@ function Comments({ postSlug, role }: CommentProps) {
           comments.map((comment: CommentWithUser) => (
             <>
               {console.log(
-                comment?.user.email === session?.user?.email ||
+                comment?.User.email === session?.user?.email ||
                   role === "ADMIN" ||
                   role === "MODERATOR"
               )}
               <div className="flex items-center mt-4" key={comment.id}>
                 <Avatar>
                   <AvatarImage
-                    src={comment.user.image || "/img/shadcn_avatar.jpg"}
+                    src={comment.User.image || "/img/shadcn_avatar.jpg"}
                     alt=""
                   />
-                  <AvatarFallback>{comment.user.name}</AvatarFallback>
+                  <AvatarFallback>{comment.User.name}</AvatarFallback>
                 </Avatar>
 
                 <div className="ml-3 p-4 border border-slate-400 rounded-lg">
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold">{comment.user.name}</span>
+                    <span className="font-semibold">{comment.User.name}</span>
                     <span className="text-sm text-slate-500">
                       {new Date(comment.createdAt).toLocaleDateString()}
                     </span>
-                    {(comment?.user.email === session?.user?.email ||
+                    {(comment?.User.email === session?.user?.email ||
                       role === "ADMIN" ||
                       role === "MODERATOR") && (
                       <>

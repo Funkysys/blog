@@ -4,15 +4,25 @@ import { NextResponse } from "next/server";
 // GET SINGLE POST
 export const GET = async (
   req: Request,
-  { params }: { params: { slug: string } }
+  context: { params: Promise<{ slug: string }> }
 ) => {
-  const { slug } = params;
+  const { slug } = await context.params;
 
   try {
-    const posts = await prisma.post.findMany({
-      where: { userName: slug },
+    // Cherche l'utilisateur par son nom
+    const user = await prisma.user.findFirst({
+      where: { name: slug },
     });
-
+    if (!user) {
+      return NextResponse.json(
+        { error: "Utilisateur non trouvé" },
+        { status: 404 }
+      );
+    }
+    // Récupère les posts de cet utilisateur
+    const posts = await prisma.post.findMany({
+      where: { userId: user.id },
+    });
     return NextResponse.json(posts, { status: 200 });
   } catch (error) {
     return NextResponse.json(

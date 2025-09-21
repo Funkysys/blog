@@ -40,11 +40,11 @@ export type Post = {
 };
 
 export type PostWithCategory = Prisma.PostGetPayload<{
-  include: { cat: true };
+  include: { Category: true };
 }>;
 
 export type CommentWithUser = Prisma.CommentGetPayload<{
-  include: { user: true };
+  include: { User: true };
 }>;
 export type User = {
   id: string;

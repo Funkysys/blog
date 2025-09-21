@@ -13,7 +13,6 @@ import {
   useLayoutEffect,
   useState,
 } from "react";
-import "react-quill/dist/quill.snow.css";
 
 import dynamic from "next/dynamic";
 const ReactQuill = dynamic(() => import("react-quill"), {
@@ -123,7 +122,7 @@ export default function WritePage() {
       title,
       content,
       catSlug: slugify(catSlug),
-      catTitle: catSlug,
+      // catTitle supprimé car non présent dans le modèle Post
       slug: slugify(title),
       image: url,
       release: date,
