@@ -114,7 +114,11 @@ const PostsPage = ({ params }: Props) => {
             {post.User?.name ? (
               <Button
                 variant="outline"
-                onClick={() => router.push(`/from-user/${post.User?.name}`)}
+                onClick={() =>
+                  router.push(
+                    `/from-artists/${encodeURIComponent(post.User.name || "")}`
+                  )
+                }
               >
                 {post.User.name}
               </Button>
@@ -142,7 +146,18 @@ const PostsPage = ({ params }: Props) => {
       <Separator />
       <section className="mt-10 dark:text-slate-200">
         <h3 className="dark:text-slate-300">
-          Artistes/Band: <span className="text-slate-200">{post.artist}</span>
+          Artistes/Band:{" "}
+          <Button
+            variant="link"
+            className="text-blue-400 hover:text-blue-600 p-0 h-auto font-normal"
+            onClick={() =>
+              router.push(
+                `/from-artists/${encodeURIComponent(post.artist || "")}`
+              )
+            }
+          >
+            {post.artist}
+          </Button>
         </h3>
         <div className="mt-3">
           <div className="flex gap-2 flex-wrap">
@@ -154,7 +169,11 @@ const PostsPage = ({ params }: Props) => {
                     key={index}
                     variant="outline"
                     size="sm"
-                    onClick={() => router.push(`/from-user/${String(member)}`)}
+                    onClick={() =>
+                      router.push(
+                        `/from-artists/${encodeURIComponent(String(member))}`
+                      )
+                    }
                     className="text-xs h-6 text-blue-600 hover:text-blue-800 hover:bg-blue-50"
                   >
                     {String(member)}

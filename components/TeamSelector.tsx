@@ -26,11 +26,24 @@ const TeamSelector = ({ team, onChange, className }: TeamSelectorProps) => {
       inputValue.length > 0
   );
 
-  const addMember = (member: string) => {
-    if (member.trim() && !team.includes(member.trim())) {
-      onChange([...team, member.trim()]);
-      setInputValue("");
-      setShowSuggestions(false);
+  const addMember = (member: string, keepInput: boolean = false) => {
+    const trimmedMember = member.trim();
+    if (trimmedMember && !team.includes(trimmedMember)) {
+      onChange([...team, trimmedMember]);
+      if (!keepInput) {
+        setInputValue("");
+        setShowSuggestions(false);
+      }
+    }
+  };
+
+  const addMultipleMembers = (members: string[]) => {
+    const validMembers = members
+      .map((m) => m.trim())
+      .filter((m) => m && !team.includes(m));
+
+    if (validMembers.length > 0) {
+      onChange([...team, ...validMembers]);
     }
   };
 
@@ -42,6 +55,8 @@ const TeamSelector = ({ team, onChange, className }: TeamSelectorProps) => {
     if (e.key === "Enter" && inputValue.trim()) {
       e.preventDefault();
       addMember(inputValue);
+      // Garder le focus sur l'input pour continuer à ajouter
+      (e.target as HTMLInputElement).focus();
     }
     if (e.key === "Escape") {
       setShowSuggestions(false);
@@ -88,12 +103,29 @@ const TeamSelector = ({ team, onChange, className }: TeamSelectorProps) => {
               onChange={handleInputChange}
               onKeyDown={handleInputKeyDown}
               onFocus={() => setShowSuggestions(inputValue.length > 0)}
-              placeholder="Ajouter un membre d'équipe..."
+              placeholder="Ajouter un membre (ou plusieurs séparés par des virgules)..."
               className="flex-1"
             />
             <Button
               type="button"
-              onClick={() => addMember(inputValue)}
+              onClick={() => {
+                // Permet d'ajouter plusieurs membres séparés par des virgules
+                const members = inputValue
+                  .split(",")
+                  .map((m) => m.trim())
+                  .filter((m) => m);
+
+                if (members.length > 1) {
+                  // Ajout multiple avec la nouvelle fonction
+                  addMultipleMembers(members);
+                } else if (members.length === 1) {
+                  // Ajout simple
+                  addMember(members[0]);
+                }
+
+                setInputValue("");
+                setShowSuggestions(false);
+              }}
               disabled={!inputValue.trim()}
               variant="outline"
               size="sm"

@@ -11,13 +11,14 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://discophiles-blog.eu"),
   title: { default: "discophiles-blog", template: "%s | discophiles-blog" },
   description: "Share your favorite albums and discover new ones",
   robots: "follow, index",
   icons: {
-    icon: "/img/discophiles.png", // Chemin vers votre favicon
-    shortcut: "/img/discophiles.png", // Chemin pour le raccourci
-    apple: "/img/discophiles.png", // Favicon pour les appareils Apple
+    icon: "/img/discophiles.png",
+    shortcut: "/img/discophiles.png",
+    apple: "/img/discophiles.png",
     other: [
       { rel: "mask-icon", url: "/img/discophiles.png", color: "#5bbad5" },
     ],
@@ -34,11 +35,15 @@ export const metadata: Metadata = {
   openGraph: {
     title: "discophiles-blog",
     description: "Share your favorite albums and discover new ones",
-    images: "/logo.png",
+    images: "/img/discophiles.png",
     url: "https://discophiles-blog.eu",
     type: "website",
   },
-  viewport: "width=device-width, initial-scale=1.0",
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1.0,
 };
 
 export default function RootLayout({

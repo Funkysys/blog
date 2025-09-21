@@ -15,8 +15,9 @@ type Props = {
 
 const FromUsersPage = ({ params }: Props) => {
   const { slug } = use(params);
+  const decodedSlug = decodeURIComponent(slug);
   const [page, setPage] = useState(0);
-  const { data: posts, isFetching } = usePostFromUser(slug);
+  const { data: posts, isFetching } = usePostFromUser(decodedSlug);
 
   const nextPageFunc = () => {
     setPage((prev) => prev + 1);
@@ -30,7 +31,7 @@ const FromUsersPage = ({ params }: Props) => {
 
   return (
     <div className="flex flex-col justify-center ">
-      <PageTitle title={slug} />
+      <PageTitle title={decodedSlug} />
 
       <div className="min-hh-[90vh] gap-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-col-4">
         {isFetching ? (
