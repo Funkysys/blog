@@ -30,7 +30,10 @@ const QuillEditor = ({
         rows={10}
       />
       <div className="mt-2 text-xs text-slate-500">
-        <p>Balises HTML supportées : &lt;b&gt;, &lt;i&gt;, &lt;u&gt;, &lt;p&gt;, &lt;br&gt;, &lt;strong&gt;, &lt;em&gt;</p>
+        <p>
+          Balises HTML supportées : &lt;b&gt;, &lt;i&gt;, &lt;u&gt;, &lt;p&gt;,
+          &lt;br&gt;, &lt;strong&gt;, &lt;em&gt;
+        </p>
       </div>
     </div>
   );

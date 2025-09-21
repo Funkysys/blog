@@ -19,13 +19,13 @@ import {
 
 import QuillEditor from "@/components/QuillEditor";
 
+import TeamSelector from "@/components/TeamSelector";
 import { Button } from "@/components/ui/button";
 import { usePost } from "@/hook/usePost";
 import { slugify } from "@/utils/slugify";
 import axios from "axios";
 import Image from "next/image";
 import { useMutation } from "react-query";
-import CreatableSelect from "react-select/creatable";
 import { uploadFile } from "../../../api/upload/upload.action";
 
 type Link = {
@@ -341,15 +341,7 @@ export default function UpdatePostePage({ params }: Props) {
               <label htmlFor="team" className="mb-3">
                 Team :
               </label>
-              <CreatableSelect
-                value={team.map((el) => {
-                  return { value: el, label: el };
-                })}
-                options={team.map((el) => ({ value: el, label: el }))}
-                isClearable
-                isMulti
-                onChange={handleOnChangeTeam}
-              />
+              <TeamSelector team={team} onChange={setTeam} className="mb-3" />
               <label htmlFor="Links" className="underline mb-3">
                 Tracks
               </label>

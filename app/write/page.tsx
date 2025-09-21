@@ -16,12 +16,12 @@ import {
 
 import QuillEditor from "@/components/QuillEditor";
 
+import TeamSelector from "@/components/TeamSelector";
 import { Button } from "@/components/ui/button";
 import { slugify } from "@/utils/slugify";
 import axios from "axios";
 import { useMutation } from "react-query";
 import Select from "react-select";
-import CreatableSelect from "react-select/creatable";
 import { BounceLoader } from "react-spinners";
 import { uploadFile } from "../api/upload/upload.action";
 
@@ -140,9 +140,6 @@ export default function WritePage() {
     );
   }
 
-  const handleOnChangeTeam = (data: any) => {
-    setTeam(data.map((el: { value: string }) => el.value as string));
-  };
   const handleOnChangeTrackName = (data: any, el: Track) => {
     const tempTracks = tracks.map((item) => {
       if (item.id === el.id) {
@@ -247,12 +244,7 @@ export default function WritePage() {
             <label htmlFor="team" className="mb-3">
               Team :
             </label>
-            <CreatableSelect
-              isClearable
-              isMulti
-              onChange={handleOnChangeTeam}
-              required={false}
-            />
+            <TeamSelector team={team} onChange={setTeam} className="mb-3" />
             <label htmlFor="Links" className="underline mb-3">
               Tracks
             </label>

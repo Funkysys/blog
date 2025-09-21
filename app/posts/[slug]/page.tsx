@@ -145,12 +145,20 @@ const PostsPage = ({ params }: Props) => {
           Artistes/Band: <span className="text-slate-200">{post.artist}</span>
         </h3>
         <div className="mt-3">
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             <h3>Team: </h3>
-            <div>
+            <div className="flex flex-wrap gap-2">
               {Array.isArray(post.team) &&
                 post.team.map((member, index) => (
-                  <p key={index}>{String(member)}</p>
+                  <Button
+                    key={index}
+                    variant="outline"
+                    size="sm"
+                    onClick={() => router.push(`/from-user/${String(member)}`)}
+                    className="text-xs h-6 text-blue-600 hover:text-blue-800 hover:bg-blue-50"
+                  >
+                    {String(member)}
+                  </Button>
                 ))}
             </div>
           </div>
