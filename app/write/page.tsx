@@ -9,6 +9,8 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import {
   FormEventHandler,
+  useRef,
+  useEffect,
   SyntheticEvent,
   useLayoutEffect,
   useState,
@@ -43,12 +45,19 @@ export default function WritePage() {
   const [imageUrl, setImageUrl] = useState<string>("");
   const [artist, setArtist] = useState("");
   const [team, setTeam] = useState<string[]>([]);
+  const teamRef = useRef<string[]>([]);
   
   // Debug function pour surveiller setTeam
   const debugSetTeam = (newTeam: string[]) => {
     console.log('setTeam called with:', newTeam, 'from:', new Error().stack);
+    teamRef.current = newTeam; // Garder une référence stable
     setTeam(newTeam);
   };
+  
+  // Synchroniser teamRef avec team
+  useEffect(() => {
+    teamRef.current = team;
+  }, [team]);
   const [trackList, setTrackList] = useState<Prisma.JsonArray>([]);
   const [tracks, setTracks] = useState<Track[]>([{ id: 1, name: "" }]);
   const [links, setLinks] = useState<Prisma.JsonArray>([]);

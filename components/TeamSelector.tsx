@@ -31,12 +31,20 @@ const TeamSelector = ({ team, onChange, className }: TeamSelectorProps) => {
       inputValue.length > 0
   );
 
-  // Fonction pour nettoyer les caractères invisibles
+  // Fonction pour nettoyer les caractères invisibles et problématiques
   const cleanMember = (member: string): string => {
     return member
       .trim()
       .replace(/\u00A0/g, " ") // Remplacer les espaces insécables
       .replace(/[\u200B-\u200D\uFEFF]/g, "") // Supprimer les caractères de largeur zéro
+      .replace(/[\u2000-\u200A]/g, " ") // Remplacer tous types d'espaces Unicode
+      .replace(/[\u2028\u2029]/g, "") // Supprimer les séparateurs de ligne/paragraphe
+      .replace(/[\r\n\t]/g, " ") // Remplacer retours chariot, nouvelles lignes, tabs
+      .replace(/[^\x00-\x7F]/g, (char) => {
+        // Garder seulement les caractères ASCII imprimables et quelques accents courants
+        const keepChars = "àáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞß";
+        return keepChars.includes(char) ? char : "";
+      })
       .replace(/\s+/g, " ") // Normaliser les espaces multiples
       .trim();
   };
@@ -137,6 +145,20 @@ const TeamSelector = ({ team, onChange, className }: TeamSelectorProps) => {
     setShowSuggestions(value.length > 0);
   };
 
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault(); // Empêcher le collage par défaut
+    const pastedText = e.clipboardData.getData('text');
+    console.log("Pasted text:", `"${pastedText}"`, "length:", pastedText.length);
+    
+    // Nettoyer le texte collé
+    const cleanedText = cleanMember(pastedText);
+    console.log("Cleaned pasted text:", `"${cleanedText}"`);
+    
+    // Remplacer le contenu de l'input avec le texte nettoyé
+    setInputValue(cleanedText);
+    setShowSuggestions(cleanedText.length > 0);
+  };
+
   return (
     <div className={className}>
       <div className="space-y-3">
@@ -170,6 +192,7 @@ const TeamSelector = ({ team, onChange, className }: TeamSelectorProps) => {
               value={inputValue}
               onChange={handleInputChange}
               onKeyDown={handleInputKeyDown}
+              onPaste={handlePaste}
               onFocus={() => setShowSuggestions(inputValue.length > 0)}
               placeholder="Ajouter un membre (ou plusieurs séparés par des virgules)..."
               className="flex-1"
