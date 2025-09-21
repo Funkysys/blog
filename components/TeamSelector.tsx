@@ -26,24 +26,71 @@ const TeamSelector = ({ team, onChange, className }: TeamSelectorProps) => {
       inputValue.length > 0
   );
 
+  // Fonction pour nettoyer les caractères invisibles
+  const cleanMember = (member: string): string => {
+    return member
+      .trim()
+      .replace(/\u00A0/g, " ") // Remplacer les espaces insécables
+      .replace(/[\u200B-\u200D\uFEFF]/g, "") // Supprimer les caractères de largeur zéro
+      .replace(/\s+/g, " ") // Normaliser les espaces multiples
+      .trim();
+  };
+
   const addMember = (member: string, keepInput: boolean = false) => {
-    const trimmedMember = member.trim();
-    if (trimmedMember && !team.includes(trimmedMember)) {
-      onChange([...team, trimmedMember]);
+    const cleanedMember = cleanMember(member);
+    console.log(
+      "Adding member:",
+      `"${member}"`,
+      "→ cleaned:",
+      `"${cleanedMember}"`,
+      "Current team:",
+      team
+    );
+
+    if (cleanedMember && !team.includes(cleanedMember)) {
+      const newTeam = [...team, cleanedMember];
+      console.log("New team will be:", newTeam);
+      onChange(newTeam);
       if (!keepInput) {
         setInputValue("");
         setShowSuggestions(false);
       }
+    } else if (cleanedMember) {
+      console.log("Member already exists in team:", cleanedMember);
     }
   };
 
   const addMultipleMembers = (members: string[]) => {
+    console.log(
+      "addMultipleMembers called with:",
+      members,
+      "Current team:",
+      team
+    );
+
+    // Nettoyer et filtrer les membres valides
     const validMembers = members
-      .map((m) => m.trim())
-      .filter((m) => m && !team.includes(m));
+      .map((m) => cleanMember(m))
+      .filter((m) => {
+        const isValid = m && !team.includes(m);
+        console.log(
+          `Member "${m}": valid=${isValid}, exists=${team.includes(m)}`
+        );
+        return isValid;
+      });
+
+    console.log("Valid members to add:", validMembers);
 
     if (validMembers.length > 0) {
-      onChange([...team, ...validMembers]);
+      const newTeam = [...team, ...validMembers];
+      console.log("New team will be:", newTeam);
+      onChange(newTeam);
+
+      // Clear input after successful addition
+      setInputValue("");
+      setShowSuggestions(false);
+    } else {
+      console.log("No valid members to add - either empty or duplicates");
     }
   };
 
@@ -54,7 +101,20 @@ const TeamSelector = ({ team, onChange, className }: TeamSelectorProps) => {
   const handleInputKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && inputValue.trim()) {
       e.preventDefault();
-      addMember(inputValue);
+
+      // Vérifier s'il y a des virgules pour l'ajout multiple
+      if (inputValue.includes(",")) {
+        const members = inputValue
+          .split(",")
+          .map((m) => m.trim())
+          .filter((m) => m);
+        addMultipleMembers(members);
+      } else {
+        addMember(inputValue);
+      }
+
+      setInputValue("");
+      setShowSuggestions(false);
       // Garder le focus sur l'input pour continuer à ajouter
       (e.target as HTMLInputElement).focus();
     }
@@ -65,6 +125,7 @@ const TeamSelector = ({ team, onChange, className }: TeamSelectorProps) => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
+    console.log("Input changed to:", `"${value}"`, "length:", value.length);
     setInputValue(value);
     setShowSuggestions(value.length > 0);
   };
@@ -109,22 +170,24 @@ const TeamSelector = ({ team, onChange, className }: TeamSelectorProps) => {
             <Button
               type="button"
               onClick={() => {
-                // Permet d'ajouter plusieurs membres séparés par des virgules
-                const members = inputValue
-                  .split(",")
-                  .map((m) => m.trim())
-                  .filter((m) => m);
+                console.log(
+                  "Add button clicked with input:",
+                  `"${inputValue}"`
+                );
 
-                if (members.length > 1) {
-                  // Ajout multiple avec la nouvelle fonction
+                // Vérifier s'il y a des virgules
+                if (inputValue.includes(",")) {
+                  console.log("Multiple members detected (contains comma)");
+                  const members = inputValue
+                    .split(",")
+                    .map((m) => m.trim())
+                    .filter((m) => m);
+                  console.log("Split members:", members);
                   addMultipleMembers(members);
-                } else if (members.length === 1) {
-                  // Ajout simple
-                  addMember(members[0]);
+                } else {
+                  console.log("Single member detected");
+                  addMember(inputValue);
                 }
-
-                setInputValue("");
-                setShowSuggestions(false);
               }}
               disabled={!inputValue.trim()}
               variant="outline"
