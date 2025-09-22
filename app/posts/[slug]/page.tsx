@@ -41,6 +41,7 @@ const PostsPage = ({ params }: Props) => {
   const [right, setRight] = useState<boolean>(false);
   const router = useRouter();
   const { data: post, isFetching, error } = usePost(slug);
+
   useEffect(() => {
     if ((role === "ADMIN" || role === "MODERATOR") && !right) {
       setRight(true);
@@ -150,7 +151,7 @@ const PostsPage = ({ params }: Props) => {
           Artistes/Band:{" "}
           <Button
             variant="link"
-            className="text-blue-400 hover:text-blue-600 p-0 h-auto font-normal"
+            className="text-blue-300 hover:text-blue-500 p-0 h-auto text-xl"
             onClick={() =>
               router.push(
                 `/from-artists/${encodeURIComponent(post.artist || "")}`

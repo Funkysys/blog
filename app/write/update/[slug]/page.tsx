@@ -129,7 +129,7 @@ export default function UpdatePostePage({ params }: Props) {
         nbComments: post.nbComments,
         nbView: post.nbView,
         slug: post.slug,
-        team: [], // Will be converted separately
+        team: [],
         title: post.title || "",
         trackList: Array.isArray(post.trackList)
           ? post.trackList.map((track: any) => ({
@@ -144,11 +144,9 @@ export default function UpdatePostePage({ params }: Props) {
       setContent(post.content || "");
       setImageUrl(post.image || "");
       setArtist(post.artist || "");
-      // Convertir l'ancien format string[] vers TeamMember[]
       const convertedTeam: TeamMember[] = Array.isArray(post.team)
         ? post.team.map((member: any, index: number) => {
             if (typeof member === "string") {
-              // Ancien format: "Kenny Garrett - saxophone alto"
               const parts = member.split(" - ");
               return {
                 id: `${index}`,
@@ -156,7 +154,6 @@ export default function UpdatePostePage({ params }: Props) {
                 function: parts[1]?.trim() || "Musicien",
               };
             } else if (typeof member === "object" && member.name) {
-              // Nouveau format déjà en TeamMember
               return {
                 id: member.id || `${index}`,
                 name: member.name,
@@ -312,7 +309,6 @@ export default function UpdatePostePage({ params }: Props) {
         {oldPost && (
           <form onSubmit={handleSubmit}>
             <PageTitle title="Write a new post" />
-            {/* Image */}
             <div className="mb-6">
               <div className="relative w-60 h-60 mx-auto mb-3 flex">
                 <Image
@@ -329,18 +325,8 @@ export default function UpdatePostePage({ params }: Props) {
                 </label>
                 <p className="text-slate-400 text-sm">Upload an image </p>
                 <Input type="file" name="image" onChange={onChangeFile} />
-                {/* <p className="text-slate-400 text-sm">
-                  Upload an image or paste an image url{" "}
-                </p>
-                <Input
-                  type="string"
-                  name="imageUrl"
-                  placeholder="Image url"
-                  onChange={(e) => setImageUrl(e.target.value)}
-                /> */}
               </div>
             </div>
-            {/* Title post */}
 
             <label htmlFor="artist" className="text-slate-50 mb-3">
               Artists or Band * :
@@ -474,9 +460,6 @@ export default function UpdatePostePage({ params }: Props) {
               </label>
               <DatePickerDemo setDate={setDate} date={date} />
             </div>
-            {/* Category / select */}
-
-            {/* Content */}
             <label htmlFor="content" className="text-slate-50">
               Why do you like this album ?
             </label>
@@ -486,7 +469,6 @@ export default function UpdatePostePage({ params }: Props) {
               value={content}
               onChange={setContent}
             />
-            {/* Submit button */}
             <Button disabled={isLoading} className="mt-6" type="submit">
               {isLoading ? "Updating..." : "Update"}
             </Button>

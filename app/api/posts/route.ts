@@ -58,7 +58,6 @@ export const POST = async (req: Request) => {
     const body = await req.json();
 
 
-    // Récupère l'id utilisateur via l'email
     const user = await prisma.user.findUnique({
       where: { email: session.user.email || "" },
     });
@@ -78,7 +77,6 @@ export const POST = async (req: Request) => {
         catSlug: body.catSlug,
         image: body.image,
         userId: user.id,
-        // Ajoute ici les autres champs du modèle Post si besoin
       },
     });
 

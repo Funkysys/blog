@@ -41,7 +41,7 @@ export const PostTeamDisplay = ({
           <div key={index} className="mb-2">
             <Link
               href={`/from-artists/${artistSlug}`}
-              className="text-blue-600 hover:text-blue-800 hover:underline transition-colors"
+              className="text-blue-300 hover:text-blue-500 hover:underline transition-colors"
             >
               {displayText}
             </Link>

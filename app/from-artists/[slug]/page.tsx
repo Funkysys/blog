@@ -32,7 +32,6 @@ const FromArtistsPage = ({ params }: Props) => {
     <div className="flex flex-col justify-center">
       <PageTitle title={`Albums de ${artistName}`} />
 
-      {/* Info artiste */}
       <div className="text-center mb-8 p-6 bg-gray-50 dark:bg-gray-800 rounded-lg">
         <h2 className="text-2xl font-bold mb-2">{artistName}</h2>
         <p className="text-gray-600 dark:text-gray-400">
@@ -63,7 +62,6 @@ const FromArtistsPage = ({ params }: Props) => {
         )}
       </div>
 
-      {/* Pagination - pour plus tard si nécessaire */}
       <div className="relative bottom-2 m-auto w-full flex justify-center gap-3 mt-5">
         <Button variant="outline" type="button" onClick={nextPageFunc}>
           Voir plus d&apos;albums

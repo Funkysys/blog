@@ -1,6 +1,5 @@
 import ArticlesListComponent from "@/components/LandingPage/ArticlesListComponent";
 import { use } from "react";
-// import { POSTS } from '@/utils/posts'
 
 type Props = {
   params: Promise<{

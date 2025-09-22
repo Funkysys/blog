@@ -1,10 +1,8 @@
 import prisma from "@/lib/connect";
 import { NextResponse } from "next/server";
 
-// Récupérer tous les artistes/membres uniques des posts
 export const GET = async () => {
   try {
-    // Récupérer tous les posts avec leurs équipes
     const posts = await prisma.post.findMany({
       select: {
         artist: true,
@@ -12,16 +10,13 @@ export const GET = async () => {
       },
     });
 
-    // Extraire tous les artistes et membres d'équipe uniques
     const artistsSet = new Set<string>();
     
     posts.forEach(post => {
-      // Ajouter l'artiste principal
       if (post.artist) {
         artistsSet.add(post.artist);
       }
       
-      // Ajouter les membres d'équipe
       if (Array.isArray(post.team)) {
         post.team.forEach(member => {
           if (typeof member === 'string' && member.trim()) {
@@ -31,7 +26,6 @@ export const GET = async () => {
       }
     });
 
-    // Convertir en tableau trié
     const artists = Array.from(artistsSet).sort();
 
     return NextResponse.json(artists, { status: 200 });

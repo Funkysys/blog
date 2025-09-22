@@ -1,11 +1,8 @@
-// /api/categories
 
-// import { Category } from "@/utils/types";
 import { getAuthSession } from "@/lib/auth-options";
 import prisma from "@/lib/connect";
 import { NextResponse } from "next/server";
 
-// GET POST PUT
 export const GET = async (req: Request) => {
   try {
     const categories = await prisma.category.findMany();
@@ -16,11 +13,8 @@ export const GET = async (req: Request) => {
       { status: 500 }
     );
   }
-  // get all categories
-  // res.json({ categories: [] })
 };
 export const POST = async (req: Request) => {
-  // create a category
   try {
     const session = await getAuthSession();
 

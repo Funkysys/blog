@@ -20,12 +20,10 @@ const TeamSelectorV2 = ({ team, onChange, className }: TeamSelectorV2Props) => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const { data: artists = [], isLoading } = useArtists();
 
-  // Références pour la protection contre les régressions
   const lastValidTeamRef = useRef<TeamMember[]>([]);
   const teamLengthRef = useRef(0);
   const isIntentionalRemoval = useRef(false);
 
-  // Surveillance des changements d'équipe avec protection
   useEffect(() => {
     console.log("👥 TeamV2: team changed to:", team, "length:", team.length);
 
@@ -66,7 +64,6 @@ const TeamSelectorV2 = ({ team, onChange, className }: TeamSelectorV2Props) => {
     }
   }, [team, onChange]);
 
-  // Filtrer les suggestions basées sur le nom
   const filteredSuggestions = artists.filter(
     (artist) =>
       artist.toLowerCase().includes(inputName.toLowerCase()) &&
@@ -74,14 +71,13 @@ const TeamSelectorV2 = ({ team, onChange, className }: TeamSelectorV2Props) => {
       inputName.length > 0
   );
 
-  // Ajouter un membre avec nom et fonction
   const addMember = (name: string, functionRole: string) => {
     const cleanedName = name.trim();
     const cleanedFunction = functionRole.trim();
 
     if (cleanedName && !team.some((member) => member.name === cleanedName)) {
       const newMember: TeamMember = {
-        id: Date.now().toString(), // ID temporaire
+        id: Date.now().toString(),
         name: cleanedName,
         function: cleanedFunction,
       };
@@ -94,7 +90,6 @@ const TeamSelectorV2 = ({ team, onChange, className }: TeamSelectorV2Props) => {
     }
   };
 
-  // Supprimer un membre
   const removeMember = (memberToRemove: TeamMember) => {
     console.log("🗑️ Intentional removal of:", memberToRemove.name);
     isIntentionalRemoval.current = true;
@@ -107,7 +102,6 @@ const TeamSelectorV2 = ({ team, onChange, className }: TeamSelectorV2Props) => {
     }, 500);
   };
 
-  // Gérer l'ajout par Entrée
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && inputName.trim() && inputFunction.trim()) {
       e.preventDefault();
@@ -121,7 +115,6 @@ const TeamSelectorV2 = ({ team, onChange, className }: TeamSelectorV2Props) => {
   return (
     <div className={className}>
       <div className="space-y-3">
-        {/* Membres actuels */}
         {team.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {team.map((member) => (
@@ -144,7 +137,6 @@ const TeamSelectorV2 = ({ team, onChange, className }: TeamSelectorV2Props) => {
           </div>
         )}
 
-        {/* Formulaire d'ajout */}
         <div className="space-y-2">
           <div className="grid grid-cols-2 gap-2">
             <div className="relative">
@@ -161,7 +153,6 @@ const TeamSelectorV2 = ({ team, onChange, className }: TeamSelectorV2Props) => {
                 className="w-full"
               />
 
-              {/* Suggestions pour le nom */}
               {showSuggestions && filteredSuggestions.length > 0 && (
                 <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border rounded-md shadow-lg z-10 max-h-40 overflow-y-auto">
                   {filteredSuggestions.slice(0, 10).map((suggestion, index) => (
@@ -203,7 +194,6 @@ const TeamSelectorV2 = ({ team, onChange, className }: TeamSelectorV2Props) => {
           </Button>
         </div>
 
-        {/* Suggestions rapides */}
         {!showSuggestions && artists.length > 0 && (
           <div className="space-y-2">
             <p className="text-sm text-gray-600 dark:text-gray-400">

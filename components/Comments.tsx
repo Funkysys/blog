@@ -74,7 +74,6 @@ function Comments({ postSlug, role }: CommentProps) {
         )}
       </div>
 
-      {/* List of comments */}
       <>
         {isFetching ? (
           <div className="h-[90vh] flex flx-col item-center justify-center">

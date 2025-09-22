@@ -9,7 +9,6 @@ export const GET = async (
   const { slug } = await context.params;
 
   try {
-    // Cherche l'utilisateur par son nom
     const user = await prisma.user.findFirst({
       where: { name: slug },
     });
@@ -19,7 +18,6 @@ export const GET = async (
         { status: 404 }
       );
     }
-    // Récupère les posts de cet utilisateur
     const posts = await prisma.post.findMany({
       where: { userId: user.id },
     });

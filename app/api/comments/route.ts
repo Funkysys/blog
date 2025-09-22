@@ -15,7 +15,7 @@ export const GET = async (req: Request) => {
 
     const comments = await prisma.comment.findMany({
       where: { postSlug },
-      include: { User: true }, // Correction du nom de la relation
+      include: { User: true }, 
     });
 
     return NextResponse.json(comments, { status: 200 });

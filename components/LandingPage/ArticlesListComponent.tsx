@@ -34,11 +34,9 @@ const ArticlesListComponent = ({ slug }: Props) => {
 
   const nextPageFunc = () => {
     setPage((prev) => prev + 1);
-    // refetch();
   };
   const previousPageFunc = () => {
     setPage((prev) => prev - 1);
-    // refetch();
   };
 
   return (

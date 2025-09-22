@@ -1,7 +1,6 @@
 import prisma from "@/lib/connect";
 import { NextResponse } from "next/server";
 
-// GET SINGLE POST
 export const GET = async (
   req: Request,
   context: { params: Promise<{ slug: string }> }

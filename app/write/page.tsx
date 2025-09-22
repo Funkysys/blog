@@ -48,14 +48,12 @@ export default function WritePage() {
   const [team, setTeam] = useState<TeamMember[]>([]);
   const teamRef = useRef<TeamMember[]>([]);
 
-  // Debug function pour surveiller setTeam - simplifiée pour la V2
   const debugSetTeam = (newTeam: TeamMember[]) => {
     console.log("💾 setTeam called with:", newTeam);
     teamRef.current = newTeam;
     setTeam(newTeam);
   };
 
-  // Synchroniser teamRef avec team
   useEffect(() => {
     teamRef.current = team;
   }, [team]);
@@ -104,7 +102,6 @@ export default function WritePage() {
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     let url = "";
-    // const image = await uploadImage(e);
     try {
       if (!isImage) return;
       const formData = new FormData(e.currentTarget);
@@ -130,7 +127,6 @@ export default function WritePage() {
       title,
       content,
       catSlug: slugify(catSlug),
-      // catTitle supprimé car non présent dans le modèle Post
       slug: slugify(title),
       image: url,
       release: date,
@@ -224,15 +220,8 @@ export default function WritePage() {
                 </p>
               )}
               <Input type="file" name="image" onChange={onChangeFile} />
-              {/* <Input
-                type="string"
-                name="imageUrl"
-                placeholder="Image url"
-                onChange={(e) => setImageUrl(e.target.value)}
-              /> */}
             </div>
           </div>
-          {/* Title post */}
 
           <label htmlFor="artist" className="text-slate-50 mb-3">
             Artists or Band * :
@@ -355,14 +344,7 @@ export default function WritePage() {
               Release :{" "}
             </label>
             <DatePickerDemo setDate={setDate} date={date} />
-            {/* <DayPicker captionLayout="dropdown" fromYear={1900} toYear={2030} />
-            <DayPicker
-              captionLayout="dropdown-buttons"
-              fromYear={1900}
-              toYear={2030}
-            />{" "} */}
           </div>
-          {/* Category / select */}
           {isFetching ? (
             <div className="h-[90vh] flex flx-col item-center justify-center">
               <BounceLoader color="#36d7b7" />
@@ -386,7 +368,6 @@ export default function WritePage() {
               />
             </div>
           )}
-          {/* Content */}
           <label htmlFor="content" className="text-slate-50">
             Why do you like this album ?
           </label>
@@ -396,7 +377,6 @@ export default function WritePage() {
             value={content}
             onChange={setContent}
           />
-          {/* Submit button */}
           <Button disabled={isLoading} className="mt-6" type="submit">
             {isLoading ? "Creating..." : "Publish"}
           </Button>

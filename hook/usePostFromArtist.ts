@@ -7,6 +7,6 @@ export const usePostFromArtist = (artistName: string) => {
     return data;
   }, {
     enabled: !!artistName,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000, 
   });
 };

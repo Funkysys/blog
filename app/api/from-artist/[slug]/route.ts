@@ -8,7 +8,6 @@ const slugToArtistName = (slug: string): string => {
     .join(' ');
 };
 
-// GET POSTS BY ARTIST NAME
 export const GET = async (
   req: Request,
   context: { params: Promise<{ slug: string }> }
