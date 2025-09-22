@@ -3,7 +3,7 @@ import { formatTeamMember, getArtistSlug } from "@/utils/formatTeam";
 import Link from "next/link";
 
 interface PostTeamDisplayProps {
-  team: TeamMember[];
+  team: (TeamMember | string)[];
   className?: string;
 }
 
@@ -13,18 +13,38 @@ export const PostTeamDisplay = ({
 }: PostTeamDisplayProps) => {
   if (!team || team.length === 0) return null;
 
+  const formatMember = (
+    member: TeamMember | string
+  ): { name: string; displayText: string } => {
+    if (typeof member === "string") {
+      // Ancien format: "Kenny Garrett - saxophone alto"
+      const parts = member.split(" - ");
+      return {
+        name: parts[0]?.trim() || member,
+        displayText: member,
+      };
+    } else {
+      // Nouveau format TeamMember
+      return {
+        name: member.name,
+        displayText: formatTeamMember(member),
+      };
+    }
+  };
+
   return (
     <div className={`team-members ${className}`}>
       {team.map((member, index) => {
-        const artistSlug = getArtistSlug(member.name);
+        const { name, displayText } = formatMember(member);
+        const artistSlug = getArtistSlug(name);
 
         return (
-          <div key={member.id || index} className="mb-2">
+          <div key={index} className="mb-2">
             <Link
               href={`/form-artist/${artistSlug}`}
               className="text-blue-600 hover:text-blue-800 hover:underline transition-colors"
             >
-              {formatTeamMember(member)}
+              {displayText}
             </Link>
           </div>
         );
