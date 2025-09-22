@@ -1,6 +1,6 @@
 "use client";
 import { useCategories } from "@/hook/useCategories";
-import { Category, User } from "@/types";
+import { User } from "@/types";
 import axios from "axios";
 import { Menu } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
@@ -135,25 +135,6 @@ const ResponsiveMenu = () => {
                 </Button>
               </>
             )}
-          </div>
-          <div className="flex flex-col gap-4 w-full text-center">
-            <p className=" underline text-lg">Categories</p>
-            {!isLoading &&
-              categories?.map((category: Category) => (
-                <Link
-                  key={category.id}
-                  href={`/categories/${category.slug}`}
-                  className="block px-2 py-1 text-lg"
-                >
-                  <Button
-                    className="bg-slate-700 hover:bg-slate-300 text-slate-50"
-                    variant={"ghost"}
-                    onClick={() => setOpenMenu(false)}
-                  >
-                    {category.title}
-                  </Button>
-                </Link>
-              ))}
           </div>
         </SheetContent>
       </Sheet>
