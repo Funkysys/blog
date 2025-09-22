@@ -7,7 +7,7 @@ const nextConfig = {
         headers: [
           {
             key: "Access-Control-Allow-Origin",
-            value: "https://discophiles-blog.eu", // Set your origin
+            value: "https://discophiles-blog.eu",
           },
           {
             key: "Access-Control-Allow-Methods",

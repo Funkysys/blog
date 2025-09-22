@@ -3,6 +3,7 @@ import Article from "@/components/Article";
 import { Button } from "@/components/ui/button";
 import { usePostFromUser } from "@/hook/usePostFromUser";
 import { PostWithCategory } from "@/types";
+import { slugToArtistName } from "@/utils/formatTeam";
 import { use, useState } from "react";
 import { BounceLoader } from "react-spinners";
 import PageTitle from "../../../components/PageTitle";
@@ -13,34 +14,40 @@ type Props = {
   }>;
 };
 
-const FromUsersPage = ({ params }: Props) => {
+const FromUserPage = ({ params }: Props) => {
   const { slug } = use(params);
   const decodedSlug = decodeURIComponent(slug);
+  const userName = slugToArtistName(decodedSlug);
   const [page, setPage] = useState(0);
   const { data: posts, isFetching } = usePostFromUser(decodedSlug);
 
   const nextPageFunc = () => {
     setPage((prev) => prev + 1);
-    // refetch();
   };
   const previousPageFunc = () => {
     setPage((prev) => prev - 1);
-    // refetch();
   };
-  console.log(posts);
 
   return (
-    <div className="flex flex-col justify-center ">
-      <PageTitle title={decodedSlug} />
+    <div className="flex flex-col justify-center">
+      <PageTitle title={`Posts de ${userName}`} />
 
-      <div className="min-hh-[90vh] gap-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-col-4">
+      <div className="text-center mb-8 p-6 bg-gray-50 dark:bg-gray-800 rounded-lg">
+        <h2 className="text-2xl font-bold mb-2">{userName}</h2>
+        <p className="text-gray-600 dark:text-gray-400">
+          {posts?.length || 0} post{posts?.length !== 1 ? "s" : ""} trouvé
+          {posts?.length !== 1 ? "s" : ""}
+        </p>
+      </div>
+
+      <div className="min-h-[90vh] gap-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-col-4">
         {isFetching ? (
           <div className="h-[90vh] flex flx-col item-center justify-center">
             <BounceLoader color="#36d7b7" />
           </div>
         ) : (
           <>
-            {posts.length > 0 ? (
+            {posts && posts.length > 0 ? (
               <>
                 {posts?.map((post: PostWithCategory) => (
                   <Article key={post.id} post={post} />
@@ -48,32 +55,25 @@ const FromUsersPage = ({ params }: Props) => {
               </>
             ) : (
               <div className="h-[90vh] p-5">
-                <p>No posts found</p>
+                <p>Aucun post trouvé pour {userName}</p>
               </div>
             )}
           </>
         )}
       </div>
-      <div className=" relative bottom-2 m-auto w-full flex justify-center gap-3 mt-5">
-        {page == 0 && (
-          <Button variant="outline" type="button" onClick={nextPageFunc}>
-            Next ALbums
-          </Button>
-        )}
 
+      <div className="relative bottom-2 m-auto w-full flex justify-center gap-3 mt-5">
+        <Button variant="outline" type="button" onClick={nextPageFunc}>
+          Voir plus de posts
+        </Button>
         {page > 0 && (
-          <>
-            <Button variant="outline" type="button" onClick={previousPageFunc}>
-              Previous
-            </Button>
-            <Button variant="outline" type="button" onClick={nextPageFunc}>
-              Next ALbums
-            </Button>
-          </>
+          <Button variant="outline" type="button" onClick={previousPageFunc}>
+            Précédent
+          </Button>
         )}
       </div>
     </div>
   );
 };
 
-export default FromUsersPage;
+export default FromUserPage;

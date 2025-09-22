@@ -118,7 +118,7 @@ const PostsPage = ({ params }: Props) => {
                 variant="outline"
                 onClick={() =>
                   router.push(
-                    `/from-artists/${encodeURIComponent(post.User.name || "")}`
+                    `/from-user/${encodeURIComponent(post.User.name || "")}`
                   )
                 }
               >
