@@ -10,7 +10,7 @@ import {
   List,
   ListOrdered,
 } from "lucide-react";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { Button } from "./ui/button";
 
 interface TiptapEditorProps {
@@ -47,6 +47,13 @@ export default function TiptapEditor({
       },
     },
   });
+
+  // Synchroniser le contenu quand la valeur change de l'extérieur
+  useEffect(() => {
+    if (editor && value !== editor.getHTML()) {
+      editor.commands.setContent(value || "");
+    }
+  }, [editor, value]);
 
   const setLink = useCallback(() => {
     if (!editor) return;

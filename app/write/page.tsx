@@ -2,6 +2,7 @@
 
 import { DatePickerDemo } from "@/components/DatePicker";
 import PageTitle from "@/components/PageTitle";
+import TiptapEditor from "@/components/TiptapEditor";
 import { Input } from "@/components/ui/input";
 import { useCategories } from "@/hook/useCategories";
 import { Post, Prisma } from "@prisma/client";
@@ -369,9 +370,9 @@ export default function WritePage() {
             </div>
           )}
           <label htmlFor="content" className="text-slate-50">
-            Why do you like this album ?
+            Pourquoi aimez-vous cet album ?
           </label>
-          <QuillEditor
+          <TiptapEditor
             className="mt-3"
             placeholder="Partagez votre passion pour cet album..."
             value={content}
