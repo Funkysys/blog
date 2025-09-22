@@ -22,9 +22,11 @@ export const GET = async (
   try {
     const posts = await prisma.post.findMany({
       where: {
-        userName: {
-          equals: userName,
-          mode: "insensitive",
+        User: {
+          name: {
+            equals: userName,
+            mode: "insensitive",
+          },
         },
       },
       include: {

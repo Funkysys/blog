@@ -1,4 +1,3 @@
-
 export const formatTeamMember = (member: any): string => {
   if (typeof member === "object" && member.name && member.function) {
     return `${member.name} - ${member.function}`;
