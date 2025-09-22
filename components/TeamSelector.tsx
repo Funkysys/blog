@@ -6,20 +6,22 @@ import { Input } from "@/components/ui/input";
 import { useArtists } from "@/hook/useArtists";
 import { X } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
+import { TeamMember } from "@/types";
 
 interface TeamSelectorProps {
-  team: string[];
-  onChange: (team: string[]) => void;
+  team: TeamMember[];
+  onChange: (team: TeamMember[]) => void;
   className?: string;
 }
 
 const TeamSelector = ({ team, onChange, className }: TeamSelectorProps) => {
-  const [inputValue, setInputValue] = useState("");
+  const [inputName, setInputName] = useState("");
+  const [inputFunction, setInputFunction] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const { data: artists = [], isLoading } = useArtists();
 
   // Référence pour la dernière équipe valide
-  const lastValidTeamRef = useRef<string[]>([]);
+  const lastValidTeamRef = useRef<TeamMember[]>([]);
   const teamLengthRef = useRef(0);
   const isIntentionalRemoval = useRef(false);
 

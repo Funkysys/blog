@@ -18,7 +18,8 @@ import {
 
 import QuillEditor from "@/components/QuillEditor";
 
-import TeamSelector from "@/components/TeamSelector";
+import TeamSelectorV2 from "@/components/TeamSelectorV2";
+import { TeamMember } from "@/types";
 import { Button } from "@/components/ui/button";
 import { slugify } from "@/utils/slugify";
 import axios from "axios";
@@ -44,37 +45,14 @@ export default function WritePage() {
   const [content, setContent] = useState("");
   const [imageUrl, setImageUrl] = useState<string>("");
   const [artist, setArtist] = useState("");
-  const [team, setTeam] = useState<string[]>([]);
-  const teamRef = useRef<string[]>([]);
-  const lastValidTeam = useRef<string[]>([]);
+  const [team, setTeam] = useState<TeamMember[]>([]);
+  const teamRef = useRef<TeamMember[]>([]);
   
-  // Debug function pour surveiller setTeam
-  const debugSetTeam = (newTeam: string[]) => {
-    console.log('setTeam called with:', newTeam, 'from:', new Error().stack);
-    
-    // Si la nouvelle équipe a plus de membres, c'est un ajout valide
-    if (newTeam.length > teamRef.current.length) {
-      lastValidTeam.current = newTeam;
-      teamRef.current = newTeam;
-      setTeam(newTeam);
-    } 
-    // Si la nouvelle équipe a moins de membres, vérifier si c'est intentionnel
-    else if (newTeam.length < teamRef.current.length) {
-      // Si c'est une réduction drastique (probablement un bug), ignorer
-      if (newTeam.length < teamRef.current.length - 1) {
-        console.log('Suspicious team reduction detected, ignoring:', newTeam);
-        return;
-      }
-      // Sinon, c'est probablement une suppression intentionnelle
-      lastValidTeam.current = newTeam;
-      teamRef.current = newTeam;
-      setTeam(newTeam);
-    }
-    // Si même longueur, mettre à jour normalement
-    else {
-      teamRef.current = newTeam;
-      setTeam(newTeam);
-    }
+  // Debug function pour surveiller setTeam - simplifiée pour la V2
+  const debugSetTeam = (newTeam: TeamMember[]) => {
+    console.log('💾 setTeam called with:', newTeam);
+    teamRef.current = newTeam;
+    setTeam(newTeam);
   };
   
   // Synchroniser teamRef avec team
@@ -282,7 +260,7 @@ export default function WritePage() {
             <label htmlFor="team" className="mb-3">
               Team :
             </label>
-            <TeamSelector team={team} onChange={debugSetTeam} className="mb-3" />
+            <TeamSelectorV2 team={team} onChange={debugSetTeam} className="mb-3" />
             <label htmlFor="Links" className="underline mb-3">
               Tracks
             </label>

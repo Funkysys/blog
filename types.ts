@@ -18,6 +18,12 @@ type Link = {
   url: string;
 };
 
+export type TeamMember = {
+  id: string;
+  name: string;
+  function: string;
+};
+
 export type Post = {
   id: string;
   title: string;
@@ -32,7 +38,7 @@ export type Post = {
   catSlug: string;
   catTitle: string;
   artist: string;
-  team: string[];
+  team: TeamMember[];
   trackList: Track[];
   links: Link[];
   createdAt: string;
