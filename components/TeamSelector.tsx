@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useArtists } from "@/hook/useArtists";
 import { X } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 interface TeamSelectorProps {
   team: string[];
@@ -18,10 +18,39 @@ const TeamSelector = ({ team, onChange, className }: TeamSelectorProps) => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const { data: artists = [], isLoading } = useArtists();
 
-  // Debug: surveiller les changements de team
+  // Référence pour la dernière équipe valide
+  const lastValidTeamRef = useRef<string[]>([]);
+  const teamLengthRef = useRef(0);
+
+  // Debug: surveiller les changements de team et protéger contre les régressions
   useEffect(() => {
     console.log('TeamSelector: team prop changed to:', team, 'length:', team.length);
-  }, [team]);
+    
+    // Si l'équipe grandit, c'est un ajout valide
+    if (team.length > teamLengthRef.current) {
+      lastValidTeamRef.current = [...team];
+      teamLengthRef.current = team.length;
+    }
+    // Si l'équipe rétrécit de plus d'1 membre de façon suspecte, restaurer
+    else if (team.length < teamLengthRef.current - 1 && lastValidTeamRef.current.length > team.length) {
+      console.log('🚨 Suspicious team reduction detected! Restoring from', team.length, 'to', lastValidTeamRef.current.length);
+      setTimeout(() => {
+        onChange(lastValidTeamRef.current);
+      }, 0);
+      return;
+    }
+    // Sinon, c'est probablement une suppression intentionnelle
+    else if (team.length < teamLengthRef.current) {
+      lastValidTeamRef.current = [...team];
+      teamLengthRef.current = team.length;
+    }
+    
+    // Initialiser si c'est la première fois
+    if (lastValidTeamRef.current.length === 0 && team.length > 0) {
+      lastValidTeamRef.current = [...team];
+      teamLengthRef.current = team.length;
+    }
+  }, [team, onChange]);
 
   // Filtrer les suggestions basées sur l'input
   const filteredSuggestions = artists.filter(
