@@ -3,6 +3,7 @@ import Article from "@/components/Article";
 import { Button } from "@/components/ui/button";
 import { usePostFromArtist } from "@/hook/usePostFromArtist";
 import { PostWithCategory } from "@/types";
+import { slugToArtistName } from "@/utils/formatTeam";
 import { use, useState } from "react";
 import { BounceLoader } from "react-spinners";
 import PageTitle from "../../../components/PageTitle";
@@ -16,6 +17,7 @@ type Props = {
 const FromArtistsPage = ({ params }: Props) => {
   const { slug } = use(params);
   const decodedSlug = decodeURIComponent(slug);
+  const artistName = slugToArtistName(decodedSlug);
   const [page, setPage] = useState(0);
   const { data: posts, isFetching } = usePostFromArtist(decodedSlug);
 
@@ -28,11 +30,11 @@ const FromArtistsPage = ({ params }: Props) => {
 
   return (
     <div className="flex flex-col justify-center">
-      <PageTitle title={`Albums de ${decodedSlug}`} />
+      <PageTitle title={`Albums de ${artistName}`} />
 
       {/* Info artiste */}
       <div className="text-center mb-8 p-6 bg-gray-50 dark:bg-gray-800 rounded-lg">
-        <h2 className="text-2xl font-bold mb-2">{decodedSlug}</h2>
+        <h2 className="text-2xl font-bold mb-2">{artistName}</h2>
         <p className="text-gray-600 dark:text-gray-400">
           {posts?.length || 0} collaboration{posts?.length !== 1 ? "s" : ""}{" "}
           trouvée{posts?.length !== 1 ? "s" : ""}
@@ -54,7 +56,7 @@ const FromArtistsPage = ({ params }: Props) => {
               </>
             ) : (
               <div className="h-[90vh] p-5">
-                <p>Aucune collaboration trouvée pour {decodedSlug}</p>
+                <p>Aucune collaboration trouvée pour {artistName}</p>
               </div>
             )}
           </>

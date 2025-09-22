@@ -13,3 +13,10 @@ export const getArtistSlug = (artistName: string): string => {
     .replace(/-+/g, '-')
     .replace(/^-|-$/g, '');
 };
+
+export const slugToArtistName = (slug: string): string => {
+  return slug
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+};

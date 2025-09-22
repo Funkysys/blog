@@ -1,7 +1,6 @@
 import prisma from "@/lib/connect";
 import { NextResponse } from "next/server";
 
-// Fonction pour convertir un slug en nom d'artiste
 const slugToArtistName = (slug: string): string => {
   return slug
     .split('-')
@@ -19,7 +18,6 @@ export const GET = async (
   const artistName = slugToArtistName(decodedSlug);
 
   try {
-    // Rechercher les posts où l'artiste apparaît soit comme artiste principal, soit dans l'équipe
     const posts = await prisma.post.findMany({
       where: {
         OR: [
@@ -35,7 +33,6 @@ export const GET = async (
               array_contains: artistName
             }
           },
-          // Recherche aussi dans les objets TeamMember
           {
             team: {
               path: [],
