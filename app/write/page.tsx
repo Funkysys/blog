@@ -370,7 +370,7 @@ export default function WritePage() {
             </div>
           )}
           <label htmlFor="content" className="text-slate-50">
-            Pourquoi aimez-vous cet album ?
+            Why do you like this album ?
           </label>
           <TiptapEditor
             className="mt-3"
