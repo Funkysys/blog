@@ -4,9 +4,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useArtists } from "@/hook/useArtists";
-import { X } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
 import { TeamMember } from "@/types";
+import { X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 interface TeamSelectorV2Props {
   team: TeamMember[];
@@ -27,30 +27,39 @@ const TeamSelectorV2 = ({ team, onChange, className }: TeamSelectorV2Props) => {
 
   // Surveillance des changements d'équipe avec protection
   useEffect(() => {
-    console.log('👥 TeamV2: team changed to:', team, 'length:', team.length);
-    
+    console.log("👥 TeamV2: team changed to:", team, "length:", team.length);
+
     if (team.length > teamLengthRef.current) {
-      console.log('✅ Team growing from', teamLengthRef.current, 'to', team.length);
+      console.log(
+        "✅ Team growing from",
+        teamLengthRef.current,
+        "to",
+        team.length
+      );
       lastValidTeamRef.current = [...team];
       teamLengthRef.current = team.length;
-    }
-    else if (team.length < teamLengthRef.current && lastValidTeamRef.current.length > team.length) {
+    } else if (
+      team.length < teamLengthRef.current &&
+      lastValidTeamRef.current.length > team.length
+    ) {
       if (isIntentionalRemoval.current) {
-        console.log('✅ Intentional removal detected, allowing reduction');
+        console.log("✅ Intentional removal detected, allowing reduction");
         lastValidTeamRef.current = [...team];
         teamLengthRef.current = team.length;
       } else {
-        console.log('🚨 Suspicious team reduction detected! Restoring...');
+        console.log("🚨 Suspicious team reduction detected! Restoring...");
         setTimeout(() => {
           onChange([...lastValidTeamRef.current]);
         }, 100);
         return;
       }
-    }
-    else if (team.length === teamLengthRef.current && JSON.stringify(team) !== JSON.stringify(lastValidTeamRef.current)) {
+    } else if (
+      team.length === teamLengthRef.current &&
+      JSON.stringify(team) !== JSON.stringify(lastValidTeamRef.current)
+    ) {
       lastValidTeamRef.current = [...team];
     }
-    
+
     if (lastValidTeamRef.current.length === 0 && team.length > 0) {
       lastValidTeamRef.current = [...team];
       teamLengthRef.current = team.length;
@@ -61,7 +70,7 @@ const TeamSelectorV2 = ({ team, onChange, className }: TeamSelectorV2Props) => {
   const filteredSuggestions = artists.filter(
     (artist) =>
       artist.toLowerCase().includes(inputName.toLowerCase()) &&
-      !team.some(member => member.name === artist) &&
+      !team.some((member) => member.name === artist) &&
       inputName.length > 0
   );
 
@@ -69,15 +78,15 @@ const TeamSelectorV2 = ({ team, onChange, className }: TeamSelectorV2Props) => {
   const addMember = (name: string, functionRole: string) => {
     const cleanedName = name.trim();
     const cleanedFunction = functionRole.trim();
-    
-    if (cleanedName && !team.some(member => member.name === cleanedName)) {
+
+    if (cleanedName && !team.some((member) => member.name === cleanedName)) {
       const newMember: TeamMember = {
         id: Date.now().toString(), // ID temporaire
         name: cleanedName,
-        function: cleanedFunction
+        function: cleanedFunction,
       };
       const newTeam = [...team, newMember];
-      console.log('➕ Adding member:', newMember);
+      console.log("➕ Adding member:", newMember);
       onChange(newTeam);
       setInputName("");
       setInputFunction("");
@@ -87,7 +96,7 @@ const TeamSelectorV2 = ({ team, onChange, className }: TeamSelectorV2Props) => {
 
   // Supprimer un membre
   const removeMember = (memberToRemove: TeamMember) => {
-    console.log('🗑️ Intentional removal of:', memberToRemove.name);
+    console.log("🗑️ Intentional removal of:", memberToRemove.name);
     isIntentionalRemoval.current = true;
     const newTeam = team.filter((member) => member.id !== memberToRemove.id);
     lastValidTeamRef.current = [...newTeam];
@@ -151,7 +160,7 @@ const TeamSelectorV2 = ({ team, onChange, className }: TeamSelectorV2Props) => {
                 placeholder="Nom de l'artiste..."
                 className="w-full"
               />
-              
+
               {/* Suggestions pour le nom */}
               {showSuggestions && filteredSuggestions.length > 0 && (
                 <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border rounded-md shadow-lg z-10 max-h-40 overflow-y-auto">
@@ -171,7 +180,7 @@ const TeamSelectorV2 = ({ team, onChange, className }: TeamSelectorV2Props) => {
                 </div>
               )}
             </div>
-            
+
             <Input
               type="text"
               value={inputFunction}
@@ -181,7 +190,7 @@ const TeamSelectorV2 = ({ team, onChange, className }: TeamSelectorV2Props) => {
               className="w-full"
             />
           </div>
-          
+
           <Button
             type="button"
             onClick={() => addMember(inputName, inputFunction)}
@@ -202,7 +211,9 @@ const TeamSelectorV2 = ({ team, onChange, className }: TeamSelectorV2Props) => {
             </p>
             <div className="flex flex-wrap gap-2">
               {artists
-                .filter((artist) => !team.some(member => member.name === artist))
+                .filter(
+                  (artist) => !team.some((member) => member.name === artist)
+                )
                 .slice(0, 6)
                 .map((artist, index) => (
                   <Button

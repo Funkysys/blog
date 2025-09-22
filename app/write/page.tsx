@@ -9,18 +9,18 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import {
   FormEventHandler,
-  useRef,
-  useEffect,
   SyntheticEvent,
+  useEffect,
   useLayoutEffect,
+  useRef,
   useState,
 } from "react";
 
 import QuillEditor from "@/components/QuillEditor";
 
 import TeamSelectorV2 from "@/components/TeamSelectorV2";
-import { TeamMember } from "@/types";
 import { Button } from "@/components/ui/button";
+import { TeamMember } from "@/types";
 import { slugify } from "@/utils/slugify";
 import axios from "axios";
 import { useMutation } from "react-query";
@@ -47,14 +47,14 @@ export default function WritePage() {
   const [artist, setArtist] = useState("");
   const [team, setTeam] = useState<TeamMember[]>([]);
   const teamRef = useRef<TeamMember[]>([]);
-  
+
   // Debug function pour surveiller setTeam - simplifiée pour la V2
   const debugSetTeam = (newTeam: TeamMember[]) => {
-    console.log('💾 setTeam called with:', newTeam);
+    console.log("💾 setTeam called with:", newTeam);
     teamRef.current = newTeam;
     setTeam(newTeam);
   };
-  
+
   // Synchroniser teamRef avec team
   useEffect(() => {
     teamRef.current = team;
@@ -260,7 +260,11 @@ export default function WritePage() {
             <label htmlFor="team" className="mb-3">
               Team :
             </label>
-            <TeamSelectorV2 team={team} onChange={debugSetTeam} className="mb-3" />
+            <TeamSelectorV2
+              team={team}
+              onChange={debugSetTeam}
+              className="mb-3"
+            />
             <label htmlFor="Links" className="underline mb-3">
               Tracks
             </label>

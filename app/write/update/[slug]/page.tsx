@@ -19,9 +19,10 @@ import {
 
 import QuillEditor from "@/components/QuillEditor";
 
-import TeamSelector from "@/components/TeamSelector";
+import TeamSelectorV2 from "@/components/TeamSelectorV2";
 import { Button } from "@/components/ui/button";
 import { usePost } from "@/hook/usePost";
+import { TeamMember } from "@/types";
 import { slugify } from "@/utils/slugify";
 import axios from "axios";
 import Image from "next/image";
@@ -62,7 +63,7 @@ type oldPost = {
   date: Date;
   nbView: number;
   slug: string;
-  team: string[];
+  team: TeamMember[];
   title: string;
   trackList: Track[];
 };
@@ -79,7 +80,7 @@ export default function UpdatePostePage({ params }: Props) {
   const [content, setContent] = useState("");
   const [imageUrl, setImageUrl] = useState<string>("");
   const [artist, setArtist] = useState("");
-  const [team, setTeam] = useState<string[]>([]);
+  const [team, setTeam] = useState<TeamMember[]>([]);
   const [tracks, setTracks] = useState<Track[]>([{ id: 1, name: "" }]);
   const [links, setLinks] = useState<Prisma.JsonArray>([]);
   const [tempLink, setTempLink] = useState<Link[]>([
@@ -128,7 +129,7 @@ export default function UpdatePostePage({ params }: Props) {
         nbComments: post.nbComments,
         nbView: post.nbView,
         slug: post.slug,
-        team: Array.isArray(post.team) ? post.team.map(String) : [],
+        team: [], // Will be converted separately
         title: post.title || "",
         trackList: Array.isArray(post.trackList)
           ? post.trackList.map((track: any) => ({
@@ -143,7 +144,33 @@ export default function UpdatePostePage({ params }: Props) {
       setContent(post.content || "");
       setImageUrl(post.image || "");
       setArtist(post.artist || "");
-      setTeam(Array.isArray(post.team) ? post.team.map(String) : []);
+      // Convertir l'ancien format string[] vers TeamMember[]
+      const convertedTeam: TeamMember[] = Array.isArray(post.team)
+        ? post.team.map((member: any, index: number) => {
+            if (typeof member === "string") {
+              // Ancien format: "Kenny Garrett - saxophone alto"
+              const parts = member.split(" - ");
+              return {
+                id: `${index}`,
+                name: parts[0]?.trim() || member,
+                function: parts[1]?.trim() || "Musicien",
+              };
+            } else if (typeof member === "object" && member.name) {
+              // Nouveau format déjà en TeamMember
+              return {
+                id: member.id || `${index}`,
+                name: member.name,
+                function: member.function || "Musicien",
+              };
+            }
+            return {
+              id: `${index}`,
+              name: String(member),
+              function: "Musicien",
+            };
+          })
+        : [];
+      setTeam(convertedTeam);
       setDate(post.release ? new Date(post.release) : new Date());
       setTracks(
         Array.isArray(post.trackList)
@@ -341,7 +368,7 @@ export default function UpdatePostePage({ params }: Props) {
               <label htmlFor="team" className="mb-3">
                 Team :
               </label>
-              <TeamSelector team={team} onChange={setTeam} className="mb-3" />
+              <TeamSelectorV2 team={team} onChange={setTeam} className="mb-3" />
               <label htmlFor="Links" className="underline mb-3">
                 Tracks
               </label>
