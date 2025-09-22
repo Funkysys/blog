@@ -1,4 +1,3 @@
-import { TeamMember } from "@/types";
 import { formatTeamMember, getArtistSlug } from "@/utils/formatTeam";
 import Link from "next/link";
 
@@ -14,9 +13,7 @@ export const PostTeamDisplay = ({
   // Vérifier si team existe et est un tableau
   if (!team || !Array.isArray(team) || team.length === 0) return null;
 
-  const formatMember = (
-    member: any
-  ): { name: string; displayText: string } => {
+  const formatMember = (member: any): { name: string; displayText: string } => {
     if (typeof member === "string") {
       // Ancien format: "Kenny Garrett - saxophone alto"
       const parts = member.split(" - ");

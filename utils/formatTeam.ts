@@ -1,4 +1,3 @@
-import { TeamMember } from "@/types";
 
 export const formatTeamMember = (member: any): string => {
   if (typeof member === "object" && member.name && member.function) {

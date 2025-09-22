@@ -1,13 +1,22 @@
 import prisma from "@/lib/connect";
 import { NextResponse } from "next/server";
 
+// Fonction pour convertir un slug en nom d'artiste
+const slugToArtistName = (slug: string): string => {
+  return slug
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+};
+
 // GET POSTS BY ARTIST NAME
 export const GET = async (
   req: Request,
   context: { params: Promise<{ slug: string }> }
 ) => {
   const { slug } = await context.params;
-  const artistName = decodeURIComponent(slug);
+  const decodedSlug = decodeURIComponent(slug);
+  const artistName = slugToArtistName(decodedSlug);
 
   try {
     // Rechercher les posts où l'artiste apparaît soit comme artiste principal, soit dans l'équipe
@@ -22,7 +31,15 @@ export const GET = async (
           },
           {
             team: {
+              path: [],
               array_contains: artistName
+            }
+          },
+          // Recherche aussi dans les objets TeamMember
+          {
+            team: {
+              path: [],
+              string_contains: artistName
             }
           }
         ]
