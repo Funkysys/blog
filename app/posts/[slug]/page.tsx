@@ -3,6 +3,7 @@
 import Comments from "@/components/Comments";
 import { DeleteButton } from "@/components/DeleteButton";
 import PageTitle from "@/components/PageTitle";
+import { PostTeamDisplay } from "@/components/PostTeamDisplay";
 import { UpdateButton } from "@/components/UpdateButton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -162,24 +163,7 @@ const PostsPage = ({ params }: Props) => {
         <div className="mt-3">
           <div className="flex gap-2 flex-wrap">
             <h3>Team: </h3>
-            <div className="flex flex-wrap gap-2">
-              {Array.isArray(post.team) &&
-                post.team.map((member, index) => (
-                  <Button
-                    key={index}
-                    variant="outline"
-                    size="sm"
-                    onClick={() =>
-                      router.push(
-                        `/from-artists/${encodeURIComponent(String(member))}`
-                      )
-                    }
-                    className="text-xs h-6 text-blue-600 hover:text-blue-800 hover:bg-blue-50"
-                  >
-                    {String(member)}
-                  </Button>
-                ))}
-            </div>
+            <PostTeamDisplay team={post.team} />
           </div>
         </div>
         <div className="mt-3">
@@ -243,9 +227,9 @@ const PostsPage = ({ params }: Props) => {
       </section>
     </main>
   ) : (
-    <div className="flex flex-col flex-grow justify-center py-10 px-4">
+    <main className="flex flex-col flex-grow justify-center py-10 px-4">
       <h2>No Albums anyway</h2>
-    </div>
+    </main>
   );
 };
 

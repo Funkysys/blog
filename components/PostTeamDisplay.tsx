@@ -3,7 +3,7 @@ import { formatTeamMember, getArtistSlug } from "@/utils/formatTeam";
 import Link from "next/link";
 
 interface PostTeamDisplayProps {
-  team: (TeamMember | string)[];
+  team: any; // Accepter JsonValue de la DB
   className?: string;
 }
 
@@ -11,10 +11,11 @@ export const PostTeamDisplay = ({
   team,
   className = "",
 }: PostTeamDisplayProps) => {
-  if (!team || team.length === 0) return null;
+  // Vérifier si team existe et est un tableau
+  if (!team || !Array.isArray(team) || team.length === 0) return null;
 
   const formatMember = (
-    member: TeamMember | string
+    member: any
   ): { name: string; displayText: string } => {
     if (typeof member === "string") {
       // Ancien format: "Kenny Garrett - saxophone alto"
@@ -23,18 +24,23 @@ export const PostTeamDisplay = ({
         name: parts[0]?.trim() || member,
         displayText: member,
       };
-    } else {
+    } else if (typeof member === "object" && member.name) {
       // Nouveau format TeamMember
       return {
         name: member.name,
         displayText: formatTeamMember(member),
       };
     }
+    // Fallback pour autres cas
+    return {
+      name: String(member),
+      displayText: String(member),
+    };
   };
 
   return (
     <div className={`team-members ${className}`}>
-      {team.map((member, index) => {
+      {team.map((member: any, index: number) => {
         const { name, displayText } = formatMember(member);
         const artistSlug = getArtistSlug(name);
 
