@@ -20,14 +20,24 @@ export const GET = async (
   const userName = slugToUserName(decodedSlug);
 
   try {
+    // Rechercher d'abord l'utilisateur par nom pour obtenir son email
+    const user = await prisma.user.findFirst({
+      where: {
+        name: {
+          equals: userName,
+          mode: "insensitive",
+        },
+      },
+    });
+
+    if (!user?.email) {
+      return NextResponse.json([], { status: 200 });
+    }
+
+    // Ensuite rechercher les posts de cet utilisateur par email
     const posts = await prisma.post.findMany({
       where: {
-        User: {
-          name: {
-            equals: userName,
-            mode: "insensitive",
-          },
-        },
+        userEmail: user.email,
       },
       include: {
         User: true,
