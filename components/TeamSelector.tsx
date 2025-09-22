@@ -28,21 +28,23 @@ const TeamSelector = ({ team, onChange, className }: TeamSelectorProps) => {
     
     // Si l'équipe grandit, c'est un ajout valide
     if (team.length > teamLengthRef.current) {
+      console.log('✅ Team growing from', teamLengthRef.current, 'to', team.length);
       lastValidTeamRef.current = [...team];
       teamLengthRef.current = team.length;
     }
-    // Si l'équipe rétrécit de plus d'1 membre de façon suspecte, restaurer
-    else if (team.length < teamLengthRef.current - 1 && lastValidTeamRef.current.length > team.length) {
-      console.log('🚨 Suspicious team reduction detected! Restoring from', team.length, 'to', lastValidTeamRef.current.length);
+    // Si l'équipe rétrécit sans qu'il y ait eu de clic sur une croix, c'est suspect
+    else if (team.length < teamLengthRef.current && lastValidTeamRef.current.length > team.length) {
+      console.log('🚨 Suspicious team reduction detected! From', teamLengthRef.current, 'to', team.length);
+      console.log('🔄 Restoring to:', lastValidTeamRef.current);
       setTimeout(() => {
-        onChange(lastValidTeamRef.current);
-      }, 0);
+        onChange([...lastValidTeamRef.current]);
+      }, 100);
       return;
     }
-    // Sinon, c'est probablement une suppression intentionnelle
-    else if (team.length < teamLengthRef.current) {
+    // Si c'est la même taille mais un contenu différent, vérifier
+    else if (team.length === teamLengthRef.current && JSON.stringify(team) !== JSON.stringify(lastValidTeamRef.current)) {
+      console.log('⚠️ Team content changed without size change');
       lastValidTeamRef.current = [...team];
-      teamLengthRef.current = team.length;
     }
     
     // Initialiser si c'est la première fois
