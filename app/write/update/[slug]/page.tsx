@@ -17,7 +17,7 @@ import {
   useState,
 } from "react";
 
-import QuillEditor from "@/components/QuillEditor";
+import TiptapEditor from "@/components/TiptapEditor";
 
 import TeamSelectorV2 from "@/components/TeamSelectorV2";
 import { Button } from "@/components/ui/button";
@@ -461,11 +461,11 @@ export default function UpdatePostePage({ params }: Props) {
               <DatePickerDemo setDate={setDate} date={date} />
             </div>
             <label htmlFor="content" className="text-slate-50">
-              Why do you like this album ?
+              Pourquoi aimez-vous cet album ?
             </label>
-            <QuillEditor
+            <TiptapEditor
               className="mt-3"
-              placeholder="Write post content here..."
+              placeholder="Partagez votre passion pour cet album..."
               value={content}
               onChange={setContent}
             />

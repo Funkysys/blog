@@ -373,7 +373,7 @@ export default function WritePage() {
           </label>
           <QuillEditor
             className="mt-3"
-            placeholder="Write post content here..."
+            placeholder="Partagez votre passion pour cet album..."
             value={content}
             onChange={setContent}
           />
