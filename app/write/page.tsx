@@ -46,12 +46,35 @@ export default function WritePage() {
   const [artist, setArtist] = useState("");
   const [team, setTeam] = useState<string[]>([]);
   const teamRef = useRef<string[]>([]);
+  const lastValidTeam = useRef<string[]>([]);
   
   // Debug function pour surveiller setTeam
   const debugSetTeam = (newTeam: string[]) => {
     console.log('setTeam called with:', newTeam, 'from:', new Error().stack);
-    teamRef.current = newTeam; // Garder une référence stable
-    setTeam(newTeam);
+    
+    // Si la nouvelle équipe a plus de membres, c'est un ajout valide
+    if (newTeam.length > teamRef.current.length) {
+      lastValidTeam.current = newTeam;
+      teamRef.current = newTeam;
+      setTeam(newTeam);
+    } 
+    // Si la nouvelle équipe a moins de membres, vérifier si c'est intentionnel
+    else if (newTeam.length < teamRef.current.length) {
+      // Si c'est une réduction drastique (probablement un bug), ignorer
+      if (newTeam.length < teamRef.current.length - 1) {
+        console.log('Suspicious team reduction detected, ignoring:', newTeam);
+        return;
+      }
+      // Sinon, c'est probablement une suppression intentionnelle
+      lastValidTeam.current = newTeam;
+      teamRef.current = newTeam;
+      setTeam(newTeam);
+    }
+    // Si même longueur, mettre à jour normalement
+    else {
+      teamRef.current = newTeam;
+      setTeam(newTeam);
+    }
   };
   
   // Synchroniser teamRef avec team
