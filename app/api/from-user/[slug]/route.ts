@@ -10,7 +10,6 @@ const slugToUserName = (slug: string): string => {
     .join(" ");
 };
 
-// GET SINGLE POST
 export const GET = async (
   req: Request,
   context: { params: Promise<{ slug: string }> }
@@ -19,8 +18,23 @@ export const GET = async (
   const decodedSlug = decodeURIComponent(slug);
   const userName = slugToUserName(decodedSlug);
 
+  const url = new URL(req.url);
+  const page = parseInt(url.searchParams.get("page") || "1");
+  const limit = parseInt(url.searchParams.get("limit") || "12");
+  const skip = (page - 1) * limit;
+
   try {
-    // Rechercher les posts de cet utilisateur par nom d'utilisateur via la relation User
+    const totalCount = await prisma.post.count({
+      where: {
+        User: {
+          name: {
+            equals: userName,
+            mode: "insensitive",
+          },
+        },
+      },
+    });
+
     const posts = await prisma.post.findMany({
       where: {
         User: {
@@ -37,9 +51,19 @@ export const GET = async (
       orderBy: {
         createdAt: "desc",
       },
+      skip: skip,
+      take: limit,
     });
 
-    return NextResponse.json(posts, { status: 200 });
+    return NextResponse.json(
+      {
+        posts,
+        totalCount,
+        currentPage: page,
+        totalPages: Math.ceil(totalCount / limit),
+      },
+      { status: 200 }
+    );
   } catch (error) {
     console.error(
       "Erreur lors de la récupération des posts de l'utilisateur:",
@@ -53,4 +77,4 @@ export const GET = async (
     );
   }
 };
-    
+
