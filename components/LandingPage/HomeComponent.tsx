@@ -5,7 +5,6 @@ import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Disc } from "lucide-react";
 import { useEffect, useRef } from "react";
-import { EmailForm } from "../EmailForm";
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin, useGSAP);
 
 const HomeComponent = () => {
@@ -42,7 +41,6 @@ const HomeComponent = () => {
               DiscoPhiles
             </h1>
           </div>
-          <EmailForm />
         </div>
       </div>
     </div>
