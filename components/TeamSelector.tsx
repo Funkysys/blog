@@ -21,6 +21,7 @@ const TeamSelector = ({ team, onChange, className }: TeamSelectorProps) => {
   // Référence pour la dernière équipe valide
   const lastValidTeamRef = useRef<string[]>([]);
   const teamLengthRef = useRef(0);
+  const isIntentionalRemoval = useRef(false);
 
   // Debug: surveiller les changements de team et protéger contre les régressions
   useEffect(() => {
@@ -34,12 +35,18 @@ const TeamSelector = ({ team, onChange, className }: TeamSelectorProps) => {
     }
     // Si l'équipe rétrécit sans qu'il y ait eu de clic sur une croix, c'est suspect
     else if (team.length < teamLengthRef.current && lastValidTeamRef.current.length > team.length) {
-      console.log('🚨 Suspicious team reduction detected! From', teamLengthRef.current, 'to', team.length);
-      console.log('🔄 Restoring to:', lastValidTeamRef.current);
-      setTimeout(() => {
-        onChange([...lastValidTeamRef.current]);
-      }, 100);
-      return;
+      if (isIntentionalRemoval.current) {
+        console.log('✅ Intentional removal detected, allowing reduction from', teamLengthRef.current, 'to', team.length);
+        lastValidTeamRef.current = [...team];
+        teamLengthRef.current = team.length;
+      } else {
+        console.log('🚨 Suspicious team reduction detected! From', teamLengthRef.current, 'to', team.length);
+        console.log('🔄 Restoring to:', lastValidTeamRef.current);
+        setTimeout(() => {
+          onChange([...lastValidTeamRef.current]);
+        }, 100);
+        return;
+      }
     }
     // Si c'est la même taille mais un contenu différent, vérifier
     else if (team.length === teamLengthRef.current && JSON.stringify(team) !== JSON.stringify(lastValidTeamRef.current)) {
@@ -141,7 +148,16 @@ const TeamSelector = ({ team, onChange, className }: TeamSelectorProps) => {
   };
 
   const removeMember = (memberToRemove: string) => {
-    onChange(team.filter((member) => member !== memberToRemove));
+    console.log('🗑️ Intentional removal of:', memberToRemove);
+    isIntentionalRemoval.current = true;
+    const newTeam = team.filter((member) => member !== memberToRemove);
+    lastValidTeamRef.current = [...newTeam]; // Mettre à jour la référence avec la nouvelle équipe
+    teamLengthRef.current = newTeam.length;
+    onChange(newTeam);
+    // Reset le flag après un délai
+    setTimeout(() => {
+      isIntentionalRemoval.current = false;
+    }, 500);
   };
 
   const handleInputKeyDown = (e: React.KeyboardEvent) => {
