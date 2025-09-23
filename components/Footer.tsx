@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import FirstTitle from "./FirstTitle";
 import { HeaderNavigation } from "./HeaderNavigation";
@@ -34,6 +35,11 @@ const Footer = () => {
         <FirstTitle />
         <div className="flex items-center justify-center m-5 p-5 w-full">
           <HeaderNavigation />
+          <Link href="https://in-extremis-formation.fr" target="_blank">
+            <Button variant="ghost" className="ml-4">
+              In-Extremis-Formation
+            </Button>
+          </Link>
         </div>
         <Button variant="ghost" onClick={() => router.push("/legals")}>
           Contact
