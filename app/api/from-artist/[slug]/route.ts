@@ -16,7 +16,37 @@ export const GET = async (
   const decodedSlug = decodeURIComponent(slug);
   const artistName = slugToArtistName(decodedSlug);
 
+  const url = new URL(req.url);
+  const page = parseInt(url.searchParams.get("page") || "1");
+  const limit = parseInt(url.searchParams.get("limit") || "12");
+  const skip = (page - 1) * limit;
+
   try {
+    const totalCount = await prisma.post.count({
+      where: {
+        OR: [
+          {
+            artist: {
+              equals: artistName,
+              mode: 'insensitive'
+            }
+          },
+          {
+            team: {
+              path: [],
+              array_contains: artistName
+            }
+          },
+          {
+            team: {
+              path: [],
+              string_contains: artistName
+            }
+          }
+        ]
+      }
+    });
+
     const posts = await prisma.post.findMany({
       where: {
         OR: [
@@ -46,10 +76,17 @@ export const GET = async (
       },
       orderBy: {
         createdAt: 'desc'
-      }
+      },
+      skip: skip,
+      take: limit,
     });
 
-    return NextResponse.json(posts, { status: 200 });
+    return NextResponse.json({
+      posts,
+      totalCount,
+      currentPage: page,
+      totalPages: Math.ceil(totalCount / limit),
+    }, { status: 200 });
   } catch (error) {
     console.error("Erreur lors de la récupération des posts de l'artiste:", error);
     return NextResponse.json(

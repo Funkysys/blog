@@ -194,33 +194,6 @@ const TeamSelectorV2 = ({ team, onChange, className }: TeamSelectorV2Props) => {
           </Button>
         </div>
 
-        {!showSuggestions && artists.length > 0 && (
-          <div className="space-y-2">
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Artistes fréquents :
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {artists
-                .filter(
-                  (artist) => !team.some((member) => member.name === artist)
-                )
-                .slice(0, 6)
-                .map((artist, index) => (
-                  <Button
-                    key={index}
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setInputName(artist)}
-                    className="text-xs h-6 text-blue-600 hover:text-blue-800 hover:bg-blue-50"
-                  >
-                    + {artist}
-                  </Button>
-                ))}
-            </div>
-          </div>
-        )}
-
         {isLoading && (
           <p className="text-sm text-gray-500">Chargement des artistes...</p>
         )}
