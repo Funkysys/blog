@@ -23,9 +23,7 @@ const Footer = () => {
           variant="outline"
           className="bg-amber-400"
           onClick={() =>
-            router.push(
-              "https://www.paypal.com/donate?hosted_button_id=64QKCN79A994E"
-            )
+            router.push("https://www.paypal.com/ncp/payment/5T7NURZWCMEAA")
           }
         >
           Support us on paypal
