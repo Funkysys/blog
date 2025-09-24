@@ -5,7 +5,6 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import axios from "axios";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BounceLoader } from "react-spinners";
 import { DeleteAccountModale } from "./DeleteAccountModale";
@@ -19,7 +18,6 @@ const ProfileButton = () => {
   const [changeRole, setChangeRole] = useState<Boolean>(false);
   const [deleteAccount, setDelete] = useState(false);
   const { data: session, status } = useSession();
-  const router = useRouter();
   const [open, setOpen] = useState(false);
 
   const handleOnDeleteAccount = async () => {
@@ -48,11 +46,6 @@ const ProfileButton = () => {
   if (status === "loading") {
     return <BounceLoader color="#36d7b7" />;
   }
-
-  const handleNavigation = (path: string) => {
-    setOpen(false);
-    router.push(path);
-  };
 
   return (
     <>
@@ -88,6 +81,18 @@ const ProfileButton = () => {
                   className="bg-lime-600 hover:bg-lime-300 text-slate-100 w-full"
                 >
                   Create Category
+                </Button>
+              </Link>
+            )}
+
+            {/* Bouton gestion albums pour ADMIN */}
+            {user?.role === "ADMIN" && (
+              <Link href={"/admin/albums"} className="w-full">
+                <Button
+                  variant="ghost"
+                  className="bg-indigo-700 hover:bg-indigo-400 text-slate-100 w-full"
+                >
+                  Gestion Albums
                 </Button>
               </Link>
             )}

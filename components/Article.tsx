@@ -34,7 +34,7 @@ const Article = ({ post }: Props) => {
               alt={post?.title}
               fill
               onError={(e) => (e.currentTarget.src = "/img/disque.jpg")}
-              className="object-cover rounded-full border-4 border-indigo-400 shadow-xl transition-all duration-300 group-hover:shadow-indigo-500 group-hover:scale-105"
+              className="object-cover rounded-full border-4 border-indigo-400 shadow-xl transition-all duration-300 group-hover:scale-105"
               style={{
                 background:
                   "radial-gradient(circle, #232e4d 60%, #1e293b 100%)",

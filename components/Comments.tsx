@@ -82,11 +82,6 @@ function Comments({ postSlug, role }: CommentProps) {
         ) : (
           comments.map((comment: CommentWithUser) => (
             <>
-              {console.log(
-                comment?.User.email === session?.user?.email ||
-                  role === "ADMIN" ||
-                  role === "MODERATOR"
-              )}
               <div className="flex items-center mt-4" key={comment.id}>
                 <Avatar>
                   <AvatarImage

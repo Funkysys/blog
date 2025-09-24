@@ -218,7 +218,6 @@ export default function UpdatePostePage({ params }: Props) {
       title,
       content,
       catSlug: slugify(catSlug),
-      // catTitle supprimé car non attendu par le type Post
       slug: slugify(title),
       image: url !== "" ? url : imageUrl,
       release: date,
@@ -288,7 +287,6 @@ export default function UpdatePostePage({ params }: Props) {
     setTempLink(tempLinkUrl);
     setLinks(tempLinkUrl as Prisma.JsonArray);
   };
-  console.log(tempLink);
 
   const AddNewLink = () => {
     setTempLink([...tempLink, { id: tempLink.length + 1, name: "", url: "" }]);
@@ -308,7 +306,7 @@ export default function UpdatePostePage({ params }: Props) {
       <div className="p-10">
         {oldPost && (
           <form onSubmit={handleSubmit}>
-            <PageTitle title="Write a new post" />
+            <PageTitle title={`Update ${oldPost.title}`} />
             <div className="mb-6">
               <div className="relative w-60 h-60 mx-auto mb-3 flex">
                 <Image

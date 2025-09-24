@@ -25,15 +25,7 @@ const TeamSelectorV2 = ({ team, onChange, className }: TeamSelectorV2Props) => {
   const isIntentionalRemoval = useRef(false);
 
   useEffect(() => {
-    console.log("👥 TeamV2: team changed to:", team, "length:", team.length);
-
     if (team.length > teamLengthRef.current) {
-      console.log(
-        "✅ Team growing from",
-        teamLengthRef.current,
-        "to",
-        team.length
-      );
       lastValidTeamRef.current = [...team];
       teamLengthRef.current = team.length;
     } else if (
@@ -41,11 +33,9 @@ const TeamSelectorV2 = ({ team, onChange, className }: TeamSelectorV2Props) => {
       lastValidTeamRef.current.length > team.length
     ) {
       if (isIntentionalRemoval.current) {
-        console.log("✅ Intentional removal detected, allowing reduction");
         lastValidTeamRef.current = [...team];
         teamLengthRef.current = team.length;
       } else {
-        console.log("🚨 Suspicious team reduction detected! Restoring...");
         setTimeout(() => {
           onChange([...lastValidTeamRef.current]);
         }, 100);
@@ -82,7 +72,6 @@ const TeamSelectorV2 = ({ team, onChange, className }: TeamSelectorV2Props) => {
         function: cleanedFunction,
       };
       const newTeam = [...team, newMember];
-      console.log("➕ Adding member:", newMember);
       onChange(newTeam);
       setInputName("");
       setInputFunction("");
@@ -91,7 +80,6 @@ const TeamSelectorV2 = ({ team, onChange, className }: TeamSelectorV2Props) => {
   };
 
   const removeMember = (memberToRemove: TeamMember) => {
-    console.log("🗑️ Intentional removal of:", memberToRemove.name);
     isIntentionalRemoval.current = true;
     const newTeam = team.filter((member) => member.id !== memberToRemove.id);
     lastValidTeamRef.current = [...newTeam];

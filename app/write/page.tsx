@@ -5,7 +5,7 @@ import PageTitle from "@/components/PageTitle";
 import TiptapEditor from "@/components/TiptapEditor";
 import { Input } from "@/components/ui/input";
 import { useCategories } from "@/hook/useCategories";
-import { Post, Prisma } from "@prisma/client";
+import { Post } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import {
@@ -16,8 +16,6 @@ import {
   useRef,
   useState,
 } from "react";
-
-import QuillEditor from "@/components/QuillEditor";
 
 import TeamSelectorV2 from "@/components/TeamSelectorV2";
 import { Button } from "@/components/ui/button";
@@ -48,31 +46,19 @@ export default function WritePage() {
   const [artist, setArtist] = useState("");
   const [team, setTeam] = useState<TeamMember[]>([]);
   const teamRef = useRef<TeamMember[]>([]);
-
-  const debugSetTeam = (newTeam: TeamMember[]) => {
-    console.log("💾 setTeam called with:", newTeam);
-    teamRef.current = newTeam;
-    setTeam(newTeam);
-  };
-
   useEffect(() => {
     teamRef.current = team;
   }, [team]);
-  const [trackList, setTrackList] = useState<Prisma.JsonArray>([]);
-  const [tracks, setTracks] = useState<Track[]>([{ id: 1, name: "" }]);
-  const [links, setLinks] = useState<Prisma.JsonArray>([]);
-  const [tempLink, setTempLink] = useState<Link[]>([
-    { id: 1, name: "", url: "" },
-  ]);
+
+  const [trackList, setTrackList] = useState<Track[]>([{ id: 1, name: "" }]);
+  const [links, setLinks] = useState<Link[]>([{ id: 1, name: "", url: "" }]);
   const [date, setDate] = useState<Date | null>(null);
   const [isImage, setIsImage] = useState(false);
   const [imageSizeError, setImageSizeError] = useState(false);
-
   const [file, setFile] = useState<File>();
   const [imageObjectUrl, setImageObjectUrl] = useState<string | null>(null);
 
   const { data: categories, isFetching } = useCategories();
-
   const router = useRouter();
 
   const createPost = (newPost: Partial<Post>) =>
@@ -93,9 +79,7 @@ export default function WritePage() {
   const onChangeFile = (e: SyntheticEvent) => {
     setIsImage(true);
     const files = (e.target as HTMLInputElement).files;
-
     if (!files || !files[0]) return;
-
     setFile(files[0]);
     setImageObjectUrl(URL.createObjectURL(files[0]));
   };
@@ -104,27 +88,27 @@ export default function WritePage() {
     e.preventDefault();
     let url = "";
     try {
-      if (!isImage) return;
-      const formData = new FormData(e.currentTarget);
-      const imageFile = formData.get("image");
-      if (imageFile && imageFile instanceof File) {
-        const size = imageFile.size;
-        if (size > 2 * 1024 * 1024) {
-          setImageSizeError(true);
-          return;
-        }
-        url = await uploadFile(formData);
-        if (url) {
-          setImageUrl(url);
+      if (isImage) {
+        const formData = new FormData(e.currentTarget);
+        const imageFile = formData.get("image");
+        if (imageFile && imageFile instanceof File) {
+          const size = imageFile.size;
+          if (size > 2 * 1024 * 1024) {
+            setImageSizeError(true);
+            return;
+          }
+          url = await uploadFile(formData);
+          if (url) {
+            setImageUrl(url);
+          }
         }
       }
     } catch (error) {
       console.error("Error in uploadImage:", error);
     }
 
-    setLinks(tempLink as Prisma.JsonArray);
-
-    await mutate({
+    // Correction : team et trackList envoyés comme tableau d'objets
+    mutate({
       title,
       content,
       catSlug: slugify(catSlug),
@@ -132,12 +116,11 @@ export default function WritePage() {
       image: url,
       release: date,
       artist,
-      team,
-      trackList: trackList,
-      links: links,
+      team, // tableau d'objets { name, function }
+      trackList, // tableau d'objets { id, name, number }
+      links, // tableau d'objets { id, name, url }
     });
   };
-  const uploadImage: FormEventHandler<HTMLFormElement> = async (e) => {};
 
   useLayoutEffect(() => {
     if (status === "unauthenticated") {
@@ -153,51 +136,51 @@ export default function WritePage() {
     );
   }
 
+  // Gestion des tracks
   const handleOnChangeTrackName = (data: any, el: Track) => {
-    const tempTracks = tracks.map((item) => {
+    const tempTracks = trackList.map((item) => {
       if (item.id === el.id) {
         return { ...item, name: data.target.value };
       }
       return item;
     });
-    setTracks(tempTracks);
+    setTrackList(tempTracks);
   };
   const handleOnChangeTrackNumber = (data: any, el: Track) => {
-    const tempTracks = tracks.map((item) => {
+    const tempTracks = trackList.map((item) => {
       if (item.id === el.id) {
         return { ...item, number: data.target.value };
       }
       return item;
     });
-    setTracks(tempTracks);
-    setTrackList(tempTracks as Prisma.JsonArray);
+    setTrackList(tempTracks);
   };
+
+  // Gestion des links
   const handleOnChangeLinkName = (data: any, el: Link) => {
-    const tempLinkName = tempLink.map((item) => {
+    const tempLinkName = links.map((item) => {
       if (item.id === el.id) {
         return { ...item, name: data.target.value };
       }
       return item;
     });
-    setTempLink(tempLinkName);
-    setLinks(tempLinkName as Prisma.JsonArray);
+    setLinks(tempLinkName);
   };
   const handleOnChangeLinkUrl = (data: any, el: Link) => {
-    const tempLinkUrl = tempLink.map((item) => {
+    const tempLinkUrl = links.map((item) => {
       if (item.id === el.id) {
         return { ...item, url: data.target.value };
       }
       return item;
     });
-    setTempLink(tempLinkUrl);
-    setLinks(tempLinkUrl as Prisma.JsonArray);
+    setLinks(tempLinkUrl);
   };
 
   const AddNewLink = () => {
-    setTempLink([...tempLink, { id: tempLink.length + 1, name: "", url: "" }]);
+    setLinks([...links, { id: links.length + 1, name: "", url: "" }]);
   };
   const AddNewTrack = () => {
-    setTracks([...tracks, { id: tracks.length + 1, name: "exemple" }]);
+    setTrackList([...trackList, { id: trackList.length + 1, name: "" }]);
   };
 
   return (
@@ -233,6 +216,7 @@ export default function WritePage() {
             className="mb-6"
             onChange={(e) => setArtist(e.target.value)}
             required={true}
+            value={artist}
           />
 
           <label htmlFor="title" className="text-slate-50 mb-3">
@@ -244,21 +228,18 @@ export default function WritePage() {
             className="mb-6"
             onChange={(e) => setTitle(e.target.value)}
             required={true}
+            value={title}
           />
 
           <div className="flex flex-col gap-3 mb-5">
             <label htmlFor="team" className="mb-3">
               Team :
             </label>
-            <TeamSelectorV2
-              team={team}
-              onChange={debugSetTeam}
-              className="mb-3"
-            />
-            <label htmlFor="Links" className="underline mb-3">
+            <TeamSelectorV2 team={team} onChange={setTeam} className="mb-3" />
+            <label htmlFor="Tracks" className="underline mb-3">
               Tracks
             </label>
-            {tracks.map((el, index) => (
+            {trackList.map((el, index) => (
               <div key={index} className="grid md:grid-cols-2 gap-2">
                 <div>
                   <label
@@ -273,6 +254,7 @@ export default function WritePage() {
                     placeholder="Track's name"
                     onChange={(data) => handleOnChangeTrackName(data, el)}
                     required={false}
+                    value={el.name}
                   />
                 </div>
                 <div>
@@ -288,6 +270,7 @@ export default function WritePage() {
                     placeholder="Track's number"
                     onChange={(data) => handleOnChangeTrackNumber(data, el)}
                     required={false}
+                    value={el.number || ""}
                   />
                 </div>
               </div>
@@ -300,7 +283,7 @@ export default function WritePage() {
             <label htmlFor="Links" className="underline mb-3">
               Links{" "}
             </label>
-            {tempLink.map((el: Link, index) => (
+            {links.map((el: Link, index) => (
               <div key={index} className="grid md:grid-cols-2 gap-2">
                 <div>
                   <label
@@ -315,6 +298,7 @@ export default function WritePage() {
                     placeholder="Link's name"
                     onChange={(data) => handleOnChangeLinkName(data, el)}
                     required={false}
+                    value={el.name}
                   />
                 </div>
                 <div>
@@ -330,6 +314,7 @@ export default function WritePage() {
                     placeholder="Link's url"
                     onChange={(data) => handleOnChangeLinkUrl(data, el)}
                     required={false}
+                    value={el.url}
                   />
                 </div>
               </div>
@@ -356,16 +341,21 @@ export default function WritePage() {
                 Category *
               </label>
               <Select
-                options={categories.map((el: { id: string; title: string }) => {
-                  return {
+                options={categories.map(
+                  (el: { id: string; slug: string; title: string }) => ({
                     id: el.id,
-                    value: el.title,
+                    value: el.slug,
                     label: el.title,
-                  };
-                })}
-                onChange={(
-                  newValue: { id: number; value: string; label: string } | null
-                ) => newValue?.value && setCatSlug(newValue?.value)}
+                  })
+                )}
+                onChange={(newValue) => {
+                  const option = newValue as {
+                    id: string;
+                    value: string;
+                    label: string;
+                  } | null;
+                  if (option && option.value) setCatSlug(option.value);
+                }}
               />
             </div>
           )}

@@ -45,6 +45,20 @@ export const GET = async (req: Request) => {
 };
 
 export const POST = async (req: Request) => {
+  const body = await req.json();
+
+  const team = Array.isArray(body.team) ? body.team : [];
+
+  const trackList =
+    body.trackList && Array.isArray(body.trackList)
+      ? body.trackList.map((t: any) => (typeof t === "string" ? JSON.parse(t) : t))
+      : [];
+
+  const links =
+    body.links && Array.isArray(body.links)
+      ? body.links.map((l: any) => (typeof l === "string" ? JSON.parse(l) : l))
+      : [];
+
   try {
     const session = await getAuthSession();
 
@@ -54,9 +68,6 @@ export const POST = async (req: Request) => {
         { status: 403 }
       );
     }
-
-    const body = await req.json();
-
 
     const user = await prisma.user.findUnique({
       where: { email: session.user.email || "" },
@@ -71,16 +82,21 @@ export const POST = async (req: Request) => {
 
     const post = await prisma.post.create({
       data: {
-        title: body.title,
-        content: body.content,
-        slug: body.slug,
-        catSlug: body.catSlug,
-        image: body.image,
+        title: body.title || "",
+        content: body.content || "",
+        catSlug: body.catSlug || "",
+        slug: body.slug || "",
+        image: body.image || "",
+        release: body.release || null,
+        artist: body.artist || "",
+        team: team,
+        trackList: trackList,
+        links: links,
         userId: user.id,
       },
     });
 
-    return NextResponse.json(post, { status: 200 });
+    return NextResponse.json(post, { status: 201 });
   } catch (error) {
     return NextResponse.json(
       { error: "Something went wrong" },
