@@ -72,6 +72,7 @@ export default function UpdatePostePage({ params }: Props) {
   const { slug } = use(params);
 
   const [oldPost, setOldPost] = useState<oldPost>({} as oldPost);
+  const [isInitialized, setIsInitialized] = useState(false); // Ajout d'un flag
 
   const { data: post, isFetching: postIsFetching, error } = usePost(slug);
 
@@ -110,7 +111,8 @@ export default function UpdatePostePage({ params }: Props) {
   const { status } = useSession();
 
   useEffect(() => {
-    if (post && post.id) {
+    // Protection : ne pas réinitialiser si déjà fait
+    if (post && post.id && !isInitialized) {
       setOldPost({
         artist: post.artist || "",
         catTitle: post.Category?.title || "",
@@ -143,6 +145,7 @@ export default function UpdatePostePage({ params }: Props) {
       setContent(post.content || "");
       setImageUrl(post.image || "");
       setArtist(post.artist || "");
+      
       const convertedTeam: TeamMember[] = Array.isArray(post.team)
         ? post.team.map((member: any, index: number) => {
             if (typeof member === "string") {
@@ -168,20 +171,20 @@ export default function UpdatePostePage({ params }: Props) {
         : [];
       setTeam(convertedTeam);
       setDate(post.release ? new Date(post.release) : new Date());
+      
       setTracks(
         Array.isArray(post.trackList)
           ? post.trackList.map((track: any, index: number) => {
-              // Si c'est une string JSON, il faut la parser
-              const trackData =
-                typeof track === "string" ? JSON.parse(track) : track;
+              const trackData = typeof track === "string" ? JSON.parse(track) : track;
               return {
                 id: trackData.id || index + 1,
                 name: trackData.name || "",
                 number: trackData.number ? Number(trackData.number) : undefined,
               };
             })
-          : []
+          : [{ id: 1, name: "" }]
       );
+      
       const parsedLinks = Array.isArray(post.links)
         ? post.links.map((link: any, index: number) => {
             const linkData = typeof link === "string" ? JSON.parse(link) : link;
@@ -191,11 +194,13 @@ export default function UpdatePostePage({ params }: Props) {
               url: linkData.url || "",
             };
           })
-        : [];
+        : [{ id: 1, name: "", url: "" }];
 
       setTempLink(parsedLinks);
+      
+      setIsInitialized(true); // Marquer comme initialisé
     }
-  }, [post]);
+  }, [post, isInitialized]); // Ajouter isInitialized aux dépendances
 
   const onChangeFile = (e: SyntheticEvent) => {
     const files = (e.target as HTMLInputElement).files;
