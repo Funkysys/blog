@@ -82,7 +82,6 @@ export default function UpdatePostePage({ params }: Props) {
   const [artist, setArtist] = useState("");
   const [team, setTeam] = useState<TeamMember[]>([]);
   const [tracks, setTracks] = useState<Track[]>([{ id: 1, name: "" }]);
-  const [links, setLinks] = useState<Link[]>([]); // Supprimer Prisma.JsonArray
   const [tempLink, setTempLink] = useState<Link[]>([
     { id: 1, name: "", url: "" },
   ]);
@@ -194,7 +193,6 @@ export default function UpdatePostePage({ params }: Props) {
           })
         : [];
 
-      setLinks(parsedLinks);
       setTempLink(parsedLinks);
     }
   }, [post]);

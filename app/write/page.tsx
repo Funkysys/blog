@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import {
   FormEventHandler,
   SyntheticEvent,
+  useCallback,
   useEffect,
   useLayoutEffect,
   useRef,
@@ -85,6 +86,28 @@ export default function WritePage() {
     setImageObjectUrl(URL.createObjectURL(files[0]));
   };
 
+  const handleOnChangeLinkName = useCallback((data: any, el: Link) => {
+    setLinks((prevLinks) =>
+      prevLinks.map((item) => {
+        if (item.id === el.id) {
+          return { ...item, name: data.target.value };
+        }
+        return item;
+      })
+    );
+  }, []);
+
+  const handleOnChangeLinkUrl = useCallback((data: any, el: Link) => {
+    setLinks((prevLinks) =>
+      prevLinks.map((item) => {
+        if (item.id === el.id) {
+          return { ...item, url: data.target.value };
+        }
+        return item;
+      })
+    );
+  }, []);
+
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     let url = imageUrl; // Garder l'URL existante si pas de nouveau fichier
@@ -156,32 +179,11 @@ export default function WritePage() {
     setTrackList(tempTracks);
   };
 
-  // Gestion des links - CORRIGÉ
-  const handleOnChangeLinkName = (data: any, el: Link) => {
-    const tempLinkName = links.map((item) => {
-      if (item.id === el.id) {
-        return { ...item, name: data.target.value };
-      }
-      return item;
-    });
-    setLinks(tempLinkName); // Utiliser setLinks directement
-  };
-
-  const handleOnChangeLinkUrl = (data: any, el: Link) => {
-    const tempLinkUrl = links.map((item) => {
-      if (item.id === el.id) {
-        return { ...item, url: data.target.value };
-      }
-      return item;
-    });
-    setLinks(tempLinkUrl); // Utiliser setLinks directement
-  };
-
   const AddNewLink = () => {
-    setLinks([...links, { id: links.length + 1, name: "", url: "" }]);
+    setLinks((prev) => [...prev, { id: prev.length + 1, name: "", url: "" }]);
   };
   const AddNewTrack = () => {
-    setTrackList([...trackList, { id: trackList.length + 1, name: "" }]);
+    setTrackList((prev) => [...prev, { id: prev.length + 1, name: "" }]);
   };
 
   return (
@@ -195,16 +197,35 @@ export default function WritePage() {
               <label htmlFor="image" className="text-slate-50 mb-3">
                 Image (optional) :
               </label>
-              {!imageSizeError ? (
-                <p className="text-slate-400 text-sm">
-                  Upload an image with max size 2Mb{" "}
-                </p>
-              ) : (
-                <p className="text-red-500 text-sm">
-                  Image size should be less than 2Mb
-                </p>
-              )}
-              <Input type="file" name="image" onChange={onChangeFile} />
+              <p className="text-slate-400 text-sm">Upload an image </p>
+              <div className="relative">
+                <div className="flex items-center gap-3">
+                  <label
+                    htmlFor="image"
+                    className="cursor-pointer bg-violet-600 hover:bg-violet-700 text-white px-4 py-2 rounded-lg text-sm font-medium"
+                  >
+                    Choisir un fichier
+                  </label>
+                  <input
+                    id="image"
+                    type="file"
+                    name="image"
+                    onChange={onChangeFile}
+                    accept="image/*"
+                    className="hidden"
+                  />
+                  <span className="text-sm text-slate-400">
+                    {file
+                      ? `${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`
+                      : "Aucun fichier sélectionné"}
+                  </span>
+                </div>
+                {file && (
+                  <p className="text-green-400 text-sm mt-2">
+                    ✓ Nouveau fichier prêt à être uploadé
+                  </p>
+                )}
+              </div>
             </div>
           </div>
 
@@ -286,25 +307,38 @@ export default function WritePage() {
               Links{" "}
             </label>
             {links.map((el: Link, index) => (
-              <div key={el.id} className="grid md:grid-cols-2 gap-2">
+              <div
+                key={`${el.id}-${index}`}
+                className="grid md:grid-cols-2 gap-2"
+              >
                 <div>
-                  <label className="text-sm text-slate-400 mb-3">Name :</label>
+                  <label
+                    htmlFor={`link-name-${el.id}-${index}`}
+                    className="text-sm text-slate-400 mb-3"
+                  >
+                    Name :
+                  </label>
                   <Input
+                    id={`link-name-${el.id}-${index}`}
+                    value={el.name}
                     type="text"
                     placeholder="Link's name"
                     onChange={(data) => handleOnChangeLinkName(data, el)}
-                    required={false}
-                    value={el.name}
                   />
                 </div>
                 <div>
-                  <label className="text-sm text-slate-400 mb-3">Link :</label>
+                  <label
+                    htmlFor={`link-url-${el.id}-${index}`}
+                    className="text-sm text-slate-400 mb-3"
+                  >
+                    Link :
+                  </label>
                   <Input
-                    type="text"
-                    placeholder="Link's url"
-                    onChange={(data) => handleOnChangeLinkUrl(data, el)}
-                    required={false}
+                    id={`link-url-${el.id}-${index}`}
                     value={el.url}
+                    type="url"
+                    placeholder="https://..."
+                    onChange={(data) => handleOnChangeLinkUrl(data, el)}
                   />
                 </div>
               </div>
