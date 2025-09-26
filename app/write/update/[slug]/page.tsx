@@ -11,6 +11,7 @@ import {
   FormEventHandler,
   SyntheticEvent,
   use,
+  useCallback,
   useEffect,
   useLayoutEffect,
   useState,
@@ -170,31 +171,31 @@ export default function UpdatePostePage({ params }: Props) {
       setDate(post.release ? new Date(post.release) : new Date());
       setTracks(
         Array.isArray(post.trackList)
-          ? post.trackList.map((track: any) => ({
-              id: Number(track.id),
-              name: track.name,
-              number: Number(track.number),
-            }))
+          ? post.trackList.map((track: any, index: number) => {
+              // Si c'est une string JSON, il faut la parser
+              const trackData =
+                typeof track === "string" ? JSON.parse(track) : track;
+              return {
+                id: trackData.id || index + 1,
+                name: trackData.name || "",
+                number: trackData.number ? Number(trackData.number) : undefined,
+              };
+            })
           : []
       );
-      setLinks(
-        Array.isArray(post.links)
-          ? post.links.map((link: any) => ({
-              id: Number(link.id),
-              name: link.name,
-              url: link.url,
-            }))
-          : []
-      );
-      setTempLink(
-        Array.isArray(post.links)
-          ? post.links.map((link: any) => ({
-              id: Number(link.id),
-              name: link.name,
-              url: link.url,
-            }))
-          : []
-      );
+      const parsedLinks = Array.isArray(post.links)
+        ? post.links.map((link: any, index: number) => {
+            const linkData = typeof link === "string" ? JSON.parse(link) : link;
+            return {
+              id: linkData.id || index + 1,
+              name: linkData.name || "",
+              url: linkData.url || "",
+            };
+          })
+        : [];
+
+      setLinks(parsedLinks);
+      setTempLink(parsedLinks);
     }
   }, [post]);
 
@@ -253,8 +254,8 @@ export default function UpdatePostePage({ params }: Props) {
     }
   }, [router, status]);
 
-  const handleOnChangeTeam = (data: any) => {
-    setTeam(data.map((el: { value: string }) => el.value as string));
+  const handleOnChangeTeam = (data: TeamMember[]) => {
+    setTeam(data);
   };
   const handleOnChangeTrackName = (data: any, el: Track) => {
     const tempTracks = tracks.map((item) => {
@@ -274,26 +275,27 @@ export default function UpdatePostePage({ params }: Props) {
     });
     setTracks(tempTracks);
   };
-  // Gestion des links - CORRIGÉ
-  const handleOnChangeLinkName = (data: any, el: Link) => {
-    const tempLinkName = tempLink.map((item) => {
-      if (item.id === el.id) {
-        return { ...item, name: data.target.value };
-      }
-      return item;
-    });
-    setTempLink(tempLinkName); // Ne pas mettre à jour setLinks
-  };
+  const handleOnChangeLinkName = useCallback((data: any, el: Link) => {
+    setTempLink((prevLinks) =>
+      prevLinks.map((item) => {
+        if (item.id === el.id) {
+          return { ...item, name: data.target.value };
+        }
+        return item;
+      })
+    );
+  }, []);
 
-  const handleOnChangeLinkUrl = (data: any, el: Link) => {
-    const tempLinkUrl = tempLink.map((item) => {
-      if (item.id === el.id) {
-        return { ...item, url: data.target.value };
-      }
-      return item;
-    });
-    setTempLink(tempLinkUrl); // Ne pas mettre à jour setLinks
-  };
+  const handleOnChangeLinkUrl = useCallback((data: any, el: Link) => {
+    setTempLink((prevLinks) =>
+      prevLinks.map((item) => {
+        if (item.id === el.id) {
+          return { ...item, url: data.target.value };
+        }
+        return item;
+      })
+    );
+  }, []);
 
   const AddNewLink = () => {
     setTempLink([...tempLink, { id: tempLink.length + 1, name: "", url: "" }]);
@@ -307,7 +309,6 @@ export default function UpdatePostePage({ params }: Props) {
   const supressLink = () => {
     setTempLink(tempLink.slice(0, tempLink.length - 1));
   };
-
   return (
     <main>
       <div className="p-10">
@@ -329,7 +330,20 @@ export default function UpdatePostePage({ params }: Props) {
                   Image (optional) :
                 </label>
                 <p className="text-slate-400 text-sm">Upload an image </p>
-                <Input type="file" name="image" onChange={onChangeFile} />
+                <div className="relative">
+                  <Input
+                    type="file"
+                    name="image"
+                    onChange={onChangeFile}
+                    accept="image/*"
+                    className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
+                  />
+                  {file && (
+                    <p className="text-green-400 text-sm mt-2">
+                      Fichier sélectionné : {file.name}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -415,16 +429,16 @@ export default function UpdatePostePage({ params }: Props) {
                 Links{" "}
               </label>
               {tempLink.map((el: Link, index) => (
-                <div key={index} className="grid md:grid-cols-2 gap-2">
+                <div key={el.id} className="grid md:grid-cols-2 gap-2">
                   <div>
                     <label
-                      htmlFor="name"
-                      id="name"
+                      htmlFor={`link-name-${el.id}`}
                       className="text-sm text-slate-400 mb-3"
                     >
                       Name :
                     </label>
                     <Input
+                      id={`link-name-${el.id}`}
                       value={el.name}
                       type="text"
                       placeholder="Link's name"
@@ -433,17 +447,17 @@ export default function UpdatePostePage({ params }: Props) {
                   </div>
                   <div>
                     <label
-                      htmlFor="link"
-                      id="link"
+                      htmlFor={`link-url-${el.id}`}
                       className="text-sm text-slate-400 mb-3"
                     >
                       Link :
                     </label>
                     <div className="flex gap-2">
                       <Input
+                        id={`link-url-${el.id}`}
                         value={el.url}
-                        type="text"
-                        placeholder="Link's url"
+                        type="url"
+                        placeholder="https://..."
                         onChange={(data) => handleOnChangeLinkUrl(data, el)}
                       />
                       <Button
