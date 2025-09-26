@@ -86,27 +86,52 @@ export default function WritePage() {
     setImageObjectUrl(URL.createObjectURL(files[0]));
   };
 
-  const handleOnChangeLinkName = useCallback((data: any, el: Link) => {
-    setLinks((prevLinks) =>
-      prevLinks.map((item) => {
-        if (item.id === el.id) {
-          return { ...item, name: data.target.value };
-        }
-        return item;
-      })
-    );
-  }, []);
+  // Gestion des tracks (état de base)
+  const handleOnChangeTrackName = (data: any, el: Track) => {
+    const tempTracks = trackList.map((item) => {
+      if (item.id === el.id) {
+        return { ...item, name: data.target.value };
+      }
+      return item;
+    });
+    setTrackList(tempTracks);
+  };
+  const handleOnChangeTrackNumber = (data: any, el: Track) => {
+    const tempTracks = trackList.map((item) => {
+      if (item.id === el.id) {
+        return { ...item, number: data.target.value };
+      }
+      return item;
+    });
+    setTrackList(tempTracks);
+  };
 
-  const handleOnChangeLinkUrl = useCallback((data: any, el: Link) => {
-    setLinks((prevLinks) =>
-      prevLinks.map((item) => {
-        if (item.id === el.id) {
-          return { ...item, url: data.target.value };
-        }
-        return item;
-      })
-    );
-  }, []);
+  // Gestion des links (inspiré des tracks)
+  const handleOnChangeLinkName = (data: any, el: Link) => {
+    const tempLinks = links.map((item) => {
+      if (item.id === el.id) {
+        return { ...item, name: data.target.value };
+      }
+      return item;
+    });
+    setLinks(tempLinks);
+  };
+  const handleOnChangeLinkUrl = (data: any, el: Link) => {
+    const tempLinks = links.map((item) => {
+      if (item.id === el.id) {
+        return { ...item, url: data.target.value };
+      }
+      return item;
+    });
+    setLinks(tempLinks);
+  };
+
+  const AddNewLink = () => {
+    setLinks([...links, { id: links.length + 1, name: "", url: "" }]);
+  };
+  const AddNewTrack = () => {
+    setTrackList([...trackList, { id: trackList.length + 1, name: "" }]);
+  };
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
@@ -158,33 +183,6 @@ export default function WritePage() {
       </div>
     );
   }
-
-  // Gestion des tracks
-  const handleOnChangeTrackName = (data: any, el: Track) => {
-    const tempTracks = trackList.map((item) => {
-      if (item.id === el.id) {
-        return { ...item, name: data.target.value };
-      }
-      return item;
-    });
-    setTrackList(tempTracks);
-  };
-  const handleOnChangeTrackNumber = (data: any, el: Track) => {
-    const tempTracks = trackList.map((item) => {
-      if (item.id === el.id) {
-        return { ...item, number: data.target.value };
-      }
-      return item;
-    });
-    setTrackList(tempTracks);
-  };
-
-  const AddNewLink = () => {
-    setLinks((prev) => [...prev, { id: prev.length + 1, name: "", url: "" }]);
-  };
-  const AddNewTrack = () => {
-    setTrackList((prev) => [...prev, { id: prev.length + 1, name: "" }]);
-  };
 
   return (
     <main>
@@ -307,38 +305,37 @@ export default function WritePage() {
               Links{" "}
             </label>
             {links.map((el: Link, index) => (
-              <div
-                key={`${el.id}-${index}`}
-                className="grid md:grid-cols-2 gap-2"
-              >
+              <div key={index} className="grid md:grid-cols-2 gap-2">
                 <div>
                   <label
-                    htmlFor={`link-name-${el.id}-${index}`}
+                    htmlFor="name"
+                    id="name"
                     className="text-sm text-slate-400 mb-3"
                   >
                     Name :
                   </label>
                   <Input
-                    id={`link-name-${el.id}-${index}`}
-                    value={el.name}
                     type="text"
                     placeholder="Link's name"
                     onChange={(data) => handleOnChangeLinkName(data, el)}
+                    required={false}
+                    value={el.name}
                   />
                 </div>
                 <div>
                   <label
-                    htmlFor={`link-url-${el.id}-${index}`}
+                    htmlFor="link"
+                    id="link"
                     className="text-sm text-slate-400 mb-3"
                   >
                     Link :
                   </label>
                   <Input
-                    id={`link-url-${el.id}-${index}`}
-                    value={el.url}
-                    type="url"
-                    placeholder="https://..."
+                    type="text"
+                    placeholder="Link's url"
                     onChange={(data) => handleOnChangeLinkUrl(data, el)}
+                    required={false}
+                    value={el.url}
                   />
                 </div>
               </div>

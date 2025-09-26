@@ -273,27 +273,26 @@ export default function UpdatePostePage({ params }: Props) {
     });
     setTracks(tempTracks);
   };
-  const handleOnChangeLinkName = useCallback((data: any, el: Link) => {
-    setTempLink((prevLinks) =>
-      prevLinks.map((item) => {
-        if (item.id === el.id) {
-          return { ...item, name: data.target.value };
-        }
-        return item;
-      })
-    );
-  }, []);
+  // Gestion des links - CORRIGÉ (inspiré des tracks)
+  const handleOnChangeLinkName = (data: any, el: Link) => {
+    const tempLinkName = tempLink.map((item) => {
+      if (item.id === el.id) {
+        return { ...item, name: data.target.value };
+      }
+      return item;
+    });
+    setTempLink(tempLinkName);
+  };
 
-  const handleOnChangeLinkUrl = useCallback((data: any, el: Link) => {
-    setTempLink((prevLinks) =>
-      prevLinks.map((item) => {
-        if (item.id === el.id) {
-          return { ...item, url: data.target.value };
-        }
-        return item;
-      })
-    );
-  }, []);
+  const handleOnChangeLinkUrl = (data: any, el: Link) => {
+    const tempLinkUrl = tempLink.map((item) => {
+      if (item.id === el.id) {
+        return { ...item, url: data.target.value };
+      }
+      return item;
+    });
+    setTempLink(tempLinkUrl);
+  };
 
   const AddNewLink = () => {
     setTempLink((prev) => [
@@ -447,19 +446,16 @@ export default function UpdatePostePage({ params }: Props) {
                 Links{" "}
               </label>
               {tempLink.map((el: Link, index) => (
-                <div
-                  key={`${el.id}-${index}`}
-                  className="grid md:grid-cols-2 gap-2"
-                >
+                <div key={index} className="grid md:grid-cols-2 gap-2">
                   <div>
                     <label
-                      htmlFor={`link-name-${el.id}-${index}`}
+                      htmlFor="name"
+                      id="name"
                       className="text-sm text-slate-400 mb-3"
                     >
                       Name :
                     </label>
                     <Input
-                      id={`link-name-${el.id}-${index}`}
                       value={el.name}
                       type="text"
                       placeholder="Link's name"
@@ -468,17 +464,17 @@ export default function UpdatePostePage({ params }: Props) {
                   </div>
                   <div>
                     <label
-                      htmlFor={`link-url-${el.id}-${index}`}
+                      htmlFor="link"
+                      id="link"
                       className="text-sm text-slate-400 mb-3"
                     >
                       Link :
                     </label>
                     <div className="flex gap-2">
                       <Input
-                        id={`link-url-${el.id}-${index}`}
                         value={el.url}
-                        type="url"
-                        placeholder="https://..."
+                        type="text"
+                        placeholder="Link's url"
                         onChange={(data) => handleOnChangeLinkUrl(data, el)}
                       />
                       <Button
