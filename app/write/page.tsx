@@ -55,6 +55,7 @@ export default function WritePage() {
   const [date, setDate] = useState<Date | null>(null);
   const [isImage, setIsImage] = useState(false);
   const [imageSizeError, setImageSizeError] = useState(false);
+
   const [file, setFile] = useState<File>();
   const [imageObjectUrl, setImageObjectUrl] = useState<string | null>(null);
 
@@ -86,10 +87,12 @@ export default function WritePage() {
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    let url = "";
+    let url = imageUrl; // Garder l'URL existante si pas de nouveau fichier
+
     try {
-      if (isImage) {
-        const formData = new FormData(e.currentTarget);
+      if (isImage && file) {
+        const formData = new FormData();
+        formData.append("image", file);
         const imageFile = formData.get("image");
         if (imageFile && imageFile instanceof File) {
           const size = imageFile.size;
@@ -98,9 +101,6 @@ export default function WritePage() {
             return;
           }
           url = await uploadFile(formData);
-          if (url) {
-            setImageUrl(url);
-          }
         }
       }
     } catch (error) {
@@ -156,7 +156,7 @@ export default function WritePage() {
     setTrackList(tempTracks);
   };
 
-  // Gestion des links
+  // Gestion des links - CORRIGÉ
   const handleOnChangeLinkName = (data: any, el: Link) => {
     const tempLinkName = links.map((item) => {
       if (item.id === el.id) {
@@ -164,8 +164,9 @@ export default function WritePage() {
       }
       return item;
     });
-    setLinks(tempLinkName);
+    setLinks(tempLinkName); // Utiliser setLinks directement
   };
+
   const handleOnChangeLinkUrl = (data: any, el: Link) => {
     const tempLinkUrl = links.map((item) => {
       if (item.id === el.id) {
@@ -173,7 +174,7 @@ export default function WritePage() {
       }
       return item;
     });
-    setLinks(tempLinkUrl);
+    setLinks(tempLinkUrl); // Utiliser setLinks directement
   };
 
   const AddNewLink = () => {
@@ -280,19 +281,14 @@ export default function WritePage() {
                 Add Another Track ?
               </Button>
             </div>
+            {/* Section Links */}
             <label htmlFor="Links" className="underline mb-3">
               Links{" "}
             </label>
             {links.map((el: Link, index) => (
-              <div key={index} className="grid md:grid-cols-2 gap-2">
+              <div key={el.id} className="grid md:grid-cols-2 gap-2">
                 <div>
-                  <label
-                    htmlFor="name"
-                    id="name"
-                    className="text-sm text-slate-400 mb-3"
-                  >
-                    Name :
-                  </label>
+                  <label className="text-sm text-slate-400 mb-3">Name :</label>
                   <Input
                     type="text"
                     placeholder="Link's name"
@@ -302,13 +298,7 @@ export default function WritePage() {
                   />
                 </div>
                 <div>
-                  <label
-                    htmlFor="link"
-                    id="link"
-                    className="text-sm text-slate-400 mb-3"
-                  >
-                    Link :
-                  </label>
+                  <label className="text-sm text-slate-400 mb-3">Link :</label>
                   <Input
                     type="text"
                     placeholder="Link's url"

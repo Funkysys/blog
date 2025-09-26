@@ -5,7 +5,6 @@ import PageTitle from "@/components/PageTitle";
 import { Input } from "@/components/ui/input";
 import { useCategories } from "@/hook/useCategories";
 import { PostWithCategory } from "@/types";
-import { Prisma } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import {
@@ -82,7 +81,7 @@ export default function UpdatePostePage({ params }: Props) {
   const [artist, setArtist] = useState("");
   const [team, setTeam] = useState<TeamMember[]>([]);
   const [tracks, setTracks] = useState<Track[]>([{ id: 1, name: "" }]);
-  const [links, setLinks] = useState<Prisma.JsonArray>([]);
+  const [links, setLinks] = useState<Link[]>([]); // Supprimer Prisma.JsonArray
   const [tempLink, setTempLink] = useState<Link[]>([
     { id: 1, name: "", url: "" },
   ]);
@@ -178,7 +177,15 @@ export default function UpdatePostePage({ params }: Props) {
             }))
           : []
       );
-      setLinks(Array.isArray(post.links) ? post.links : []);
+      setLinks(
+        Array.isArray(post.links)
+          ? post.links.map((link: any) => ({
+              id: Number(link.id),
+              name: link.name,
+              url: link.url,
+            }))
+          : []
+      );
       setTempLink(
         Array.isArray(post.links)
           ? post.links.map((link: any) => ({
@@ -202,17 +209,17 @@ export default function UpdatePostePage({ params }: Props) {
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    let url = "";
+    let url = imageUrl; // Garder l'URL existante
+
     try {
       if (file) {
-        const formData = new FormData(e.currentTarget);
+        const formData = new FormData();
+        formData.append("image", file);
         url = await uploadFile(formData);
       }
     } catch (error) {
       console.error("Error in uploadImage : ", error);
     }
-
-    setLinks(tempLink as Prisma.JsonArray);
 
     await mutate({
       title,
@@ -224,7 +231,7 @@ export default function UpdatePostePage({ params }: Props) {
       artist,
       team,
       trackList: tracks,
-      links: links,
+      links: tempLink,
     });
   };
 
@@ -267,6 +274,7 @@ export default function UpdatePostePage({ params }: Props) {
     });
     setTracks(tempTracks);
   };
+  // Gestion des links - CORRIGÉ
   const handleOnChangeLinkName = (data: any, el: Link) => {
     const tempLinkName = tempLink.map((item) => {
       if (item.id === el.id) {
@@ -274,9 +282,9 @@ export default function UpdatePostePage({ params }: Props) {
       }
       return item;
     });
-    setTempLink(tempLinkName);
-    setLinks(tempLinkName as Prisma.JsonArray);
+    setTempLink(tempLinkName); // Ne pas mettre à jour setLinks
   };
+
   const handleOnChangeLinkUrl = (data: any, el: Link) => {
     const tempLinkUrl = tempLink.map((item) => {
       if (item.id === el.id) {
@@ -284,8 +292,7 @@ export default function UpdatePostePage({ params }: Props) {
       }
       return item;
     });
-    setTempLink(tempLinkUrl);
-    setLinks(tempLinkUrl as Prisma.JsonArray);
+    setTempLink(tempLinkUrl); // Ne pas mettre à jour setLinks
   };
 
   const AddNewLink = () => {
@@ -383,7 +390,7 @@ export default function UpdatePostePage({ params }: Props) {
                     </label>
                     <div className="flex gap-3">
                       <Input
-                        value={el.number}
+                        value={el.number || ""}
                         type="number"
                         placeholder="Track's number"
                         onChange={(data) => handleOnChangeTrackNumber(data, el)}
@@ -432,15 +439,19 @@ export default function UpdatePostePage({ params }: Props) {
                     >
                       Link :
                     </label>
-                    <div className="flex bg-red-600">
+                    <div className="flex gap-2">
                       <Input
                         value={el.url}
                         type="text"
                         placeholder="Link's url"
                         onChange={(data) => handleOnChangeLinkUrl(data, el)}
                       />
-                      <Button type="button" onClick={supressLink}>
-                        x
+                      <Button
+                        className="bg-red-600"
+                        type="button"
+                        onClick={supressLink}
+                      >
+                        X
                       </Button>
                     </div>
                   </div>
