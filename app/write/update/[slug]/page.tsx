@@ -298,16 +298,22 @@ export default function UpdatePostePage({ params }: Props) {
   }, []);
 
   const AddNewLink = () => {
-    setTempLink([...tempLink, { id: tempLink.length + 1, name: "", url: "" }]);
+    setTempLink((prev) => [
+      ...prev,
+      { id: prev.length + 1, name: "", url: "" },
+    ]);
   };
+
   const AddNewTrack = () => {
-    setTracks([...tracks, { id: tracks.length + 1, name: "exemple" }]);
+    setTracks((prev) => [...prev, { id: prev.length + 1, name: "exemple" }]);
   };
+
   const supressTrack = () => {
-    setTracks(tracks.slice(0, tracks.length - 1));
+    setTracks((prev) => prev.slice(0, prev.length - 1));
   };
+
   const supressLink = () => {
-    setTempLink(tempLink.slice(0, tempLink.length - 1));
+    setTempLink((prev) => prev.slice(0, prev.length - 1));
   };
   return (
     <main>
@@ -331,16 +337,30 @@ export default function UpdatePostePage({ params }: Props) {
                 </label>
                 <p className="text-slate-400 text-sm">Upload an image </p>
                 <div className="relative">
-                  <Input
-                    type="file"
-                    name="image"
-                    onChange={onChangeFile}
-                    accept="image/*"
-                    className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
-                  />
+                  <div className="flex items-center gap-3">
+                    <label
+                      htmlFor="image"
+                      className="cursor-pointer bg-violet-600 hover:bg-violet-700 text-white px-4 py-2 rounded-lg text-sm font-medium"
+                    >
+                      Choisir un fichier
+                    </label>
+                    <input
+                      id="image"
+                      type="file"
+                      name="image"
+                      onChange={onChangeFile}
+                      accept="image/*"
+                      className="hidden"
+                    />
+                    <span className="text-sm text-slate-400">
+                      {file
+                        ? `${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`
+                        : "Aucun fichier sélectionné"}
+                    </span>
+                  </div>
                   {file && (
                     <p className="text-green-400 text-sm mt-2">
-                      Fichier sélectionné : {file.name}
+                      ✓ Nouveau fichier prêt à être uploadé
                     </p>
                   )}
                 </div>
@@ -429,16 +449,19 @@ export default function UpdatePostePage({ params }: Props) {
                 Links{" "}
               </label>
               {tempLink.map((el: Link, index) => (
-                <div key={el.id} className="grid md:grid-cols-2 gap-2">
+                <div
+                  key={`${el.id}-${index}`}
+                  className="grid md:grid-cols-2 gap-2"
+                >
                   <div>
                     <label
-                      htmlFor={`link-name-${el.id}`}
+                      htmlFor={`link-name-${el.id}-${index}`}
                       className="text-sm text-slate-400 mb-3"
                     >
                       Name :
                     </label>
                     <Input
-                      id={`link-name-${el.id}`}
+                      id={`link-name-${el.id}-${index}`}
                       value={el.name}
                       type="text"
                       placeholder="Link's name"
@@ -447,14 +470,14 @@ export default function UpdatePostePage({ params }: Props) {
                   </div>
                   <div>
                     <label
-                      htmlFor={`link-url-${el.id}`}
+                      htmlFor={`link-url-${el.id}-${index}`}
                       className="text-sm text-slate-400 mb-3"
                     >
                       Link :
                     </label>
                     <div className="flex gap-2">
                       <Input
-                        id={`link-url-${el.id}`}
+                        id={`link-url-${el.id}-${index}`}
                         value={el.url}
                         type="url"
                         placeholder="https://..."
